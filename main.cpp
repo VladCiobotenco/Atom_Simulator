@@ -1,120 +1,107 @@
 #include <iostream>
-#include <array>
-#include <chrono>
-#include <thread>
+#include <string>
+#include <vector>
 
-#include <SFML/Graphics.hpp>
 
-//////////////////////////////////////////////////////////////////////
-/// This class is used to test that the memory leak checks work as expected even when using a GUI
-class SomeClass {
+class atom
+{
+    int period, group, atomicNumber, atomicMass;
+    std::string name,symbol;
 public:
-    explicit SomeClass(int) {}
+    ///
+    ///Constructor de initializare, de copiere si destructor
+    ///
+    atom(const int p, const int g, const int Z, const int m, const std::string& n, const std::string& s)
+    {
+        period=p; group=g; atomicNumber=Z; atomicMass=m; name=n; symbol=s;
+        std::cout<<"Un atom a fost construit\n";
+    }
+    atom (const atom& other)
+    {
+        period=other.period; group=other.group; atomicNumber=other.atomicNumber; atomicMass=other.atomicMass;
+        name=other.name; symbol=other.symbol;
+        std::cout<<"Un atom a fost copiat\n";
+    }
+    ~atom(){std::cout<<"Un atom a fost distrus\n";}
+
+    ///Supraincarcarea operatorului <<
+    std::ostream& operator<<(std::ostream& out)
+    {
+        out<<"Atomul "<<name<<", simbol "<<symbol<<", aflat in perioada "<<period<<", grupa principala "<<group<<", cu numarul atomic "<<atomicNumber<<" si numarul de masa "<<atomicMass<<"\n";
+        return out;
+    }
+
+    ///Crearea de getters
+    std::string getName(){return name;}
+    int getAtomicMass() const {return atomicMass;}
+
+
+
 };
 
-SomeClass *getC() {
-    return new SomeClass{2};
-}
-//////////////////////////////////////////////////////////////////////
+class molecule
+{
+    std::string name;
+    std::vector<atom>a;
 
+public:
+    explicit molecule(const std::string& n){name=n; std::cout<<"O molecula a fost construita\n";}
+    //copy constructor required
+    ~molecule(){std::cout<<"O molecula a fost distrusa\n";}
 
-int main() {
-    ///
-    std::cout << "Hello, world!\n";
-    std::cout << "Hellow boss\n";
-    std::array<int, 100> v{};
-    int nr;
-    std::cout << "Introduceți nr: ";
-    /////////////////////////////////////////////////////////////////////////
-    /// Observație: dacă aveți nevoie să citiți date de intrare de la tastatură,
-    /// dați exemple de date de intrare folosind fișierul tastatura.txt
-    /// Trebuie să aveți în fișierul tastatura.txt suficiente date de intrare
-    /// (în formatul impus de voi) astfel încât execuția programului să se încheie.
-    /// De asemenea, trebuie să adăugați în acest fișier date de intrare
-    /// pentru cât mai multe ramuri de execuție.
-    /// Dorim să facem acest lucru pentru a automatiza testarea codului, fără să
-    /// mai pierdem timp de fiecare dată să introducem de la zero aceleași date de intrare.
-    ///
-    /// Pe GitHub Actions (bife), fișierul tastatura.txt este folosit
-    /// pentru a simula date introduse de la tastatură.
-    /// Bifele verifică dacă programul are erori de compilare, erori de memorie și memory leaks.
-    ///
-    /// Dacă nu puneți în tastatura.txt suficiente date de intrare, îmi rezerv dreptul să vă
-    /// testez codul cu ce date de intrare am chef și să nu pun notă dacă găsesc vreun bug.
-    /// Impun această cerință ca să învățați să faceți un demo și să arătați părțile din
-    /// program care merg (și să le evitați pe cele care nu merg).
-    ///
-    /////////////////////////////////////////////////////////////////////////
-    std::cin >> nr;
-    /////////////////////////////////////////////////////////////////////////
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "v[" << i << "] = ";
-        std::cin >> v[i];
+    void addAtom(const atom& ATOM)
+    {
+        a.push_back(ATOM);
     }
-    std::cout << "\n\n";
-    std::cout << "Am citit de la tastatură " << nr << " elemente:\n";
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "- " << v[i] << "\n";
+
+    void removeAtom()
+    {
+        a.pop_back();
     }
-    ///////////////////////////////////////////////////////////////////////////
-    /// Pentru date citite din fișier, NU folosiți tastatura.txt. Creați-vă voi
-    /// alt fișier propriu cu ce alt nume doriți.
-    /// Exemplu:
-    /// std::ifstream fis("date.txt");
-    /// for(int i = 0; i < nr2; ++i)
-    ///     fis >> v2[i];
-    ///
-    ///////////////////////////////////////////////////////////////////////////
 
-    SomeClass *c = getC();
-    std::cout << c << "\n";
-    delete c;  // comentarea acestui rând ar trebui să ducă la semnalarea unui mem leak
-
-    sf::RenderWindow window;
-    ///////////////////////////////////////////////////////////////////////////
-    /// NOTE: sync with env variable APP_WINDOW from .github/workflows/cmake.yml:31
-    window.create(sf::VideoMode({800, 700}), "My Window", sf::Style::Default);
-    ///////////////////////////////////////////////////////////////////////////
-    std::cout << "Fereastra a fost creată\n";
-    ///////////////////////////////////////////////////////////////////////////
-    /// NOTE: mandatory use one of vsync or FPS limit (not both)            ///
-    /// This is needed so we do not burn the GPU                            ///
-    window.setVerticalSyncEnabled(true);                                    ///
-    /// window.setFramerateLimit(60);                                       ///
-    ///////////////////////////////////////////////////////////////////////////
-
-    while(window.isOpen()) {
-        bool shouldExit = false;
-
-        while(const std::optional event = window.pollEvent()) {
-            if (event->is<sf::Event::Closed>()) {
-                window.close();
-                std::cout << "Fereastra a fost închisă\n";
-            }
-            else if (event->is<sf::Event::Resized>()) {
-                std::cout << "New width: " << window.getSize().x << '\n'
-                          << "New height: " << window.getSize().y << '\n';
-            }
-            else if (event->is<sf::Event::KeyPressed>()) {
-                const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
-                std::cout << "Received key " << (keyPressed->scancode == sf::Keyboard::Scancode::X ? "X" : "(other)") << "\n";
-                if(keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
-                    shouldExit = true;
-                }
-            }
+    std::ostream& operator<<(std::ostream& out)
+    {
+        out<<"Molecula "<<name<<" contine urmatorii atomi: ";
+        std::vector<atom>::iterator i;
+        for (i=a.begin();i<a.end()-1;++i)
+        {
+            out<<i->getName()<<", ";
         }
-        if(shouldExit) {
-            window.close();
-            std::cout << "Fereastra a fost închisă (shouldExit == true)\n";
-            break;
-        }
-        using namespace std::chrono_literals;
-        std::this_thread::sleep_for(300ms);
-
-        window.clear();
-        window.display();
+        out<<i->getName();
+        out<<"\n";
+        return out;
     }
 
-    std::cout << "Programul a terminat execuția\n";
+    int moleculeMass()
+    {
+        int m=0;
+        std::vector<atom>::iterator i;
+        for (i=a.begin();i<a.end();++i)
+            m=m+i->getAtomicMass();
+        return m;
+    }
+
+};
+
+int main()
+{
+    atom H(1,1,1,1,"Hidrogen","H");
+    atom C(2,4,6,12,"Carbon","C");
+    atom N(2,5,7,14,"Azot","N");
+    atom O(2,6,8,16,"Oxigen","O");
+
+    molecule H2O("Water");
+    H2O.addAtom(H);
+    H2O.addAtom(H);
+    H2O.addAtom(O);
+
+    H2O.operator<<(std::cout);
+    std::cout<<H2O.moleculeMass()<<"\n";
+
+    H2O.removeAtom();
+    H2O.removeAtom();
+    H2O.removeAtom();
+
+
     return 0;
 }
