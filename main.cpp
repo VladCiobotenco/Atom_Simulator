@@ -25,7 +25,7 @@ public:
     ~atom(){std::cout<<"Un atom a fost distrus\n";}
 
     ///Supraincarcarea operatorului <<
-    std::ostream& operator<<(std::ostream& out)
+    std::ostream& operator<<(std::ostream& out) const
     {
         out<<"Atomul "<<name<<", simbol "<<symbol<<", aflat in perioada "<<period<<", grupa principala "<<group<<", cu numarul atomic "<<atomicNumber<<" si numarul de masa "<<atomicMass<<"\n";
         return out;
@@ -33,7 +33,7 @@ public:
 
     ///Crearea de getters
     std::string getName(){return name;}
-    int getAtomicMass() const {return atomicMass;}
+    [[nodiscard]] int getAtomicMass() const {return atomicMass;}
 
 
 
@@ -75,8 +75,7 @@ public:
     int moleculeMass()
     {
         int m=0;
-        std::vector<atom>::iterator i;
-        for (i=a.begin();i<a.end();++i)
+        for (auto i = a.begin();i<a.end();++i)
             m=m+i->getAtomicMass();
         return m;
     }
@@ -103,6 +102,6 @@ int main()
     H2O.removeAtom();
 
 
-    
+
     return 0;
 }
