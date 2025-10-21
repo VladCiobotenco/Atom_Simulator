@@ -34,7 +34,7 @@ public:
     }
 
     ///Crearea de getters
-    [[nodiscard]] std::string getName() const {return name;}
+    [[nodiscard]] const std::string& getName() const {return name;}
     int getAtomicMass() const {return atomicMass;}
 
 
