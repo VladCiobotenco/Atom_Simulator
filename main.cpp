@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <utility>
 #include <vector>
 
 
@@ -11,17 +12,18 @@ public:
     ///
     ///Constructor de initializare, de copiere si destructor
     ///
-    atom(const int p, const int g, const int Z, const int m, const std::string& n, const std::string& s)
+    atom(const int p, const int g, const int Z, const int m, std::string  n, std::string  s):
+    period(p), group(g), atomicNumber(Z), atomicMass(m), name(std::move(n)), symbol(std::move(s))
     {
-        period=p; group=g; atomicNumber=Z; atomicMass=m; name=n; symbol=s;
         std::cout<<"Un atom a fost construit\n";
     }
-    atom (const atom& other)
+
+    atom(const atom& other):
+    period(other.period), group(other.group), atomicNumber(other.atomicNumber), atomicMass(other.atomicMass), name(other.name), symbol(other.symbol)
     {
-        period=other.period; group=other.group; atomicNumber=other.atomicNumber; atomicMass=other.atomicMass;
-        name=other.name; symbol=other.symbol;
         std::cout<<"Un atom a fost copiat\n";
     }
+
     ~atom(){std::cout<<"Un atom a fost distrus\n";}
 
     ///Supraincarcarea operatorului <<
@@ -32,8 +34,8 @@ public:
     }
 
     ///Crearea de getters
-    std::string getName(){return name;}
-    [[nodiscard]] int getAtomicMass() const {return atomicMass;}
+    [[nodiscard]] std::string getName() const {return name;}
+    int getAtomicMass() const {return atomicMass;}
 
 
 
@@ -45,7 +47,10 @@ class molecule
     std::vector<atom>a;
 
 public:
-    explicit molecule(const std::string& n){name=n; std::cout<<"O molecula a fost construita\n";}
+    explicit molecule(std::string  n):name(std::move(n))
+    {
+        std::cout<<"O molecula a fost construita\n";
+    }
     //copy constructor required
     ~molecule(){std::cout<<"O molecula a fost distrusa\n";}
 
@@ -100,8 +105,6 @@ int main()
     H2O.removeAtom();
     H2O.removeAtom();
     H2O.removeAtom();
-
-
 
     return 0;
 }
