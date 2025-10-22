@@ -1,4 +1,8 @@
-# Nu primesc notă pentru că nu am pus titlu și descriere
+# Atom simulator
+
+### O scurta descriere
+
+__Atom simulator__ este o aplicatie educationala destinat elevilor ce doresc sa inteleaga principiile fundamentale ale chimiei. Programul permite utilizatorului sa simuleze molecule, sa vizualizeze legaturile chimice care se stabilesc intre atomi si sa descopere informatii despre elemente precum _oxigenul_, _hidrogenul_, _carbonul_ si altele.
 
 ### Folosiți template-ul corespunzător grupei voastre!
 
