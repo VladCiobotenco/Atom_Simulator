@@ -2,12 +2,11 @@
 #include <iostream>
 #include <utility>
 
-atom::atom(const int p, const int g, const int Z, const int m, std::string  n, std::string  s):
-    period(p), group(g), atomicNumber(Z), atomicMass(m), name(std::move(n)), symbol(std::move(s))
+atom::atom(const int p, const int g, const int Z, const int m, std::string  n, std::string  s): period(p), group(g), atomicNumber(Z), atomicMass(m), name(std::move(n)), symbol(std::move(s))
 {
     std::cout<<"Un atom a fost construit\n";
 
-    if (s=="H")
+    if (symbol=="H")
         atomShape.setRadius(50.f);
     else atomShape.setRadius(25.f);
 
@@ -31,8 +30,7 @@ atom::atom(const int p, const int g, const int Z, const int m, std::string  n, s
     //atomShape.setPosition(0, 0);
 
 }
-atom::atom(const atom& other):
-    period(other.period), group(other.group), atomicNumber(other.atomicNumber), atomicMass(other.atomicMass), name(other.name), symbol(other.symbol)
+atom::atom(const atom& other): period(other.period), group(other.group), atomicNumber(other.atomicNumber), atomicMass(other.atomicMass), name(other.name), symbol(other.symbol)
 {
     std::cout<<"Un atom a fost copiat - "<<other.name<<"\n";
 }

@@ -16,10 +16,6 @@ public:
     bond(const bond& other);
     bond& operator=(const bond& other);
     ~bond();
-    void draw(sf::RenderWindow& window) const;
-    void updatePosition(const sf::Vector2f& pos1, const sf::Vector2f& pos2);
-    [[nodiscard]] int getAtomIndex1() const;
-    [[nodiscard]] int getAtomIndex2() const;
     friend std::ostream& operator<<(std::ostream&, const bond&);
 };
 
