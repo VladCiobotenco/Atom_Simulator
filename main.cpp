@@ -1,9 +1,12 @@
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <optional>
+#include <chrono>
+#include <thread>
 
 #include "sources/atom.hpp"
 #include "sources/bond.hpp"
@@ -11,6 +14,8 @@
 
 int main()
 {
+    std::ifstream in("input/elements.txt");
+
     atom H(1,1,1,1,"Hidrogen","H");
     atom C(2,4,6,12,"Carbon","C");
     atom N(2,5,7,14,"Azot","N");
@@ -37,15 +42,49 @@ int main()
 
     ///Work in progress
     sf::RenderWindow mainScreen(sf::VideoMode({800, 600}), "Atom Simulator");
+
+    bool isDragging = false;
+    sf::Vector2f dragOffset;
     while (mainScreen.isOpen())
     {
         while (const std::optional event = mainScreen.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
                 mainScreen.close();
+
+            if (event->is<sf::Event::MouseButtonPressed>())
+            {
+                if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>())
+                {
+                    if (mouseButtonPressed->button == sf::Mouse::Button::Left)
+                    {
+                        sf::Vector2i pixelPosition = {mouseButtonPressed->position.x, mouseButtonPressed->position.y};
+                        sf::Vector2f mousePosition = mainScreen.mapPixelToCoords(pixelPosition);
+                        if (H.getBounds().contains(mousePosition))
+                        {
+                            isDragging = true;
+                            dragOffset = H.getAtomPosition() - mousePosition;
+                        }
+                    }
+                }
+            }
+
+            if (event->is<sf::Event::MouseButtonReleased>())
+            {
+                isDragging=false;
+
+            }
         }
+
+        if (isDragging)
+        {
+            sf::Vector2i pixelPos = sf::Mouse::getPosition(mainScreen);
+            sf::Vector2f worldPos = mainScreen.mapPixelToCoords(pixelPos);
+            H.move(worldPos + dragOffset);
+        }
+
         mainScreen.clear(sf::Color::Cyan);
-        N.draw(mainScreen);
+        H.draw(mainScreen);
         mainScreen.display();
     }
 

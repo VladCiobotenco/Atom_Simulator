@@ -2,13 +2,19 @@
 #include <iostream>
 #include <utility>
 
-atom::atom(const int p, const int g, const int Z, const int m, std::string  n, std::string  s): period(p), group(g), atomicNumber(Z), atomicMass(m), name(std::move(n)), symbol(std::move(s))
+atom::atom(const int p, const int g, const int Z, const int m, std::string  n, std::string  s): period(p), group(g), atomicNumber(Z), atomicMass(m), name(std::move(n)), symbol(std::move(s)), atomPosition({100.f, 100.f})
 {
     std::cout<<"Un atom a fost construit\n";
-
+    float radius;
     if (symbol=="H")
-        atomShape.setRadius(50.f);
-    else atomShape.setRadius(25.f);
+        radius=25.f;
+    else radius=50.f;
+
+    atomShape.setRadius(radius);
+    atomShape.setOutlineColor(sf::Color::Black);
+    atomShape.setOutlineThickness(2.f);
+    //atomShape.setOrigin(radius,radius);
+    atomShape.setPosition(atomPosition);
 
     switch (Z)
     {
@@ -23,14 +29,8 @@ atom::atom(const int p, const int g, const int Z, const int m, std::string  n, s
     default: atomShape.setFillColor(sf::Color::Magenta);
     }
 
-    atomShape.setOutlineColor(sf::Color::Black);
-    atomShape.setOutlineThickness(2.f);
-
-    //atomShape.setOrigin(25.f, 25.f);
-    //atomShape.setPosition(0, 0);
-
 }
-atom::atom(const atom& other): period(other.period), group(other.group), atomicNumber(other.atomicNumber), atomicMass(other.atomicMass), name(other.name), symbol(other.symbol)
+atom::atom(const atom& other): period(other.period), group(other.group), atomicNumber(other.atomicNumber), atomicMass(other.atomicMass), name(other.name), symbol(other.symbol), atomShape(other.atomShape), atomPosition(other.atomPosition)
 {
     std::cout<<"Un atom a fost copiat - "<<other.name<<"\n";
 }
@@ -44,6 +44,8 @@ atom& atom::operator=(const atom& other)
         atomicMass = other.atomicMass;
         name = other.name;
         symbol = other.symbol;
+        atomShape = other.atomShape;
+        atomPosition = other.atomPosition;
     }
     return *this;
 }
@@ -52,6 +54,7 @@ atom::~atom(){std::cout<<"Un atom a fost distrus\n";}
 [[nodiscard]] const std::string& atom::getName() const {return name;}
 int atom::getAtomicMass() const {return atomicMass;}
 
+
 int atom::atomValence() const
 {
     if (group==1 || group==2 || group==3)
@@ -59,9 +62,27 @@ int atom::atomValence() const
     return 8-group;
 }
 
-void atom::draw(sf::RenderWindow& window) const {
+void atom::draw(sf::RenderWindow& window) const
+{
     window.draw(atomShape);
 }
+
+void atom::move(sf::Vector2f newPosition)
+{
+    atomPosition=newPosition;
+    atomShape.setPosition(atomPosition);
+}
+
+sf::FloatRect atom::getBounds() const
+{
+    return atomShape.getGlobalBounds();
+}
+
+sf::Vector2f atom::getAtomPosition() const
+{
+    return atomPosition;
+}
+
 
 std::ostream& operator<<(std::ostream& out, const atom& ATOM)
 {
