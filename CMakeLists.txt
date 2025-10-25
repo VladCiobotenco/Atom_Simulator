@@ -58,7 +58,14 @@ endif()
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
+        sources/atom.hpp
+        sources/bond.hpp
+        sources/molecule.hpp
+        sources/atom.cpp
+        sources/bond.cpp
+        sources/molecule.cpp
 )
+
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
 # NOTE: RUN_SANITIZERS is optional, if it's not present it will default to true

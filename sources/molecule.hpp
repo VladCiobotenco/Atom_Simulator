@@ -1,0 +1,33 @@
+#ifndef MOLECULE_HPP
+#define MOLECULE_HPP
+#include <iostream>
+#include <string>
+#include <vector>
+#include <SFML/Graphics.hpp>
+#include "atom.hpp"
+#include "bond.hpp"
+
+class molecule
+{
+    std::string name;
+    std::vector<atom> atomsList;
+    std::vector<bond> bondsList;
+
+public:
+    explicit molecule(std::string  n);
+    molecule(const molecule& other);
+    molecule& operator=(const molecule& other);
+    ~molecule();
+
+    void addAtom(const atom& ATOM);
+    void removeAtom();
+    void addBond(const bond& BOND);
+    void removeBond();
+    int moleculeMass();
+
+    friend std::ostream& operator<<(std::ostream&, molecule&);
+};
+
+std::ostream& operator<<(std::ostream& out, molecule& MOLECULE);
+
+#endif
