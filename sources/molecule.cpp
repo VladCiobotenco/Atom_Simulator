@@ -41,10 +41,10 @@ int molecule::moleculeMass()
         m=m+i->getAtomicMass();
     return m;
 }
-std::ostream& operator<<(std::ostream& out, molecule& MOLECULE)
+std::ostream& operator<<(std::ostream& out, const molecule& MOLECULE)
 {
     out<<"Molecula "<<MOLECULE.name<<" contine urmatorii atomi: ";
-    std::vector<atom>::iterator i;
+    std::vector<atom>::const_iterator i;
     for (i=MOLECULE.atomsList.begin();i<MOLECULE.atomsList.end()-1;++i)
     {
         out<<i->getName()<<", ";

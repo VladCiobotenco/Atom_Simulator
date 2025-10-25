@@ -25,9 +25,9 @@ public:
     void removeBond();
     int moleculeMass();
 
-    friend std::ostream& operator<<(std::ostream&, molecule&);
+    friend std::ostream& operator<<(std::ostream&, const molecule&);
 };
 
-std::ostream& operator<<(std::ostream& out, molecule& MOLECULE);
+std::ostream& operator<<(std::ostream& out, const molecule& MOLECULE);
 
 #endif

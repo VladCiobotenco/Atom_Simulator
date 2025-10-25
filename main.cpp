@@ -21,7 +21,7 @@ int main()
     H2O.addAtom(H);
     H2O.addAtom(H);
     H2O.addAtom(O);
-    std::cout<<H2O;
+    std::cout<<H2O<<" "<<H2O.moleculeMass()<<"\n";
 
     bond A(0,1,"simple");
     bond B(1,2,"simple");
