@@ -8,10 +8,13 @@
 #include "sources/atom.hpp"
 #include "sources/bond.hpp"
 #include "sources/molecule.hpp"
+#include "sources/input.hpp"
+
 
 int main()
 {
-    std::ifstream in("input/elements.txt");
+    //std::vector<atom> inputAtoms=readAtoms("sources/elements.txt");
+    //std::cout<<inputAtoms[0];
 
     atom H(1,1,1,1,"Hidrogen","H");
     atom C(2,4,6,12,"Carbon","C");

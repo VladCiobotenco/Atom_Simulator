@@ -1,8 +1,7 @@
 #include "bond.hpp"
-#include <iostream>
 #include <utility>
 
-bond::bond(int atom_index1, int atom_index2, std::string  type): atomIndex1(atom_index1), atomIndex2(atom_index2), type(std::move(type)){}
+bond::bond(int atomIndex1, int atomIndex2, std::string  type): atomIndex1(atomIndex1), atomIndex2(atomIndex2), type(std::move(type)){}
 bond::bond(const bond& other): atomIndex1(other.atomIndex1), atomIndex2(other.atomIndex2),type(other.type){}
 bond& bond::operator=(const bond& other)
 {

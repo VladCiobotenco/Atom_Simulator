@@ -1,9 +1,7 @@
 #ifndef ATOM_HPP
 #define ATOM_HPP
 
-#include <iostream>
 #include <string>
-#include <utility>
 #include <SFML/Graphics.hpp>
 
 class atom

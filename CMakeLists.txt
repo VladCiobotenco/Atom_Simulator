@@ -64,6 +64,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         sources/atom.cpp
         sources/bond.cpp
         sources/molecule.cpp
+        sources/input.cpp
 )
 
 

@@ -1,6 +1,5 @@
 #ifndef MOLECULE_HPP
 #define MOLECULE_HPP
-#include <iostream>
 #include <string>
 #include <vector>
 #include <SFML/Graphics.hpp>

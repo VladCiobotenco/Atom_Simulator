@@ -61,15 +61,13 @@ void molecule::draw(sf::RenderWindow& window) const
 
 atom& molecule::getAtom(int index)
 {
-    if (static_cast<size_t>(index)<atomsList.size() && index>=0)
+    //if (static_cast<size_t>(index)<atomsList.size() && index>=0)
         return atomsList[index];
-    return atomsList[0];
     //throw std::out_of_range("Invalid atom's location");
 }
 const atom& molecule::getAtom(int index) const {
-    if (static_cast<size_t>(index)<atomsList.size() && index>=0)
+    //if (static_cast<size_t>(index)<atomsList.size() && index>=0)
         return atomsList[index];
-    return atomsList[0];
     //throw std::out_of_range("Invalid atom's location");
 }
 
