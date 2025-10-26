@@ -1,12 +1,9 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <utility>
-#include <vector>
 #include <SFML/Graphics.hpp>
 #include <optional>
 #include <chrono>
-//#include <thread>
 
 #include "sources/atom.hpp"
 #include "sources/bond.hpp"
@@ -36,13 +33,10 @@ int main()
     H2O.removeBond();
     H2O.removeBond();
 
-    H2O.removeAtom();
-    H2O.removeAtom();
-    H2O.removeAtom();
-
     ///Work in progress
     sf::RenderWindow mainScreen(sf::VideoMode({800, 600}), "Atom Simulator");
 
+    int draggedAtomIndex = -1;
     bool isDragging = false;
     sf::Vector2f dragOffset;
     while (mainScreen.isOpen())
@@ -59,10 +53,13 @@ int main()
                     {
                         sf::Vector2i pixelPosition = {mouseButtonPressed->position.x, mouseButtonPressed->position.y};
                         sf::Vector2f mousePosition = mainScreen.mapPixelToCoords(pixelPosition);
-                        if (H.getBounds().contains(mousePosition))
+                        int clickAtomIndex=H2O.findAtomAtPosition(mousePosition);
+                        if (clickAtomIndex != -1)
                         {
-                            isDragging = true;
-                            dragOffset = H.getAtomPosition() - mousePosition;
+                            isDragging=true;
+                            draggedAtomIndex=clickAtomIndex;
+                            atom& clickedAtom=H2O.getAtom(draggedAtomIndex);
+                            dragOffset=clickedAtom.getAtomPosition()-mousePosition;
                         }
                     }
             }
@@ -71,23 +68,32 @@ int main()
             {
                 const sf::Event::MouseButtonReleased* mouseButtonReleased = event->getIf<sf::Event::MouseButtonReleased>();
                 if (mouseButtonReleased->button == sf::Mouse::Button::Left && isDragging == true)
+                {
                     isDragging=false;
+                    draggedAtomIndex=-1;
+                }
+
             }
         }
 
-        if (isDragging)
+        if (isDragging && draggedAtomIndex != -1)
         {
             sf::Vector2i pixelPos = sf::Mouse::getPosition(mainScreen);
             sf::Vector2f worldPos = mainScreen.mapPixelToCoords(pixelPos);
-            H.move(worldPos + dragOffset);
-            H.restrictAtomToWindow(mainScreen);
+            atom& currentAtom = H2O.getAtom(draggedAtomIndex);
+            currentAtom.move(worldPos+dragOffset);
+            currentAtom.restrictAtomToWindow(mainScreen);
         }
 
         mainScreen.clear(sf::Color::Cyan);
-        H.draw(mainScreen);
+        H2O.draw(mainScreen);
         mainScreen.display();
     }
 
+
+    H2O.removeAtom();
+    H2O.removeAtom();
+    H2O.removeAtom();
 
     return 0;
 }

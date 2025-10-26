@@ -100,7 +100,6 @@ void atom::restrictAtomToWindow(sf::RenderWindow &window) {
 
     if (currentPosition!=atomPosition)
         move(currentPosition);
-
 }
 
 

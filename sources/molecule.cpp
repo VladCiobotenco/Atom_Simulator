@@ -1,6 +1,7 @@
 #include "molecule.hpp"
-#include <iostream> // For std::cout and std::ostream
-#include <utility>  // For std::move
+#include <iostream>
+#include <utility>
+#include <stdexcept>
 
 molecule::molecule(std::string  n):name(std::move(n))
 {
@@ -13,10 +14,12 @@ molecule& molecule::operator=(const molecule& other)
     {
         name = other.name;
         atomsList = other.atomsList;
+        bondsList = other.bondsList;
     }
     return *this;
 }
 molecule::~molecule(){std::cout<<"O molecula a fost distrusa\n";}
+
 
 void molecule::addAtom(const atom& ATOM)
 {
@@ -41,6 +44,33 @@ int molecule::moleculeMass()
         m=m+i->getAtomicMass();
     return m;
 }
+int molecule::findAtomAtPosition(const sf::Vector2f& worldPos) const {
+    for (int i = 0; static_cast<size_t>(i) < atomsList.size(); i++) {
+        if (atomsList[i].getBounds().contains(worldPos)) {
+            return i;
+        }
+    }
+    return -1;
+}
+void molecule::draw(sf::RenderWindow& window) const
+{
+    for (const auto& atom : atomsList)
+        atom.draw(window);
+}
+
+
+atom& molecule::getAtom(int index)
+{
+    if (static_cast<size_t>(index)<atomsList.size() && index>=0)
+        return atomsList[index];
+    //throw std::out_of_range("Invalid atom's location");
+}
+const atom& molecule::getAtom(int index) const {
+    if (static_cast<size_t>(index)<atomsList.size() && index>=0)
+        return atomsList[index];
+    //throw std::out_of_range("Invalid atom's location");
+}
+
 std::ostream& operator<<(std::ostream& out, const molecule& MOLECULE)
 {
     out<<"Molecula "<<MOLECULE.name<<" contine urmatorii atomi: ";

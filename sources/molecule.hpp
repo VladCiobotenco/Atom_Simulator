@@ -24,6 +24,11 @@ public:
     void addBond(const bond& BOND);
     void removeBond();
     int moleculeMass();
+    int findAtomAtPosition(const sf::Vector2f&)const;
+    void draw(sf::RenderWindow&)const;
+
+    [[nodiscard]] atom& getAtom(int index);
+    [[nodiscard]] const atom& getAtom(int index) const;
 
     friend std::ostream& operator<<(std::ostream&, const molecule&);
 };
