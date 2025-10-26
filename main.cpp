@@ -59,7 +59,7 @@ int main()
                         {
                             isDragging=true;
                             draggedAtomIndex=clickAtomIndex;
-                            atom& clickedAtom=H2O.getAtom(draggedAtomIndex);
+                            const atom& clickedAtom=H2O.getAtom(draggedAtomIndex);
                             dragOffset=clickedAtom.getAtomPosition()-mousePosition;
                         }
                     }
