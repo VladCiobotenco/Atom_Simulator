@@ -24,6 +24,7 @@ public:
     int atomValence() const;
     void draw(sf::RenderWindow& window) const;
     void move(sf::Vector2f newPosition);
+    void restrictAtomToWindow(sf::RenderWindow& window);
     friend std::ostream& operator<<(std::ostream&, const atom&);
 };
 

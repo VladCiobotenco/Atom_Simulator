@@ -4,7 +4,7 @@
 
 atom::atom(const int p, const int g, const int Z, const int m, std::string  n, std::string  s): period(p), group(g), atomicNumber(Z), atomicMass(m), name(std::move(n)), symbol(std::move(s)), atomPosition({100.f, 100.f})
 {
-    std::cout<<"Un atom a fost construit\n";
+    std::cout<<"Un atom a fost construit - "<<name<<"\n";
     float radius;
     if (symbol=="H")
         radius=25.f;
@@ -13,7 +13,7 @@ atom::atom(const int p, const int g, const int Z, const int m, std::string  n, s
     atomShape.setRadius(radius);
     atomShape.setOutlineColor(sf::Color::Black);
     atomShape.setOutlineThickness(2.f);
-    //atomShape.setOrigin(radius,radius);
+    atomShape.setOrigin({radius,radius});
     atomShape.setPosition(atomPosition);
 
     switch (Z)
@@ -49,7 +49,7 @@ atom& atom::operator=(const atom& other)
     }
     return *this;
 }
-atom::~atom(){std::cout<<"Un atom a fost distrus\n";}
+atom::~atom(){std::cout<<"Un atom a fost distrus - "<<name<<"\n";}
 
 [[nodiscard]] const std::string& atom::getName() const {return name;}
 int atom::getAtomicMass() const {return atomicMass;}
@@ -82,6 +82,27 @@ sf::Vector2f atom::getAtomPosition() const
 {
     return atomPosition;
 }
+
+void atom::restrictAtomToWindow(sf::RenderWindow &window) {
+    float windowWidth=window.getSize().x;
+    float windowHeight=window.getSize().y;
+    float radius=atomShape.getRadius();
+    sf::Vector2f currentPosition=atomPosition;
+
+    if (currentPosition.x-radius<0)
+        currentPosition.x=radius;
+    if (currentPosition.x+radius>windowWidth)
+        currentPosition.x=windowWidth-radius;
+    if (currentPosition.y-radius<0)
+        currentPosition.y=radius;
+    if (currentPosition.y+radius>windowHeight)
+        currentPosition.y=windowHeight-radius;
+
+    if (currentPosition!=atomPosition)
+        move(currentPosition);
+
+}
+
 
 
 std::ostream& operator<<(std::ostream& out, const atom& ATOM)

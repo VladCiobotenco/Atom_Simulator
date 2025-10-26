@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <optional>
 #include <chrono>
-#include <thread>
+//#include <thread>
 
 #include "sources/atom.hpp"
 #include "sources/bond.hpp"
@@ -54,8 +54,7 @@ int main()
 
             if (event->is<sf::Event::MouseButtonPressed>())
             {
-                if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>())
-                {
+               const sf::Event::MouseButtonPressed* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>();
                     if (mouseButtonPressed->button == sf::Mouse::Button::Left)
                     {
                         sf::Vector2i pixelPosition = {mouseButtonPressed->position.x, mouseButtonPressed->position.y};
@@ -66,13 +65,13 @@ int main()
                             dragOffset = H.getAtomPosition() - mousePosition;
                         }
                     }
-                }
             }
 
             if (event->is<sf::Event::MouseButtonReleased>())
             {
-                isDragging=false;
-
+                const sf::Event::MouseButtonReleased* mouseButtonReleased = event->getIf<sf::Event::MouseButtonReleased>();
+                if (mouseButtonReleased->button == sf::Mouse::Button::Left && isDragging == true)
+                    isDragging=false;
             }
         }
 
@@ -81,6 +80,7 @@ int main()
             sf::Vector2i pixelPos = sf::Mouse::getPosition(mainScreen);
             sf::Vector2f worldPos = mainScreen.mapPixelToCoords(pixelPos);
             H.move(worldPos + dragOffset);
+            H.restrictAtomToWindow(mainScreen);
         }
 
         mainScreen.clear(sf::Color::Cyan);
