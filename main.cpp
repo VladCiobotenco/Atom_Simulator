@@ -20,9 +20,10 @@ int main()
     std::cout<<C<<" "<<C.atomValence()<<"\n";
 
     molecule H2O("Water");
-    H2O.addAtom(H);
-    H2O.addAtom(H);
     H2O.addAtom(O);
+    H2O.addAtom(H);
+    H2O.addAtom(H);
+
     std::cout<<H2O<<" "<<H2O.moleculeMass()<<"\n";
 
     bond A(0,1,"simple");
