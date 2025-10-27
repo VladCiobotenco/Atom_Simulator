@@ -62,7 +62,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         sources/bond.hpp
         sources/molecule.hpp
         sources/input.hpp
-        sources/json.hpp
+        libraries/json.hpp
         sources/atom.cpp
         sources/bond.cpp
         sources/molecule.cpp

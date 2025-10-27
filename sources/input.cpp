@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 #include "atom.hpp"
-#include "json.hpp"
+#include "../libraries/json.hpp"
 
 using json=nlohmann::json;
 
