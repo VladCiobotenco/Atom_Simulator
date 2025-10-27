@@ -13,13 +13,22 @@
 
 int main()
 {
-    //std::vector<atom> inputAtoms=readAtoms("sources/elements.txt");
-    //std::cout<<inputAtoms[0];
+    std::vector<atom> inputAtoms = readAtomsFromJson("F:/Facultate/POO/Atom_Simulator/sources/elements.json");
+    if (inputAtoms.empty()) {
+        std::cerr << "Nu s-a citit niciun atom\n";
+        return 1;
+    }
 
-    atom H(1,1,1,1,"Hidrogen","H");
+
+    atom H = inputAtoms[0];
+    atom C = inputAtoms[1];
+    atom N = inputAtoms[2];
+    atom O = inputAtoms[3];
+
+    /*atom H(1,1,1,1,"Hidrogen","H");
     atom C(2,4,6,12,"Carbon","C");
     atom N(2,5,7,14,"Azot","N");
-    atom O(2,6,8,16,"Oxigen","O");
+    atom O(2,6,8,16,"Oxigen","O");*/
     std::cout<<C<<" "<<C.atomValence()<<"\n";
 
     molecule H2O("Water");

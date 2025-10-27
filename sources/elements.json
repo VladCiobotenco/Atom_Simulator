@@ -1,0 +1,34 @@
+[
+  {
+    "period": 1,
+    "group": 1,
+    "atomicNumber": 1,
+    "atomicMass": 1,
+    "name": "Hydrogen",
+    "symbol": "H"
+  },
+  {
+    "period": 2,
+    "group": 4,
+    "atomicNumber": 6,
+    "atomicMass": 12,
+    "name": "Carbon",
+    "symbol": "C"
+  },
+  {
+    "period": 2,
+    "group": 5,
+    "atomicNumber": 7,
+    "atomicMass": 14,
+    "name": "Nitrogen",
+    "symbol": "N"
+  },
+  {
+    "period": 2,
+    "group": 6,
+    "atomicNumber": 8,
+    "atomicMass": 16,
+    "name": "Oxygen",
+    "symbol": "O"
+  }
+]
