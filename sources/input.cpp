@@ -29,17 +29,15 @@ std::vector<atom> readAtomsFromJson(const std::string& fileName)
     }
 
     file.close();
-    int period, group,atomicNumber, atomicMass;
-    std::string atomName, symbol;
     for (const auto& atomObject:jsonData)
     {
-        period=atomObject.at("period").get<int>();
-        group=atomObject.at("group").get<int>();
-        atomicNumber=atomObject.at("atomicNumber").get<int>();
-        atomicMass=atomObject.at("atomicMass").get<int>();
-        atomName=atomObject.at("name").get<std::string>();
-        symbol=atomObject.at("symbol").get<std::string>();
-        atom temporaryAtom(period, group, atomicNumber, atomicMass, atomName, symbol);
+        int period_temporary = atomObject.at("period").get<int>();
+        int group_temporary = atomObject.at("group").get<int>();
+        int atomicNumber_temporary = atomObject.at("atomicNumber").get<int>();
+        int atomicMass_temporary = atomObject.at("atomicMass").get<int>();
+        std::string atomName_temporary = atomObject.at("name").get<std::string>();
+        std::string symbol_temporary = atomObject.at("symbol").get<std::string>();
+        atom temporaryAtom(period_temporary, group_temporary, atomicNumber_temporary, atomicMass_temporary, atomName_temporary, symbol_temporary);
         atomList.push_back(temporaryAtom);
     }
     return atomList;
