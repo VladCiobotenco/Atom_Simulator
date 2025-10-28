@@ -19,19 +19,15 @@ int main()
         return 1;
     }
 
-
     atom H = inputAtoms[0];
     atom C = inputAtoms[1];
     atom N = inputAtoms[2];
     atom O = inputAtoms[3];
 
-    /*atom H(1,1,1,1,"Hidrogen","H");
-    atom C(2,4,6,12,"Carbon","C");
-    atom N(2,5,7,14,"Azot","N");
-    atom O(2,6,8,16,"Oxigen","O");*/
     std::cout<<C<<" "<<C.atomValence()<<"\n";
 
     molecule H2O("Water");
+    H2O.addAtom(O);
     H2O.addAtom(O);
     H2O.addAtom(H);
     H2O.addAtom(H);
@@ -77,11 +73,20 @@ int main()
                     {
                         if (selectedAtomIndex == -1)
                         {
-                            selectedAtomIndex=clickAtomIndex;
+                            if (H2O.checkValenceLaws(clickAtomIndex))
+                                selectedAtomIndex=clickAtomIndex;
                         }
                         else
                         {
-                            H2O.addBond(selectedAtomIndex,clickAtomIndex,"simple");
+                            if (H2O.checkValenceLaws(clickAtomIndex))
+                            {
+                                int bondIndex=H2O.findBondPosition(selectedAtomIndex, clickAtomIndex);
+                                if (bondIndex==-1)
+                                    H2O.addBond(selectedAtomIndex,clickAtomIndex,"simple");
+                                else
+                                    H2O.removeBond(bondIndex);
+
+                            }
                             selectedAtomIndex=-1;
                         }
                     }

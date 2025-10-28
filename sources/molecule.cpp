@@ -29,15 +29,7 @@ void molecule::removeAtom()
 {
     atomsList.pop_back();
 }
-/*void molecule::addBond(const bond& BOND)
-{
-    bondsList.push_back(BOND);
-}
-void molecule::removeBond()
-{
-    bondsList.pop_back();
-}*/
-void molecule::addBond(int index1, int index2, std::string type)
+void molecule::addBond(int index1, int index2, const std::string& type)
 {
     sf::Vector2f atom1Position = atomsList[index1].getAtomPosition();
     sf::Vector2f atom2Position = atomsList[index2].getAtomPosition();
@@ -51,11 +43,33 @@ int molecule::moleculeMass()
         m=m+i->getAtomicMass();
     return m;
 }
+bool molecule::checkValenceLaws(int atomIndex)
+{
+    int valence=getAtom(atomIndex).atomValence();
+    int currentBonds=0;
+    for (auto& bond: bondsList)
+        if (bond.getAtomIndex1()==atomIndex || bond.getAtomIndex2()==atomIndex)
+            currentBonds++;
+    if (currentBonds<valence)
+        return true;
+    return false;
+}
 int molecule::findAtomAtPosition(const sf::Vector2f& worldPos) const {
     for (int i = 0; static_cast<size_t>(i) < atomsList.size(); i++) {
         if (atomsList[i].getBounds().contains(worldPos)) {
             return i;
         }
+    }
+    return -1;
+}
+int molecule::findBondPosition(int atomIndex1,int atomIndex2) const
+{
+    int bondIndex=-1;
+    for (auto& bond:bondsList)
+    {
+        bondIndex++;
+        if ((bond.getAtomIndex1()==atomIndex1 && bond.getAtomIndex2()==atomIndex2)||(bond.getAtomIndex1()==atomIndex2 && bond.getAtomIndex2()==atomIndex1))
+            return bondIndex;
     }
     return -1;
 }
@@ -66,6 +80,13 @@ void molecule::updateBondsPositions()
         sf::Vector2f pos1 = atomsList[bond.getAtomIndex1()].getAtomPosition();
         sf::Vector2f pos2 = atomsList[bond.getAtomIndex2()].getAtomPosition();
         bond.updatePosition(pos1, pos2);
+    }
+}
+void molecule::removeBond(int bondIndex)
+{
+    if (bondIndex >= 0 && static_cast<size_t>(bondIndex) < bondsList.size())
+    {
+        bondsList.erase(bondsList.begin() + bondIndex);
     }
 }
 void molecule::draw(sf::RenderWindow& window) const
