@@ -2,7 +2,7 @@
 
 ### O scurta descriere
 
-__Atom simulator__ este o aplicatie educationala destinat elevilor ce doresc sa inteleaga principiile fundamentale ale chimiei. Programul permite utilizatorului sa simuleze molecule, sa vizualizeze legaturile chimice care se stabilesc intre atomi si sa descopere informatii despre elemente precum _oxigenul_, _hidrogenul_, _carbonul_ si altele.
+__Atom simulator__ este o aplicatie educationala destinat elevilor ce doresc sa inteleaga principiile fundamentale ale chimiei. Programul permite utilizatorului sa simuleze molecule, sa vizualizeze legaturile chimice care se stabilesc intre atomi pe baza valentelor acestora si sa descopere informatii despre elemente precum _oxigenul_, _hidrogenul_, _carbonul_ si altele.
 
 ### Folosiți template-ul corespunzător grupei voastre!
 
@@ -47,12 +47,12 @@ O cerință nu se consideră îndeplinită dacă este realizată doar prin cod g
 - [x] cât mai multe `const` (unde este cazul) și funcții `private`
 - [x] implementarea a minim 3 funcții membru publice pentru funcționalități netriviale specifice temei alese, dintre care cel puțin 1-2 funcții mai complexe
   - nu doar citiri/afișări sau adăugat/șters elemente într-un/dintr-un vector
-- [ ] scenariu de utilizare **cu sens** a claselor definite:
+- [x] scenariu de utilizare **cu sens** a claselor definite:
   - crearea de obiecte și apelarea tuturor funcțiilor membru publice în main
   - vor fi adăugate în fișierul `tastatura.txt` DOAR exemple de date de intrare de la tastatură (dacă există); dacă aveți nevoie de date din fișiere, creați alte fișiere separat
-- [ ] minim 50-55% din codul propriu să fie C++, `.gitattributes` configurat corect
+- [x] minim 50-55% din codul propriu să fie C++, `.gitattributes` configurat corect
 - [x] tag de `git`: de exemplu `v0.1`
-- [ ] serviciu de integrare continuă (CI) cu **toate bifele**; exemplu: GitHub Actions
+- [x] serviciu de integrare continuă (CI) cu **toate bifele**; exemplu: GitHub Actions
 - [ ] code review #1 2 proiecte
 
 ## Tema 2
