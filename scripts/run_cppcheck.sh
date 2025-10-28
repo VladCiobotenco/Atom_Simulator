@@ -3,8 +3,9 @@
 cppcheck --enable=all \
     --inline-suppr \
     --project="${BUILD_DIR:-build}"/compile_commands.json \
-    --suppress="*:*${BUILD_DIR:-build}/*" \
-    --suppress="*:*${EXT_DIR:-libraries}/*" \
+    -i"${BUILD_DIR:-build}" --suppress="*:${BUILD_DIR:-build}/*" \
+    -i"${EXT_DIR:-ext}" --suppress="*:${EXT_DIR:-ext}/*" \
+    -i"libraries" --suppress="*:libraries/*" \
     --suppress=missingIncludeSystem \
     --suppress=unmatchedSuppression \
     --suppress=useStlAlgorithm \
