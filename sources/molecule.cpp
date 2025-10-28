@@ -47,7 +47,7 @@ bool molecule::checkValenceLaws(int atomIndex)
 {
     int valence=getAtom(atomIndex).atomValence();
     int currentBonds=0;
-    for (auto& bond: bondsList)
+    for (const auto& bond: bondsList)
         if (bond.getAtomIndex1()==atomIndex || bond.getAtomIndex2()==atomIndex)
             currentBonds++;
     if (currentBonds<valence)
@@ -65,7 +65,7 @@ int molecule::findAtomAtPosition(const sf::Vector2f& worldPos) const {
 int molecule::findBondPosition(int atomIndex1,int atomIndex2) const
 {
     int bondIndex=-1;
-    for (auto& bond:bondsList)
+    for (const auto& bond:bondsList)
     {
         bondIndex++;
         if ((bond.getAtomIndex1()==atomIndex1 && bond.getAtomIndex2()==atomIndex2)||(bond.getAtomIndex1()==atomIndex2 && bond.getAtomIndex2()==atomIndex1))
