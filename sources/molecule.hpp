@@ -20,10 +20,12 @@ public:
 
     void addAtom(const atom& ATOM);
     void removeAtom();
-    void addBond(const bond& BOND);
-    void removeBond();
+    //void addBond(const bond& BOND);
+    //void removeBond();
+    void addBond(int index1, int index2, std::string type);
     int moleculeMass();
     int findAtomAtPosition(const sf::Vector2f&)const;
+    void updateBondsPositions();
     void draw(sf::RenderWindow&)const;
 
     [[nodiscard]] atom& getAtom(int index);

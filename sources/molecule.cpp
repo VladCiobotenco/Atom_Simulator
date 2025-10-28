@@ -3,7 +3,7 @@
 #include <utility>
 #include <stdexcept>
 
-molecule::molecule(std::string  n):name(std::move(n))
+molecule::molecule(std::string  t):name(std::move(t))
 {
     std::cout<<"O molecula a fost construita\n";
 }
@@ -29,13 +29,20 @@ void molecule::removeAtom()
 {
     atomsList.pop_back();
 }
-void molecule::addBond(const bond& BOND)
+/*void molecule::addBond(const bond& BOND)
 {
     bondsList.push_back(BOND);
 }
 void molecule::removeBond()
 {
     bondsList.pop_back();
+}*/
+void molecule::addBond(int index1, int index2, std::string type)
+{
+    sf::Vector2f atom1Position = atomsList[index1].getAtomPosition();
+    sf::Vector2f atom2Position = atomsList[index2].getAtomPosition();
+    bond temporaryBond(index1,index2,type,atom1Position,atom2Position);
+    bondsList.push_back(temporaryBond);
 }
 int molecule::moleculeMass()
 {
@@ -52,8 +59,19 @@ int molecule::findAtomAtPosition(const sf::Vector2f& worldPos) const {
     }
     return -1;
 }
+void molecule::updateBondsPositions()
+{
+    for ( auto& bond: bondsList)
+    {
+        sf::Vector2f pos1 = atomsList[bond.getAtomIndex1()].getAtomPosition();
+        sf::Vector2f pos2 = atomsList[bond.getAtomIndex2()].getAtomPosition();
+        bond.updatePosition(pos1, pos2);
+    }
+}
 void molecule::draw(sf::RenderWindow& window) const
 {
+    for (const auto& bond : bondsList)
+        bond.draw(window);
     for (const auto& atom : atomsList)
         atom.draw(window);
 }

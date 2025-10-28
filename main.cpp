@@ -38,18 +38,11 @@ int main()
 
     std::cout<<H2O<<" "<<H2O.moleculeMass()<<"\n";
 
-    bond A(0,1,"simple");
-    bond B(1,2,"simple");
-    H2O.addBond(A);
-    H2O.addBond(B);
-
-    H2O.removeBond();
-    H2O.removeBond();
-
     ///Work in progress
     sf::RenderWindow mainScreen(sf::VideoMode({800, 600}), "Atom Simulator");
 
-    int draggedAtomIndex = -1;
+    int draggedAtomIndex = -1; //folosit pentru dragging
+    int selectedAtomIndex = -1; //folosit pentru bonding
     bool isDragging = false;
     sf::Vector2f dragOffset;
     while (mainScreen.isOpen())
@@ -62,19 +55,37 @@ int main()
             if (event->is<sf::Event::MouseButtonPressed>())
             {
                const sf::Event::MouseButtonPressed* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>();
-                    if (mouseButtonPressed->button == sf::Mouse::Button::Left)
+                if (mouseButtonPressed->button == sf::Mouse::Button::Left)
+                {
+                    sf::Vector2i pixelPosition = {mouseButtonPressed->position.x, mouseButtonPressed->position.y};
+                    sf::Vector2f mousePosition = mainScreen.mapPixelToCoords(pixelPosition);
+                    int clickAtomIndex=H2O.findAtomAtPosition(mousePosition);
+                    if (clickAtomIndex != -1)
                     {
-                        sf::Vector2i pixelPosition = {mouseButtonPressed->position.x, mouseButtonPressed->position.y};
-                        sf::Vector2f mousePosition = mainScreen.mapPixelToCoords(pixelPosition);
-                        int clickAtomIndex=H2O.findAtomAtPosition(mousePosition);
-                        if (clickAtomIndex != -1)
+                        isDragging=true;
+                        draggedAtomIndex=clickAtomIndex;
+                        const atom& clickedAtom=H2O.getAtom(draggedAtomIndex);
+                        dragOffset=clickedAtom.getAtomPosition()-mousePosition;
+                    }
+                }
+                if (mouseButtonPressed->button == sf::Mouse::Button::Right)
+                {
+                    sf::Vector2i pixelPosition = {mouseButtonPressed->position.x, mouseButtonPressed->position.y};
+                    sf::Vector2f mousePosition = mainScreen.mapPixelToCoords(pixelPosition);
+                    int clickAtomIndex=H2O.findAtomAtPosition(mousePosition);
+                    if (clickAtomIndex != -1)
+                    {
+                        if (selectedAtomIndex == -1)
                         {
-                            isDragging=true;
-                            draggedAtomIndex=clickAtomIndex;
-                            const atom& clickedAtom=H2O.getAtom(draggedAtomIndex);
-                            dragOffset=clickedAtom.getAtomPosition()-mousePosition;
+                            selectedAtomIndex=clickAtomIndex;
+                        }
+                        else
+                        {
+                            H2O.addBond(selectedAtomIndex,clickAtomIndex,"simple");
+                            selectedAtomIndex=-1;
                         }
                     }
+                }
             }
 
             if (event->is<sf::Event::MouseButtonReleased>())
@@ -96,6 +107,7 @@ int main()
             atom& currentAtom = H2O.getAtom(draggedAtomIndex);
             currentAtom.move(worldPos+dragOffset);
             currentAtom.restrictAtomToWindow(mainScreen);
+            H2O.updateBondsPositions();
         }
 
         mainScreen.clear(sf::Color::Cyan);

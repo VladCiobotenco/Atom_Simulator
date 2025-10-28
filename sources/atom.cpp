@@ -53,7 +53,14 @@ atom::~atom(){std::cout<<"Un atom a fost distrus - "<<name<<"\n";}
 
 [[nodiscard]] const std::string& atom::getName() const {return name;}
 int atom::getAtomicMass() const {return atomicMass;}
-
+sf::FloatRect atom::getBounds() const
+{
+    return atomShape.getGlobalBounds();
+}
+sf::Vector2f atom::getAtomPosition() const
+{
+    return atomPosition;
+}
 
 int atom::atomValence() const
 {
@@ -61,26 +68,14 @@ int atom::atomValence() const
         return group;
     return 8-group;
 }
-
 void atom::draw(sf::RenderWindow& window) const
 {
     window.draw(atomShape);
 }
-
 void atom::move(sf::Vector2f newPosition)
 {
     atomPosition=newPosition;
     atomShape.setPosition(atomPosition);
-}
-
-sf::FloatRect atom::getBounds() const
-{
-    return atomShape.getGlobalBounds();
-}
-
-sf::Vector2f atom::getAtomPosition() const
-{
-    return atomPosition;
 }
 
 void atom::restrictAtomToWindow(sf::RenderWindow &window) {
