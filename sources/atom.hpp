@@ -17,7 +17,7 @@ public:
     ~atom();
     [[nodiscard]] const std::string& getName() const;
     int getAtomicMass() const;
-    std::string getSymbol() const;
+    const std::string& getSymbol() const;
     sf::FloatRect getBounds() const;
     sf::Vector2f getAtomPosition() const;
     int atomValence() const;
