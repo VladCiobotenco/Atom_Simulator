@@ -13,7 +13,7 @@
 
 int main()
 {
-    std::vector<atom> inputAtoms = readAtomsFromJson("F:/Facultate/POO/Atom_Simulator/sources/elements.json");
+    std::vector<atom> inputAtoms = readAtomsFromJson("elements.json");
     if (inputAtoms.empty()) {
         std::cerr << "Nu s-a citit niciun atom\n";
         return 1;
@@ -26,13 +26,27 @@ int main()
 
     std::cout<<C<<" "<<C.atomValence()<<"\n";
 
-    molecule H2O("Water");
-    H2O.addAtom(O);
-    H2O.addAtom(O);
-    H2O.addAtom(H);
-    H2O.addAtom(H);
+    molecule testMolecule("practiceMolecule");
 
-    std::cout<<H2O<<" "<<H2O.moleculeMass()<<"\n";
+    testMolecule.addAtom(C);
+    testMolecule.addAtom(O);
+    testMolecule.addAtom(N);
+    testMolecule.addAtom(H);
+
+    std::cout<<testMolecule<<" "<<testMolecule.moleculeMass()<<"\n";
+
+    sf::Font font("fonts/Roboto-VariableFOnt_wdth,wght.ttf");
+    sf::Text infoText(font);
+    infoText.setCharacterSize(14);
+    infoText.setFillColor(sf::Color::Black);
+
+    sf::RectangleShape infoBox;
+    infoBox.setFillColor(sf::Color::White);
+    infoBox.setOutlineColor(sf::Color::Black);
+    infoBox.setOutlineThickness(1.f);
+    infoBox.setSize({150.f, 25.f});
+    bool infoBoxVisibility = false;
+
 
     ///Work in progress
     sf::RenderWindow mainScreen(sf::VideoMode({800, 600}), "Atom Simulator");
@@ -55,12 +69,12 @@ int main()
                 {
                     sf::Vector2i pixelPosition = {mouseButtonPressed->position.x, mouseButtonPressed->position.y};
                     sf::Vector2f mousePosition = mainScreen.mapPixelToCoords(pixelPosition);
-                    int clickAtomIndex=H2O.findAtomAtPosition(mousePosition);
+                    int clickAtomIndex=testMolecule.findAtomAtPosition(mousePosition);
                     if (clickAtomIndex != -1)
                     {
                         isDragging=true;
                         draggedAtomIndex=clickAtomIndex;
-                        const atom& clickedAtom=H2O.getAtom(draggedAtomIndex);
+                        const atom& clickedAtom=testMolecule.getAtom(draggedAtomIndex);
                         dragOffset=clickedAtom.getAtomPosition()-mousePosition;
                     }
                 }
@@ -68,25 +82,18 @@ int main()
                 {
                     sf::Vector2i pixelPosition = {mouseButtonPressed->position.x, mouseButtonPressed->position.y};
                     sf::Vector2f mousePosition = mainScreen.mapPixelToCoords(pixelPosition);
-                    int clickAtomIndex=H2O.findAtomAtPosition(mousePosition);
+                    int clickAtomIndex=testMolecule.findAtomAtPosition(mousePosition);
                     if (clickAtomIndex != -1)
                     {
                         if (selectedAtomIndex == -1)
-                        {
-                            if (H2O.checkValenceLaws(clickAtomIndex))
                                 selectedAtomIndex=clickAtomIndex;
-                        }
                         else
                         {
-                            if (H2O.checkValenceLaws(clickAtomIndex))
-                            {
-                                int bondIndex=H2O.findBondPosition(selectedAtomIndex, clickAtomIndex);
-                                if (bondIndex==-1)
-                                    H2O.addBond(selectedAtomIndex,clickAtomIndex,"simple");
-                                else
-                                    H2O.removeBond(bondIndex);
-
-                            }
+                            int bondIndex=testMolecule.findBondPosition(selectedAtomIndex, clickAtomIndex);
+                            if (testMolecule.checkValenceLaws(clickAtomIndex) && testMolecule.checkValenceLaws(selectedAtomIndex) && bondIndex==-1)
+                                testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"simple");
+                            else if (bondIndex!=-1)
+                                testMolecule.removeBond(bondIndex);
                             selectedAtomIndex=-1;
                         }
                     }
@@ -109,21 +116,46 @@ int main()
         {
             sf::Vector2i pixelPos = sf::Mouse::getPosition(mainScreen);
             sf::Vector2f worldPos = mainScreen.mapPixelToCoords(pixelPos);
-            atom& currentAtom = H2O.getAtom(draggedAtomIndex);
+            atom& currentAtom = testMolecule.getAtom(draggedAtomIndex);
             currentAtom.move(worldPos+dragOffset);
             currentAtom.restrictAtomToWindow(mainScreen);
-            H2O.updateBondsPositions();
+            testMolecule.updateBondsPositions();
+            infoBoxVisibility=false;
+        }
+        if (!isDragging)
+        {
+            sf::Vector2i pixelPos = sf::Mouse::getPosition(mainScreen);
+            sf::Vector2f worldPos = mainScreen.mapPixelToCoords(pixelPos);
+            int hoveredAtomIndex=testMolecule.findAtomAtPosition(worldPos);
+            if (hoveredAtomIndex != -1)
+            {
+                infoBoxVisibility=true;
+                const atom& hoveredAtom = testMolecule.getAtom(hoveredAtomIndex);
+                std::string info = hoveredAtom.getName() + " (" + hoveredAtom.getSymbol() + ")";
+                infoText.setString(info);
+
+                sf::Vector2f infoBoxPosition=worldPos+sf::Vector2f(10.f,10.f);
+                infoBox.setPosition(infoBoxPosition);
+                infoText.setPosition(infoBoxPosition+sf::Vector2f(40.f,0.f));
+            }
+            else infoBoxVisibility=false;
         }
 
         mainScreen.clear(sf::Color::Cyan);
-        H2O.draw(mainScreen);
+        testMolecule.draw(mainScreen);
+        if (infoBoxVisibility)
+        {
+            mainScreen.draw(infoBox);
+            mainScreen.draw(infoText);
+        }
         mainScreen.display();
     }
 
 
-    H2O.removeAtom();
-    H2O.removeAtom();
-    H2O.removeAtom();
+    testMolecule.removeAtom();
+    testMolecule.removeAtom();
+    testMolecule.removeAtom();
+    testMolecule.removeAtom();
 
     return 0;
 }

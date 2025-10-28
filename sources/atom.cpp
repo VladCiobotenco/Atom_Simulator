@@ -53,6 +53,7 @@ atom::~atom(){std::cout<<"Un atom a fost distrus - "<<name<<"\n";}
 
 [[nodiscard]] const std::string& atom::getName() const {return name;}
 int atom::getAtomicMass() const {return atomicMass;}
+std::string atom::getSymbol()const {return symbol;}
 sf::FloatRect atom::getBounds() const
 {
     return atomShape.getGlobalBounds();

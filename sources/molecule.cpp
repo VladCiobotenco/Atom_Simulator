@@ -73,6 +73,28 @@ int molecule::findBondPosition(int atomIndex1,int atomIndex2) const
     }
     return -1;
 }
+// [[nodiscard]] int molecule::findBondPosition(int atomIndex1, int atomIndex2) const
+// {
+//     // Use a standard index-based for loop
+//     for (size_t i = 0; i < bondsList.size(); ++i)
+//     {
+//         const auto& bond = bondsList[i];
+//
+//         // Check for A -> B
+//         if (bond.getAtomIndex1() == atomIndex1 && bond.getAtomIndex2() == atomIndex2)
+//         {
+//             return static_cast<int>(i); // Found it
+//         }
+//
+//         // Check for B -> A
+//         if (bond.getAtomIndex1() == atomIndex2 && bond.getAtomIndex2() == atomIndex1)
+//         {
+//             return static_cast<int>(i); // Found it
+//         }
+//     }
+//
+//     return -1; // No bond found
+// }
 void molecule::updateBondsPositions()
 {
     for ( auto& bond: bondsList)
