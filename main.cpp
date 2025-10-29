@@ -35,7 +35,7 @@ int main()
 
     std::cout<<testMolecule<<" "<<testMolecule.moleculeMass()<<"\n";
 
-    sf::Font font("fonts/Roboto-VariableFOnt_wdth,wght.ttf");
+    sf::Font font("fonts/Roboto-VariableFont_wdth,wght.ttf");
     sf::Text infoText(font);
     infoText.setCharacterSize(14);
     infoText.setFillColor(sf::Color::Black);
