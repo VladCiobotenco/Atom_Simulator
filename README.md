@@ -16,7 +16,7 @@ Utilizatorul poate muta atomii pe ecran prin urmatorul procedeu: click-stanga pe
 - atomul de hidrogen accepta maxim o legatura
 - atomul de oxigen accepta maxim 2 legaturi
 - atomul de azot accepta maxim 3 legaturi
-- atomic de carbon accepta maxim 4 legaturi
+- atomic de carbon accepta maxim 4 legaturi 
 
 ### Folosiți template-ul corespunzător grupei voastre!
 
