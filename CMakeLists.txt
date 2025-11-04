@@ -67,6 +67,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         sources/bond.cpp
         sources/molecule.cpp
         sources/input.cpp
+        sources/simulator_manager.hpp
+        sources/simulator_manager.cpp
 )
 
 
