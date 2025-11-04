@@ -4,6 +4,20 @@
 
 __Atom simulator__ este o aplicatie educationala destinat elevilor ce doresc sa inteleaga principiile fundamentale ale chimiei. Programul permite utilizatorului sa simuleze molecule, sa vizualizeze legaturile chimice care se stabilesc intre atomi pe baza valentelor acestora si sa descopere informatii despre elemente precum _oxigenul_, _hidrogenul_, _carbonul_ si altele.
 
+### Mecanica simulatorului
+
+Versiunea actuala a aplicatiei permite utilizatorului sa vizualizeze o molecule ce contine 4 atomi (reprezentati prin cercuri de culori si dimensiuni diferite):
+- Carbon - negru
+- Oxigen - rosu
+- Hidrogen - alb
+- Azot - albastru
+
+Utilizatorul poate muta atomii pe ecran prin urmatorul procedeu: click-stanga pe atom + drag and drop la noua pozitie dorita. De asemenea, pot fi realizate legaturi intre atomi pe baza valentelor acestora. Legaturile se pot crea prin click-dreapta pe atomii intre care se doreste sa existe o legatura, iar pentru stergerea unei legaturi existente se apasa click-dreapta pe atomii intre care exista respectiva legatura. Legaturile intre atomi se realizeaza dupa urmatoarea regula:
+- atomul de hidrogen accepta maxim o legatura
+- atomul de oxigen accepta maxim 2 legaturi
+- atomul de azot accepta maxim 3 legaturi
+- atomic de carbon accepta maxim 4 legaturi
+
 ### Folosiți template-ul corespunzător grupei voastre!
 
 | Laborant  | Link template                                |
