@@ -1,10 +1,12 @@
-#include "atom.hpp"
 #include <iostream>
 #include <utility>
 
-atom::atom(const int p, const int g, const int Z, const int m, std::string  n, std::string  s): period(p), group(g), atomicNumber(Z), atomicMass(m), name(std::move(n)), symbol(std::move(s)), atomPosition({100.f, 100.f})
+#include "atom.hpp"
+#include "entity.hpp"
+
+atom::atom(std::string  n, const int p, const int g, const int Z, const int m, std::string  s): entity(std::move(n)), period(p), group(g), atomicNumber(Z), atomicMass(m), symbol(std::move(s)), atomPosition({100.f, 100.f})
 {
-    std::cout<<"Un atom a fost construit - "<<name<<"\n";
+    std::cout<<"Un atom a fost construit - "<<getName()<<"\n";
     float radius;
     if (symbol=="H")
         radius=25.f;
@@ -30,9 +32,9 @@ atom::atom(const int p, const int g, const int Z, const int m, std::string  n, s
     }
 
 }
-atom::atom(const atom& other): period(other.period), group(other.group), atomicNumber(other.atomicNumber), atomicMass(other.atomicMass), name(other.name), symbol(other.symbol), atomShape(other.atomShape), atomPosition(other.atomPosition)
+atom::atom(const atom& other): entity(other), period(other.period), group(other.group), atomicNumber(other.atomicNumber), atomicMass(other.atomicMass), symbol(other.symbol), atomShape(other.atomShape), atomPosition(other.atomPosition)
 {
-    std::cout<<"Un atom a fost copiat - "<<other.name<<"\n";
+    std::cout<<"Un atom a fost copiat - "<<getName()<<"\n";
 }
 atom& atom::operator=(const atom& other)
 {
@@ -42,16 +44,17 @@ atom& atom::operator=(const atom& other)
         group = other.group;
         atomicNumber = other.atomicNumber;
         atomicMass = other.atomicMass;
-        name = other.name;
         symbol = other.symbol;
         atomShape = other.atomShape;
         atomPosition = other.atomPosition;
+
+        entity(other.getName());
     }
     return *this;
 }
-atom::~atom(){std::cout<<"Un atom a fost distrus - "<<name<<"\n";}
+atom::~atom(){std::cout<<"Un atom a fost distrus - "<<getName()<<"\n";}
 
-[[nodiscard]] const std::string& atom::getName() const {return name;}
+//[[nodiscard]] const std::string& atom::getName() const {return getName();}
 int atom::getAtomicMass() const {return atomicMass;}
 const std::string& atom::getSymbol()const {return symbol;}
 sf::FloatRect atom::getBounds() const
@@ -100,10 +103,10 @@ void atom::restrictAtomToWindow(sf::RenderWindow &window) {
 
 
 
-std::ostream& operator<<(std::ostream& out, const atom& ATOM)
-{
-    out << "Atomul " << ATOM.name << " cu simbolul " << ATOM.symbol << " se afla in perioada " << ATOM.period << ", grupa principala " << ATOM.group;
-    out << " are numarul atomic " << ATOM.atomicNumber << " si masa atomica " << ATOM.atomicMass << "\n";
-    return out;
-}
+    std::ostream& operator<<(std::ostream& out, const atom& ATOM)
+    {
+        out << "Atomul " << ATOM.getName() << " cu simbolul " << ATOM.symbol << " se afla in perioada " << ATOM.period << ", grupa principala " << ATOM.group;
+        out << " are numarul atomic " << ATOM.atomicNumber << " si masa atomica " << ATOM.atomicMass << "\n";
+        return out;
+    }
 

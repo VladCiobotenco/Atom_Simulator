@@ -69,6 +69,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         sources/input.cpp
         sources/simulator_manager.hpp
         sources/simulator_manager.cpp
+        sources/entity.hpp
+        sources/entity.cpp
 )
 
 

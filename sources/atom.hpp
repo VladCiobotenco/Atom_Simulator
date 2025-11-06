@@ -4,18 +4,20 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 
-class atom
+#include "entity.hpp"
+
+class atom : public entity
 {
     int period, group, atomicNumber, atomicMass;
-    std::string name, symbol;
+    std::string symbol;
     sf::CircleShape atomShape;
     sf::Vector2f atomPosition;
 public:
-    atom(const int p, const int g, const int Z, const int m, std::string  n, std::string  s);
+    atom(std::string, int, int, int Z, int m, std::string);
     atom(const atom& other);
     atom& operator=(const atom& other);
     ~atom();
-    [[nodiscard]] const std::string& getName() const;
+    //[[nodiscard]] const std::string& getName() const;
     int getAtomicMass() const;
     const std::string& getSymbol() const;
     sf::FloatRect getBounds() const;

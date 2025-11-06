@@ -37,7 +37,7 @@ std::vector<atom> readAtomsFromJson(const std::string& fileName)
         int atomicMass_temporary = atomObject.at("atomicMass").get<int>();
         std::string atomName_temporary = atomObject.at("name").get<std::string>();
         std::string symbol_temporary = atomObject.at("symbol").get<std::string>();
-        atom temporaryAtom(period_temporary, group_temporary, atomicNumber_temporary, atomicMass_temporary, atomName_temporary, symbol_temporary);
+        atom temporaryAtom(atomName_temporary,period_temporary, group_temporary, atomicNumber_temporary, atomicMass_temporary, symbol_temporary);
         atomList.push_back(temporaryAtom);
     }
     return atomList;
