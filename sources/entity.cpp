@@ -15,14 +15,9 @@ entity& entity::operator=(const entity& other)
 
 entity::~entity()= default;
 
-std::string entity::getName() const
+const std::string& entity::getName() const
 {
     return name;
-}
-
-void entity::setName(const std::string& newName)
-{
-    name=newName;
 }
 
 
