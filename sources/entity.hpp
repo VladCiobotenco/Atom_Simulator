@@ -2,6 +2,7 @@
 #define ENTITY_HPP
 
 #include <string>
+#include <SFML/Graphics.hpp>
 
 class entity
 {
@@ -10,9 +11,11 @@ public:
     explicit entity(std::string);
     entity (const entity& other);
     entity& operator=(const entity& other);
-    ~entity();
 
-    const std::string& getName()const;
+    virtual ~entity();
+
+    [[nodiscard]] virtual sf::FloatRect getBounds() const = 0;
+    [[nodiscard]] const std::string& getName()const;
 };
 
 

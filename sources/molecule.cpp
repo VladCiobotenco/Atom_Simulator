@@ -33,7 +33,7 @@ void molecule::addBond(int index1, int index2, const std::string& type)
 {
     sf::Vector2f atom1Position = atomsList[index1].getAtomPosition();
     sf::Vector2f atom2Position = atomsList[index2].getAtomPosition();
-    bond temporaryBond(index1,index2,type,atom1Position,atom2Position);
+    bond temporaryBond(type,index1,index2,atom1Position,atom2Position);
     bondsList.push_back(temporaryBond);
 }
 int molecule::moleculeMass()

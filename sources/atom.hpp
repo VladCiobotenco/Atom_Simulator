@@ -20,7 +20,7 @@ public:
     //[[nodiscard]] const std::string& getName() const;
     int getAtomicMass() const;
     const std::string& getSymbol() const;
-    sf::FloatRect getBounds() const;
+    sf::FloatRect getBounds() const override;
     sf::Vector2f getAtomPosition() const;
     int atomValence() const;
     void draw(sf::RenderWindow& window) const;

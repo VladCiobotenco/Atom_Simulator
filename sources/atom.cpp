@@ -32,7 +32,7 @@ atom::atom(std::string  n, const int p, const int g, const int Z, const int m, s
     }
 
 }
-atom::atom(const atom& other): entity(other), period(other.period), group(other.group), atomicNumber(other.atomicNumber), atomicMass(other.atomicMass), symbol(other.symbol), atomShape(other.atomShape), atomPosition(other.atomPosition)
+atom::atom(const atom& other): entity(other), period(other.period), group(other.group), atomicNumber(other.atomicNumber),atomicMass(other.atomicMass), symbol(other.symbol), atomShape(other.atomShape), atomPosition(other.atomPosition)
 {
     std::cout<<"Un atom a fost copiat - "<<getName()<<"\n";
 }
@@ -40,6 +40,8 @@ atom& atom::operator=(const atom& other)
 {
     if (this != &other)
     {
+        entity::operator=(other);
+
         period = other.period;
         group = other.group;
         atomicNumber = other.atomicNumber;
@@ -47,8 +49,6 @@ atom& atom::operator=(const atom& other)
         symbol = other.symbol;
         atomShape = other.atomShape;
         atomPosition = other.atomPosition;
-
-        entity(other.getName());
     }
     return *this;
 }
@@ -100,8 +100,6 @@ void atom::restrictAtomToWindow(sf::RenderWindow &window) {
     if (currentPosition!=atomPosition)
         move(currentPosition);
 }
-
-
 
     std::ostream& operator<<(std::ostream& out, const atom& ATOM)
     {
