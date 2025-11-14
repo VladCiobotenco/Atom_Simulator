@@ -16,7 +16,7 @@ public:
     bond(std::string, int, int,const sf::Vector2f&, const sf::Vector2f&);
     bond(const bond&);
     bond& operator=(const bond&);
-    ~bond();
+    ~bond() override;
 
     int getAtomIndex1()const;
     int getAtomIndex2()const;

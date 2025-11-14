@@ -16,7 +16,7 @@ public:
     atom(std::string, int, int, int Z, int m, std::string);
     atom(const atom& other);
     atom& operator=(const atom& other);
-    ~atom();
+    ~atom() override;
     //[[nodiscard]] const std::string& getName() const;
     int getAtomicMass() const;
     const std::string& getSymbol() const;
