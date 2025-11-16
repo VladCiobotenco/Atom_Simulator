@@ -59,10 +59,10 @@ void molecule::removeAtom()
 //     const bond temporaryBond(type,index1,index2,atom1Position,atom2Position);
 //     bondsList.push_back(temporaryBond);
 // }
-void molecule::addBond(const int index1, const int index2, std::string name)
+void molecule::addBond(const int index1, const int index2, std::string bondName)
 {
-    atom* atom1 = getAtom(index1);
-    atom* atom2 = getAtom(index2);
+    const atom* atom1 = getAtom(index1);
+    const atom* atom2 = getAtom(index2);
 
     if (!atom1 || !atom2)
     {
@@ -70,7 +70,7 @@ void molecule::addBond(const int index1, const int index2, std::string name)
         return;
     }
 
-    std::unique_ptr<bond> newBond = std::make_unique<bond>(name, index1, index2, atom1->getAtomPosition(), atom2->getAtomPosition());
+    std::unique_ptr<bond> newBond = std::make_unique<bond>(bondName, index1, index2, atom1->getAtomPosition(), atom2->getAtomPosition());
     bondsList.push_back(std::move(newBond));
 }
 // int molecule::moleculeMass()
@@ -85,7 +85,7 @@ int molecule::moleculeMass() const
     int m=0;
     for (const auto& thisAtom : atomsList)
     {
-        const auto newAtom = dynamic_cast<atom*>(thisAtom.get());
+        const atom* newAtom = dynamic_cast<atom*>(thisAtom.get());
         m=m+newAtom->getAtomicMass();
     }
     return m;
@@ -107,7 +107,7 @@ bool molecule::checkValenceLaws(int atomIndex) const
     int currentBonds=0;
     for (const auto& thisBond: bondsList)
     {
-        const auto newBond = dynamic_cast<bond*>(thisBond.get());
+        const bond* newBond = dynamic_cast<bond*>(thisBond.get());
         if (newBond->getAtomIndex1()==atomIndex || newBond->getAtomIndex2()==atomIndex)
             currentBonds++;
     }
@@ -148,7 +148,7 @@ int molecule::findBondPosition(int atomIndex1,int atomIndex2) const
     for (const auto& ptrBond:bondsList)
     {
         bondIndex++;
-        const auto thisBond = dynamic_cast<bond*>(ptrBond.get());
+        const bond* thisBond = dynamic_cast<bond*>(ptrBond.get());
         if ((thisBond->getAtomIndex1()==atomIndex1 && thisBond->getAtomIndex2()==atomIndex2)||(thisBond->getAtomIndex1()==atomIndex2 && thisBond->getAtomIndex2()==atomIndex1))
             return bondIndex;
     }
@@ -168,8 +168,8 @@ void molecule::updateBondsPositions() const
     for ( auto& ptrBond: bondsList)
     {
         const auto thisBond = dynamic_cast<bond*>(ptrBond.get());
-        atom* atom1 = getAtom(thisBond->getAtomIndex1());
-        atom* atom2 = getAtom(thisBond->getAtomIndex2());
+        const atom* atom1 = getAtom(thisBond->getAtomIndex1());
+        const atom* atom2 = getAtom(thisBond->getAtomIndex2());
         thisBond->updatePosition(atom1->getAtomPosition(), atom2->getAtomPosition());
     }
 }
