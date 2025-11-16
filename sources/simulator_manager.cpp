@@ -60,8 +60,8 @@ void simulator_manager::simulationStart(std::string& windowName, molecule testMo
                     {
                         isDragging=true;
                         draggedAtomIndex=clickAtomIndex;
-                        const atom& clickedAtom=testMolecule.getAtom(draggedAtomIndex);
-                        dragOffset=clickedAtom.getAtomPosition()-mousePosition;
+                        const atom* clickedAtom=testMolecule.getAtom(draggedAtomIndex);
+                        dragOffset=clickedAtom->getAtomPosition()-mousePosition;
                     }
                 }
                 if (mouseButtonPressed->button == sf::Mouse::Button::Right)
@@ -102,9 +102,9 @@ void simulator_manager::simulationStart(std::string& windowName, molecule testMo
         {
             sf::Vector2i pixelPos = sf::Mouse::getPosition(mainScreen);
             sf::Vector2f worldPos = mainScreen.mapPixelToCoords(pixelPos);
-            atom& currentAtom = testMolecule.getAtom(draggedAtomIndex);
-            currentAtom.move(worldPos+dragOffset);
-            currentAtom.restrictAtomToWindow(mainScreen);
+            atom* currentAtom = testMolecule.getAtom(draggedAtomIndex);
+            currentAtom->move(worldPos+dragOffset);
+            currentAtom->restrictAtomToWindow(mainScreen);
             testMolecule.updateBondsPositions();
             infoBoxVisibility=false;
         }
@@ -116,8 +116,8 @@ void simulator_manager::simulationStart(std::string& windowName, molecule testMo
             if (hoveredAtomIndex != -1)
             {
                 infoBoxVisibility=true;
-                const atom& hoveredAtom = testMolecule.getAtom(hoveredAtomIndex);
-                std::string info = hoveredAtom.getName() + " (" + hoveredAtom.getSymbol() + ")";
+                const atom* hoveredAtom = testMolecule.getAtom(hoveredAtomIndex);
+                std::string info = hoveredAtom->getName() + " (" + hoveredAtom->getSymbol() + ")";
                 infoText.setString(info);
 
                 sf::Vector2f infoBoxPosition=worldPos+sf::Vector2f(10.f,10.f);

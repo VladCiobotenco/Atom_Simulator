@@ -17,13 +17,16 @@ public:
     atom(const atom& other);
     atom& operator=(const atom& other);
     ~atom() override;
+    std::unique_ptr<entity> clone() const override;
+
     //[[nodiscard]] const std::string& getName() const;
     int getAtomicMass() const;
     const std::string& getSymbol() const;
     sf::FloatRect getBounds() const override;
     sf::Vector2f getAtomPosition() const;
+
     int atomValence() const;
-    void draw(sf::RenderWindow& window) const;
+    void draw(sf::RenderWindow& window) const override;
     void move(sf::Vector2f newPosition);
     void restrictAtomToWindow(sf::RenderWindow& window);
     friend std::ostream& operator<<(std::ostream&, const atom&);

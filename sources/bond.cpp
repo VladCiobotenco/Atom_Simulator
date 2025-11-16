@@ -29,16 +29,10 @@ bond& bond::operator=(const bond& other)
     return *this;
 }
 bond::~bond(){};
+std::unique_ptr<entity> bond::clone() const {return std::make_unique<bond>(*this);}
 
-int bond::getAtomIndex1() const
-{
-    return atomIndex1;
-}
-int bond::getAtomIndex2() const
-{
-    return atomIndex2;
-}
-
+int bond::getAtomIndex1() const {return atomIndex1;}
+int bond::getAtomIndex2() const {return atomIndex2;}
 
 void bond::draw(sf::RenderWindow& window) const {
     window.draw(bondLine);

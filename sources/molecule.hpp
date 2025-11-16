@@ -9,8 +9,10 @@
 class molecule
 {
     std::string name;
-    std::vector<atom> atomsList;
-    std::vector<bond> bondsList;
+    std::vector<std::unique_ptr<entity>> atomsList;
+    std::vector<std::unique_ptr<entity>> bondsList;
+    // std::vector<atom> atomsList;
+    // std::vector<bond> bondsList;
 
 public:
     explicit molecule(std::string  n);
@@ -18,19 +20,23 @@ public:
     molecule& operator=(const molecule& other);
     ~molecule();
 
-    void addAtom(const atom& ATOM);
+    void addAtom(const atom&);
     void removeAtom();
-    void addBond(int index1, int index2, const std::string& type);
-    int moleculeMass();
-    bool checkValenceLaws(int);
-    int findAtomAtPosition(const sf::Vector2f&) const;
-    int findBondPosition(int, int) const;
-    void updateBondsPositions();
+    //void addBond(int index1, int index2, const std::string& type);
+    void addBond(int, int, std::string);
+    int moleculeMass() const;
+    bool checkValenceLaws(int) const;
+    [[nodiscard]] int findAtomAtPosition(const sf::Vector2f&) const;
+    [[nodiscard]] int findBondPosition(int, int) const;
+    void updateBondsPositions() const;
     void removeBond(int);
     void draw(sf::RenderWindow&) const;
 
-    [[nodiscard]] atom& getAtom(int index);
-    [[nodiscard]] const atom& getAtom(int index) const;
+    // [[nodiscard]] atom& getAtom(int index);
+    // [[nodiscard]] const atom& getAtom(int index) const;
+    atom* getAtom(size_t index) const;
+    bond* getBond(size_t index) const;
+
 
     friend std::ostream& operator<<(std::ostream&, const molecule&);
 };
