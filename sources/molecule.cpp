@@ -210,15 +210,6 @@ atom* molecule::getAtom(size_t index) const
     return dynamic_cast<atom*>(atomsList[index].get());
 }
 
-bond* molecule::getBond(size_t index) const
-{
-    if (index >= bondsList.size())
-    {
-        throw std::out_of_range("Invalid bond's location");
-    }
-    return dynamic_cast<bond*>(bondsList[index].get());
-}
-
 // std::ostream& operator<<(std::ostream& out, const molecule& MOLECULE)
 // {
 //     out<<"Molecula "<<MOLECULE.name<<" contine urmatorii atomi: ";
