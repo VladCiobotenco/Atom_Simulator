@@ -20,6 +20,7 @@ public:
     std::unique_ptr<entity> clone() const override;
 
     //[[nodiscard]] const std::string& getName() const;
+    void setAtomThickness(float);
     int getAtomicMass() const;
     const std::string& getSymbol() const;
     sf::FloatRect getBounds() const override;

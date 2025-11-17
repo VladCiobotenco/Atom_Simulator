@@ -60,7 +60,8 @@ void simulator_manager::simulationStart(std::string& windowName, molecule testMo
                     {
                         isDragging=true;
                         draggedAtomIndex=clickAtomIndex;
-                        const atom* clickedAtom=testMolecule.getAtom(draggedAtomIndex);
+                        atom* clickedAtom=testMolecule.getAtom(draggedAtomIndex);
+                        clickedAtom->setAtomThickness(5.f);
                         dragOffset=clickedAtom->getAtomPosition()-mousePosition;
                     }
                 }
@@ -72,7 +73,12 @@ void simulator_manager::simulationStart(std::string& windowName, molecule testMo
                     if (clickAtomIndex != -1)
                     {
                         if (selectedAtomIndex == -1)
-                                selectedAtomIndex=clickAtomIndex;
+                        {
+                            selectedAtomIndex=clickAtomIndex;
+                            atom* selectedAtom=testMolecule.getAtom(selectedAtomIndex);
+                            selectedAtom->setAtomThickness(5.f);
+                        }
+
                         else
                         {
                             int bondIndex=testMolecule.findBondPosition(selectedAtomIndex, clickAtomIndex);
@@ -80,6 +86,8 @@ void simulator_manager::simulationStart(std::string& windowName, molecule testMo
                                 testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"simple");
                             else if (bondIndex!=-1)
                                 testMolecule.removeBond(bondIndex);
+                            atom* selectedAtom=testMolecule.getAtom(selectedAtomIndex);
+                            selectedAtom->setAtomThickness(2.f);
                             selectedAtomIndex=-1;
                         }
                     }
@@ -91,6 +99,8 @@ void simulator_manager::simulationStart(std::string& windowName, molecule testMo
                 const sf::Event::MouseButtonReleased* mouseButtonReleased = event->getIf<sf::Event::MouseButtonReleased>();
                 if (mouseButtonReleased->button == sf::Mouse::Button::Left && isDragging == true)
                 {
+                    atom* draggedAtom = testMolecule.getAtom(draggedAtomIndex);
+                    draggedAtom->setAtomThickness(2.f);
                     isDragging=false;
                     draggedAtomIndex=-1;
                 }
