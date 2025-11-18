@@ -16,10 +16,10 @@ public:
 
 
     void draw(sf::RenderWindow&) const override;
-    friend std::ostream& operator<<(std::ostream&, ion&);
+    friend std::ostream& operator<<(std::ostream&, const ion&);
 };
 
-std::ostream& operator<<(std::ostream&, ion&);
+std::ostream& operator<<(std::ostream&, const ion&);
 
 
 #endif

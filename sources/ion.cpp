@@ -55,7 +55,7 @@ void ion::draw(sf::RenderWindow& window) const
     window.draw(chargeText);
 }
 
-std::ostream& operator<<(std::ostream& os, ion& ION)
+std::ostream& operator<<(std::ostream& os, const ion& ION)
 {
     os << static_cast<const atom&>(ION);
     os << "Acest ion are sarcina "<<ION.ionCharge<<"\n";
