@@ -59,18 +59,21 @@ endif()
 add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
         sources/atom.hpp
-        sources/bond.hpp
-        sources/molecule.hpp
-        sources/input.hpp
-        libraries/json.hpp
         sources/atom.cpp
+        sources/bond.hpp
         sources/bond.cpp
+        sources/molecule.hpp
         sources/molecule.cpp
+        sources/input.hpp
         sources/input.cpp
         sources/simulator_manager.hpp
         sources/simulator_manager.cpp
         sources/entity.hpp
         sources/entity.cpp
+        sources/ion.cpp
+        sources/ion.hpp
+
+        libraries/json.hpp
 )
 
 
@@ -104,6 +107,6 @@ if(APPLE)
 endif()
 
 
-copy_files(FILES elements.json tastatura.txt DIRECTORY fonts COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
+copy_files(FILES atoms.json ions.json tastatura.txt DIRECTORY fonts COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(FILES tastatura.txt config.json DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})

@@ -19,6 +19,7 @@ public:
     ~atom() override;
     std::unique_ptr<entity> clone() const override;
 
+    void setAtomOutlineColor(sf::Color);
     //[[nodiscard]] const std::string& getName() const;
     void setAtomThickness(float);
     int getAtomicMass() const;
@@ -27,12 +28,12 @@ public:
     sf::Vector2f getAtomPosition() const;
 
     int atomValence() const;
-    void draw(sf::RenderWindow& window) const override;
-    void move(sf::Vector2f newPosition);
-    void restrictAtomToWindow(sf::RenderWindow& window);
+    void draw(sf::RenderWindow&) const override;
+    void move(sf::Vector2f);
+    void restrictAtomToWindow(sf::RenderWindow&);
     friend std::ostream& operator<<(std::ostream&, const atom&);
 };
 
-std::ostream& operator<<(std::ostream& out, const atom& ATOM);
+std::ostream& operator<<(std::ostream&, const atom&);
 
 #endif

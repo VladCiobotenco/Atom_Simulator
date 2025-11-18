@@ -59,7 +59,7 @@ void molecule::removeAtom()
 //     const bond temporaryBond(type,index1,index2,atom1Position,atom2Position);
 //     bondsList.push_back(temporaryBond);
 // }
-void molecule::addBond(const int index1, const int index2, std::string bondName)
+void molecule::addBond(const int index1, const int index2, const std::string& bondName)
 {
     const atom* atom1 = getAtom(index1);
     const atom* atom2 = getAtom(index2);

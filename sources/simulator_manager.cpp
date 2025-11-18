@@ -1,20 +1,16 @@
-#include <fstream>
-#include <iostream>
 #include <string>
 #include <SFML/Graphics.hpp>
 #include <optional>
-#include <chrono>
 
 #include "../sources/atom.hpp"
 #include "../sources/bond.hpp"
 #include "../sources/molecule.hpp"
-#include "../sources/input.hpp"
 
 #include "simulator_manager.hpp"
 
-void simulator_manager::simulationStart(std::string& windowName, molecule testMolecule)
+void simulator_manager::simulationStart(const std::string& windowName, molecule testMolecule, const sf::Font& font)
 {
-    sf::Font font("../fonts/Roboto-VariableFont_wdth,wght.ttf");
+
     sf::Text infoText(font);
     infoText.setCharacterSize(14);
     infoText.setFillColor(sf::Color::Black);
@@ -137,7 +133,7 @@ void simulator_manager::simulationStart(std::string& windowName, molecule testMo
             else infoBoxVisibility=false;
         }
 
-        mainScreen.clear(sf::Color::Cyan);
+        mainScreen.clear(sf::Color(232, 219, 135));
         testMolecule.draw(mainScreen);
         if (infoBoxVisibility)
         {

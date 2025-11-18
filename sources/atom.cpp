@@ -55,6 +55,11 @@ atom& atom::operator=(const atom& other)
 atom::~atom(){std::cout<<"Un atom a fost distrus - "<<getName()<<"\n";}
 std::unique_ptr<entity> atom::clone() const {return std::make_unique<atom>(*this);}
 
+void atom::setAtomOutlineColor(const sf::Color newColor)
+{
+    atomShape.setOutlineColor(newColor);
+}
+
 void atom::setAtomThickness(float thickness)
 {
     atomShape.setOutlineThickness(thickness);

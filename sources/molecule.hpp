@@ -23,7 +23,7 @@ public:
     void addAtom(const atom&);
     void removeAtom();
     //void addBond(int index1, int index2, const std::string& type);
-    void addBond(int, int, std::string);
+    void addBond(int, int, const std::string&);
     int moleculeMass() const;
     bool checkValenceLaws(int) const;
     [[nodiscard]] int findAtomAtPosition(const sf::Vector2f&) const;

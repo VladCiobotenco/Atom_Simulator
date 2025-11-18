@@ -1,0 +1,20 @@
+[
+  {
+    "period": 3,
+    "group": 1,
+    "atomicNumber": 11,
+    "atomicMass": 23,
+    "name": "Sodium",
+    "symbol": "Na",
+    "ionCharge": 1
+  },
+  {
+    "period": 3,
+    "group": 7,
+    "atomicNumber": 17,
+    "atomicMass": 35.5,
+    "name": "Chlorine",
+    "symbol": "Cl",
+    "ionCharge": -1
+  }
+]
