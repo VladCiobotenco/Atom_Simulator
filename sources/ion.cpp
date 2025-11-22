@@ -49,6 +49,8 @@ ion::~ion()
     std::cout<<"Un ion a fost distrus\n";
 }
 
+std::shared_ptr<entity> ion::clone() const { return std::make_shared<ion>(*this);}
+
 void ion::draw(sf::RenderWindow& window) const
 {
     atom::draw(window);
@@ -61,8 +63,3 @@ std::ostream& operator<<(std::ostream& os, const ion& ION)
     os << "Acest ion are sarcina "<<ION.ionCharge<<"\n";
     return os;
 }
-
-
-
-
-

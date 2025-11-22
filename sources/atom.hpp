@@ -17,7 +17,7 @@ public:
     atom(const atom& other);
     atom& operator=(const atom& other);
     ~atom() override;
-    std::unique_ptr<entity> clone() const override;
+    std::shared_ptr<entity> clone() const override;
 
     void setAtomOutlineColor(sf::Color);
     //[[nodiscard]] const std::string& getName() const;

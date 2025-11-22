@@ -56,7 +56,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule 
                     {
                         isDragging=true;
                         draggedAtomIndex=clickAtomIndex;
-                        atom* clickedAtom=testMolecule.getAtom(draggedAtomIndex);
+                        const auto clickedAtom=testMolecule.getAtom(draggedAtomIndex);
                         clickedAtom->setAtomThickness(5.f);
                         dragOffset=clickedAtom->getAtomPosition()-mousePosition;
                     }
@@ -71,7 +71,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule 
                         if (selectedAtomIndex == -1)
                         {
                             selectedAtomIndex=clickAtomIndex;
-                            atom* selectedAtom=testMolecule.getAtom(selectedAtomIndex);
+                            const auto selectedAtom=testMolecule.getAtom(selectedAtomIndex);
                             selectedAtom->setAtomThickness(5.f);
                         }
 
@@ -82,7 +82,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule 
                                 testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"simple");
                             else if (bondIndex!=-1)
                                 testMolecule.removeBond(bondIndex);
-                            atom* selectedAtom=testMolecule.getAtom(selectedAtomIndex);
+                            const auto selectedAtom=testMolecule.getAtom(selectedAtomIndex);
                             selectedAtom->setAtomThickness(2.f);
                             selectedAtomIndex=-1;
                         }
@@ -95,7 +95,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule 
                 const sf::Event::MouseButtonReleased* mouseButtonReleased = event->getIf<sf::Event::MouseButtonReleased>();
                 if (mouseButtonReleased->button == sf::Mouse::Button::Left && isDragging == true)
                 {
-                    atom* draggedAtom = testMolecule.getAtom(draggedAtomIndex);
+                    const auto draggedAtom = testMolecule.getAtom(draggedAtomIndex);
                     draggedAtom->setAtomThickness(2.f);
                     isDragging=false;
                     draggedAtomIndex=-1;
@@ -108,7 +108,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule 
         {
             sf::Vector2i pixelPos = sf::Mouse::getPosition(mainScreen);
             sf::Vector2f worldPos = mainScreen.mapPixelToCoords(pixelPos);
-            atom* currentAtom = testMolecule.getAtom(draggedAtomIndex);
+            const auto currentAtom = testMolecule.getAtom(draggedAtomIndex);
             currentAtom->move(worldPos+dragOffset);
             currentAtom->restrictAtomToWindow(mainScreen);
             testMolecule.updateBondsPositions();
@@ -122,7 +122,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule 
             if (hoveredAtomIndex != -1)
             {
                 infoBoxVisibility=true;
-                const atom* hoveredAtom = testMolecule.getAtom(hoveredAtomIndex);
+                const auto hoveredAtom = testMolecule.getAtom(hoveredAtomIndex);
                 std::string info = hoveredAtom->getName() + " (" + hoveredAtom->getSymbol() + ")";
                 infoText.setString(info);
 

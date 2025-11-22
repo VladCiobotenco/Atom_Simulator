@@ -17,7 +17,7 @@ public:
     bond(const bond&);
     bond& operator=(const bond&);
     ~bond() override;
-    std::unique_ptr<entity> clone() const override;
+    std::shared_ptr<entity> clone() const override;
 
     int getAtomIndex1()const;
     int getAtomIndex2()const;

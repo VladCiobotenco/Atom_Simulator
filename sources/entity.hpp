@@ -12,7 +12,7 @@ public:
     entity (const entity& other);
     entity& operator=(const entity& other);
     virtual ~entity();
-    [[nodiscard]] virtual std::unique_ptr<entity> clone() const = 0;
+    [[nodiscard]] virtual std::shared_ptr<entity> clone() const = 0;
 
     [[nodiscard]] virtual sf::FloatRect getBounds() const = 0;
     virtual void draw(sf::RenderWindow& window) const = 0;

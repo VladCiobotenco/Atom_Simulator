@@ -13,6 +13,7 @@ public:
     ion(std::string, int, int, int Z, int m, std::string, int, sf::Font);
     ion(const ion&);
     ~ion() override;
+    std::shared_ptr<entity>clone() const override;
 
 
     void draw(sf::RenderWindow&) const override;

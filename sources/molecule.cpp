@@ -7,230 +7,179 @@ molecule::molecule(std::string  t):name(std::move(t))
 {
     std::cout<<"O molecula a fost construita\n";
 }
-//molecule::molecule(const molecule& other): name(other.name), atomsList(other.atomsList), bondsList(other.bondsList){}
 molecule::molecule(const molecule& other): name(other.name)
 {
-    atomsList.reserve(other.atomsList.size());
-    for (const auto& atom : other.atomsList)
-        atomsList.push_back(atom->clone());
-    bondsList.reserve(other.bondsList.size());
-    for (const auto& bond : other.bondsList)
-        bondsList.push_back(bond->clone());
+    entitiesList.reserve(other.entitiesList.size());
+    for (const auto& entity : other.entitiesList)
+        entitiesList.push_back(entity->clone());
 }
-// molecule& molecule::operator=(const molecule& other)
-// {
-//     if (this != &other)
-//     {
-//         name = other.name;
-//         atomsList = other.atomsList;
-//         bondsList = other.bondsList;
-//     }
-//     return *this;
-// }
 molecule& molecule::operator=(const molecule& other)
 {
     if (this != &other) {
         molecule temp(other);
         std::swap(name, temp.name);
-        std::swap(atomsList, temp.bondsList);
-        std::swap(bondsList, temp.bondsList);
+        std::swap(entitiesList, temp.entitiesList);
     }
     return *this;
 }
 molecule::~molecule(){std::cout<<"O molecula a fost distrusa\n";}
 
-// void molecule::addAtom(const atom& ATOM)
-// {
-//     atomsList.push_back(ATOM);
-// }
 void molecule::addAtom(const atom& tempAtom)
 {
-    std::unique_ptr<atom> newAtom = std::make_unique<atom>(tempAtom);
-    atomsList.push_back(std::move(newAtom));
+    const auto newAtom = std::make_shared<atom>(tempAtom);
+    entitiesList.push_back(newAtom);
 }
-void molecule::removeAtom()
-{
-    atomsList.pop_back();
-}
-// void molecule::addBond(const int index1, const int index2, const std::string& type)
-// {
-//     const sf::Vector2f atom1Position = atomsList[index1].getAtomPosition();
-//     const sf::Vector2f atom2Position = atomsList[index2].getAtomPosition();
-//     const bond temporaryBond(type,index1,index2,atom1Position,atom2Position);
-//     bondsList.push_back(temporaryBond);
-// }
+
 void molecule::addBond(const int index1, const int index2, const std::string& bondName)
 {
-    const atom* atom1 = getAtom(index1);
-    const atom* atom2 = getAtom(index2);
-
-    if (!atom1 || !atom2)
-    {
-        std::cerr << "Error: Invalid atom indices for bond.\n";
+    if (index1 < 0 || static_cast<size_t>(index1) >entitiesList.size() || index2 < 0 || static_cast<size_t>(index2) > entitiesList.size())
         return;
-    }
 
-    std::unique_ptr<bond> newBond = std::make_unique<bond>(bondName, index1, index2, atom1->getAtomPosition(), atom2->getAtomPosition());
-    bondsList.push_back(std::move(newBond));
+    const auto atom1 = std::dynamic_pointer_cast<atom>(entitiesList[index1]);
+    const auto atom2 = std::dynamic_pointer_cast<atom>(entitiesList[index2]);
+
+    if (atom1 && atom2)
+    {
+        const auto newBond = std::make_shared<bond>(bondName, index1, index2, atom1->getAtomPosition(), atom2->getAtomPosition());
+        entitiesList.push_back(newBond);
+        std::cout << "A fost adaugata o legatura intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
+    }
 }
-// int molecule::moleculeMass()
-// {
-//     int m=0;
-//     for (auto i = atomsList.begin();i<atomsList.end();++i)
-//         m=m+i->getAtomicMass();
-//     return m;
-// }
+
+void molecule::removeBond(const int bondIndex)
+{
+    if (bondIndex < 0 || static_cast<size_t>(bondIndex) >= entitiesList.size())
+        return;
+
+    if (auto bondPtr = std::dynamic_pointer_cast<bond>(entitiesList[bondIndex]))
+    {
+        entitiesList.erase(entitiesList.begin() + bondIndex);
+        std::cout << "Legatura cu indexul " << bondIndex << " a fost stearsa.\n";
+    }
+}
+
+void molecule::removeEntity()
+{
+    entitiesList.pop_back();
+}
+
 int molecule::moleculeMass() const
 {
-    int m=0;
-    for (const auto& thisAtom : atomsList)
-    {
-        const atom* newAtom = dynamic_cast<atom*>(thisAtom.get());
-        m=m+newAtom->getAtomicMass();
-    }
-    return m;
+    int totalMass=0;
+    for (const auto& entityPtr : entitiesList)
+        if (const auto thisAtom = std::dynamic_pointer_cast<atom>(entityPtr))
+            totalMass = totalMass + thisAtom->getAtomicMass();
+
+    return totalMass;
 }
-// bool molecule::checkValenceLaws(int atomIndex)
-// {
-//     int valence=getAtom(atomIndex).atomValence();
-//     int currentBonds=0;
-//     for (const auto& bond: bondsList)
-//         if (bond.getAtomIndex1()==atomIndex || bond.getAtomIndex2()==atomIndex)
-//             currentBonds++;
-//     if (currentBonds<valence)
-//         return true;
-//     return false;
-// }
-bool molecule::checkValenceLaws(int atomIndex) const
+
+bool molecule::checkValenceLaws(const int atomIndex) const
 {
-    const int valence=getAtom(atomIndex)->atomValence();
-    int currentBonds=0;
-    for (const auto& thisBond: bondsList)
+
+    const auto thisAtom = std::dynamic_pointer_cast<atom>(entitiesList[atomIndex]);
+    if (!thisAtom)
+        return false;
+
+    const int valence = thisAtom->atomValence();
+    int currentBonds = 0;
+
+    for (const auto& entityPtr : entitiesList)
     {
-        const bond* newBond = dynamic_cast<bond*>(thisBond.get());
-        if (newBond->getAtomIndex1()==atomIndex || newBond->getAtomIndex2()==atomIndex)
-            currentBonds++;
-    }
-    if (currentBonds<valence)
-        return true;
-    return false;
-}
-// int molecule::findAtomAtPosition(const sf::Vector2f& worldPos) const {
-//     for (int i = 0; static_cast<size_t>(i) < atomsList.size(); i++) {
-//         if (atomsList[i].getBounds().contains(worldPos)) {
-//             return i;
-//         }
-//     }
-//     return -1;
-// }
-int molecule::findAtomAtPosition(const sf::Vector2f& worldPos) const {
-    for (int i = 0; static_cast<size_t>(i) < atomsList.size(); i++) {
-        if (atomsList[i]->getBounds().contains(worldPos)) {
-            return i;
+        if (const auto bondPtr = std::dynamic_pointer_cast<bond>(entityPtr))
+        {
+            if (bondPtr->getAtomIndex1() == atomIndex || bondPtr->getAtomIndex2() == atomIndex)
+                currentBonds++;
         }
     }
+    return currentBonds < valence;
+}
+
+int molecule::findAtomAtPosition(const sf::Vector2f& worldPos) const {
+    int entityIndex=0;
+    for (const auto& entityPtr : entitiesList)
+    {
+        if (const auto thisAtom = std::dynamic_pointer_cast<atom>(entityPtr))
+            if (thisAtom->getBounds().contains(worldPos))
+                return entityIndex;
+        entityIndex++;
+    }
+
     return -1;
 }
-// int molecule::findBondPosition(int atomIndex1,int atomIndex2) const
-// {
-//     int bondIndex=-1;
-//     for (const auto& bond:bondsList)
-//     {
-//         bondIndex++;
-//         if ((bond.getAtomIndex1()==atomIndex1 && bond.getAtomIndex2()==atomIndex2)||(bond.getAtomIndex1()==atomIndex2 && bond.getAtomIndex2()==atomIndex1))
-//             return bondIndex;
-//     }
-//     return -1;
-// }
+
 int molecule::findBondPosition(int atomIndex1,int atomIndex2) const
 {
-    int bondIndex=-1;
-    for (const auto& ptrBond:bondsList)
+    int entityIndex=0;
+    for (const auto& entityPtr : entitiesList)
     {
-        bondIndex++;
-        const bond* thisBond = dynamic_cast<bond*>(ptrBond.get());
-        if ((thisBond->getAtomIndex1()==atomIndex1 && thisBond->getAtomIndex2()==atomIndex2)||(thisBond->getAtomIndex1()==atomIndex2 && thisBond->getAtomIndex2()==atomIndex1))
-            return bondIndex;
+        if (const auto thisBond = std::dynamic_pointer_cast<bond>(entityPtr))
+            if ((thisBond->getAtomIndex1()==atomIndex1 && thisBond->getAtomIndex2()==atomIndex2)||(thisBond->getAtomIndex1()==atomIndex2 && thisBond->getAtomIndex2()==atomIndex1))
+                return entityIndex;
+        entityIndex++;
     }
     return -1;
 }
-// void molecule::updateBondsPositions()
-// {
-//     for ( auto& bond: bondsList)
-//     {
-//         sf::Vector2f pos1 = atomsList[bond.getAtomIndex1()].getAtomPosition();
-//         sf::Vector2f pos2 = atomsList[bond.getAtomIndex2()].getAtomPosition();
-//         bond.updatePosition(pos1, pos2);
-//     }
-// }
+
 void molecule::updateBondsPositions() const
 {
-    for ( auto& ptrBond: bondsList)
-    {
-        const auto thisBond = dynamic_cast<bond*>(ptrBond.get());
-        const atom* atom1 = getAtom(thisBond->getAtomIndex1());
-        const atom* atom2 = getAtom(thisBond->getAtomIndex2());
-        thisBond->updatePosition(atom1->getAtomPosition(), atom2->getAtomPosition());
-    }
+    for ( auto& entityPtr: entitiesList)
+        if (const auto bondPtr = std::dynamic_pointer_cast<bond>(entityPtr))
+        {
+            const auto atom1 = std::dynamic_pointer_cast<atom>(entitiesList[bondPtr->getAtomIndex1()]);
+            const auto atom2 = std::dynamic_pointer_cast<atom>(entitiesList[bondPtr->getAtomIndex2()]);
+            bondPtr->updatePosition(atom1->getAtomPosition(), atom2->getAtomPosition());
+        }
 }
-void molecule::removeBond(int bondIndex)
-{
-    if (bondIndex >= 0 && static_cast<size_t>(bondIndex) < bondsList.size())
-    {
-        bondsList.erase(bondsList.begin() + bondIndex);
-    }
-}
+
 void molecule::draw(sf::RenderWindow& window) const
 {
-    for (const auto& bond : bondsList)
-        bond->draw(window);
-    for (const auto& atom : atomsList)
-        atom->draw(window);
+    for (const auto& entityPtr : entitiesList)
+        if (std::dynamic_pointer_cast<bond>(entityPtr))
+            entityPtr->draw(window);
+
+    for (const auto& entityPtr : entitiesList)
+        if (!std::dynamic_pointer_cast<bond>(entityPtr))
+            entityPtr->draw(window);
 }
 
-
-// atom& molecule::getAtom(int index)
-// {
-//     //if (static_cast<size_t>(index)<atomsList.size() && index>=0)
-//         return atomsList[index];
-//     //throw std::out_of_range("Invalid atom's location");
-// }
-// const atom& molecule::getAtom(int index) const {
-//     //if (static_cast<size_t>(index)<atomsList.size() && index>=0)
-//         return atomsList[index];
-//     //throw std::out_of_range("Invalid atom's location");
-// }
-
-atom* molecule::getAtom(size_t index) const
+std::shared_ptr<atom> molecule::getAtom(const size_t index) const
 {
-    if (index >= atomsList.size())
-    {
-        throw std::out_of_range("Invalid atom's location");
-    }
-    return dynamic_cast<atom*>(atomsList[index].get());
+    if (index >= entitiesList.size())
+        return nullptr;
+
+    return std::dynamic_pointer_cast<atom>(entitiesList[index]);
 }
 
-// std::ostream& operator<<(std::ostream& out, const molecule& MOLECULE)
-// {
-//     out<<"Molecula "<<MOLECULE.name<<" contine urmatorii atomi: ";
-//     std::vector<atom>::const_iterator i;
-//     for (i=MOLECULE.atomsList.begin();i<MOLECULE.atomsList.end()-1;++i)
-//     {
-//         out<<i->getName()<<", ";
-//     }
-//     out<<i->getName();
-//     out<<"\n";
-//     return out;
-// }
 std::ostream& operator<<(std::ostream& out, const molecule& thisMolecule)
 {
-    out<<"Molecula "<<thisMolecule.name<<" contine urmatorii atomi: ";
-    for (const auto& atom : thisMolecule.atomsList)
-        out<<atom->getName()<<" ";
-    out<<". ";
-    out<<"De asemenea, contine urmatoarele legaturi: ";
-    for (const auto& bond : thisMolecule.bondsList)
-        out<<bond->getName()<<" ";
-    out<<"\n";
+    out << "Molecula " << thisMolecule.name << " contine urmatorii atomi: ";
+
+    bool firstAtom = true;
+    for (const auto& entityPtr : thisMolecule.entitiesList)
+    {
+        if (const auto atomPtr = std::dynamic_pointer_cast<atom>(entityPtr))
+        {
+            if (!firstAtom) out << ", ";
+            out << atomPtr->getName();
+            firstAtom = false;
+        }
+    }
+    if (firstAtom) out << "(niciunul)";
+
+    out << ". De asemenea, contine urmatoarele legaturi: ";
+
+    bool firstBond = true;
+    for (const auto& entityPtr : thisMolecule.entitiesList)
+    {
+        if (const auto bondPtr = std::dynamic_pointer_cast<bond>(entityPtr))
+        {
+            if (!firstBond) out << ", ";
+            out << bondPtr->getName();
+            firstBond = false;
+        }
+    }
+    if (firstBond) out << "(niciuna)";
+
+    out << ".\n";
     return out;
 }

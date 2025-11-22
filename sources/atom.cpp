@@ -53,7 +53,7 @@ atom& atom::operator=(const atom& other)
     return *this;
 }
 atom::~atom(){std::cout<<"Un atom a fost distrus - "<<getName()<<"\n";}
-std::unique_ptr<entity> atom::clone() const {return std::make_unique<atom>(*this);}
+std::shared_ptr<entity> atom::clone() const {return std::make_shared<atom>(*this);}
 
 void atom::setAtomOutlineColor(const sf::Color newColor)
 {

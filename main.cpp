@@ -55,10 +55,5 @@ int main()
 
     simulator_manager::simulationStart(gameWindowName, testMolecule, font);
 
-    testMolecule.removeAtom();
-    testMolecule.removeAtom();
-    testMolecule.removeAtom();
-    testMolecule.removeAtom();
-
     return 0;
 }
