@@ -7,24 +7,23 @@
 
 class bond: public entity
 {
+protected:
     int atomIndex1, atomIndex2;
-    //std::string type;
-    //sf::VertexArray bondLine;
-    sf::RectangleShape bondLine;
 
 public:
-    bond(std::string, int, int,const sf::Vector2f&, const sf::Vector2f&);
+    bond(std::string, int, int);
     bond(const bond&);
     bond& operator=(const bond&);
     ~bond() override;
-    std::shared_ptr<entity> clone() const override;
+    [[nodiscard]] std::shared_ptr<entity> clone() const override = 0;
 
     int getAtomIndex1()const;
     int getAtomIndex2()const;
 
-    void draw(sf::RenderWindow&) const override;
-    void updatePosition(const sf::Vector2f& pos1, const sf::Vector2f& pos2);
-    sf::FloatRect getBounds() const override;
+    [[nodiscard]] std::pair<float, float> calculateGeometry(const sf::Vector2f&, const sf::Vector2f&)const;
+    void draw(sf::RenderWindow&) const override = 0;
+    virtual void updatePosition(const sf::Vector2f& pos1, const sf::Vector2f& pos2) = 0;
+    [[nodiscard]] sf::FloatRect getBounds() const override = 0;
 
     friend std::ostream& operator<<(std::ostream&, const bond&);
 };

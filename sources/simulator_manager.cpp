@@ -79,7 +79,11 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule 
                         {
                             int bondIndex=testMolecule.findBondPosition(selectedAtomIndex, clickAtomIndex);
                             if (testMolecule.checkValenceLaws(clickAtomIndex) && testMolecule.checkValenceLaws(selectedAtomIndex) && bondIndex==-1)
-                                testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"simple");
+                            {
+                                testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"single_bond");
+                                testMolecule.updateBondsPositions();
+                            }
+
                             else if (bondIndex!=-1)
                                 testMolecule.removeBond(bondIndex);
                             const auto selectedAtom=testMolecule.getAtom(selectedAtomIndex);

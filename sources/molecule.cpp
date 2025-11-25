@@ -3,6 +3,8 @@
 #include <utility>
 #include <stdexcept>
 
+#include "single_bond.h"
+
 molecule::molecule(std::string  t):name(std::move(t))
 {
     std::cout<<"O molecula a fost construita\n";
@@ -40,9 +42,12 @@ void molecule::addBond(const int index1, const int index2, const std::string& bo
 
     if (atom1 && atom2)
     {
-        const auto newBond = std::make_shared<bond>(bondName, index1, index2, atom1->getAtomPosition(), atom2->getAtomPosition());
-        entitiesList.push_back(newBond);
-        std::cout << "A fost adaugata o legatura intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
+        if (bondName == "single_bond")
+        {
+            const auto newBond = std::make_shared<single_bond>(index1, index2);
+            entitiesList.push_back(newBond);
+            std::cout << "A fost adaugata o legatura intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
+        }
     }
 }
 
@@ -58,9 +63,10 @@ void molecule::removeBond(const int bondIndex)
     }
 }
 
-void molecule::removeEntity()
+void molecule::removeEntities()
 {
-    entitiesList.pop_back();
+    while (!entitiesList.empty())
+        entitiesList.pop_back();
 }
 
 int molecule::moleculeMass() const

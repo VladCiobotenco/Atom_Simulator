@@ -74,6 +74,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         sources/ion.hpp
 
         libraries/json.hpp
+        sources/single_bond.cpp
+        sources/single_bond.h
 )
 
 

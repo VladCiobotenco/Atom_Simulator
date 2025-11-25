@@ -55,5 +55,7 @@ int main()
 
     simulator_manager::simulationStart(gameWindowName, testMolecule, font);
 
+    testMolecule.removeEntities();
+
     return 0;
 }
