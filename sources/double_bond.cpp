@@ -8,7 +8,7 @@ double_bond::double_bond(int atomIndex1, int atomIndex2): bond("double_bond", at
     bondLine2.setOrigin({0.f, 2.f - bondLinesOffset});
 }
 
-double_bond::double_bond(const double_bond& other): bond(other.getName(), other.getAtomIndex1(), other.getAtomIndex2()){}
+double_bond::double_bond(const double_bond& other): bond(other.getName(), other.getAtomIndex1(), other.getAtomIndex2()), bondLinesOffset(other.bondLinesOffset){}
 
 double_bond& double_bond::operator=(const double_bond& other)
 {
@@ -16,6 +16,7 @@ double_bond& double_bond::operator=(const double_bond& other)
         bond::operator=(other);
         bondLine1=other.bondLine1;
         bondLine2=other.bondLine2;
+        bondLinesOffset=other.bondLinesOffset;
     }
     return *this;
 }

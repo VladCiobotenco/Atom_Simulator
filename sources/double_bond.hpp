@@ -6,7 +6,7 @@
 class double_bond: public bond{
     sf::RectangleShape bondLine1;
     sf::RectangleShape bondLine2;
-    float bondLinesOffset, bondLinesThickness;
+    float bondLinesOffset;
 public:
     double_bond(int,int);
     double_bond(const double_bond&);
