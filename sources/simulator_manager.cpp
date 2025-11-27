@@ -8,6 +8,8 @@
 
 #include "simulator_manager.hpp"
 
+#include <iostream>
+
 void simulator_manager::simulationStart(const std::string& windowName, molecule testMolecule, const sf::Font& font)
 {
 
@@ -78,9 +80,15 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule 
                         else
                         {
                             int bondIndex=testMolecule.findBondPosition(selectedAtomIndex, clickAtomIndex);
-                            if (testMolecule.checkValenceLaws(clickAtomIndex) && testMolecule.checkValenceLaws(selectedAtomIndex) && bondIndex==-1)
+                            int availableBonds1=testMolecule.checkValenceLaws(clickAtomIndex);
+                            int availableBonds2=testMolecule.checkValenceLaws(selectedAtomIndex);
+                            if (availableBonds1 && availableBonds2 && bondIndex==-1)
                             {
-                                testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"single_bond");
+                                if (availableBonds1>=2 && availableBonds2>=2) {
+                                    testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"double_bond");
+                                }
+
+                                else testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"single_bond");
                                 testMolecule.updateBondsPositions();
                             }
 

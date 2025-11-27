@@ -4,10 +4,20 @@ single_bond::single_bond(const int atomIndex1, const int atomIndex2)
     : bond("SingleBond", atomIndex1 , atomIndex2)
 {
     bondLine.setFillColor(sf::Color(80, 80, 80));
-    bondLine.setOrigin({0.f, 4.f / 2.f});
+    bondLine.setOrigin({0.f, 2.f});
 }
 
 single_bond::single_bond(const bond& other): bond(other.getName(), other.getAtomIndex1(), other.getAtomIndex2()){}
+
+single_bond & single_bond::operator=(const single_bond& other)
+{
+    if (&other != this)
+    {
+        bond::operator=(other);
+        bondLine=other.bondLine;
+    }
+    return *this;
+}
 
 single_bond::~single_bond(){}
 
@@ -32,6 +42,10 @@ void single_bond::updatePosition(const sf::Vector2f& p1, const sf::Vector2f& p2)
 sf::FloatRect single_bond::getBounds() const
 {
     return bondLine.getGlobalBounds();
+}
+
+int single_bond::getOrder() const {
+    return 1;
 }
 
 

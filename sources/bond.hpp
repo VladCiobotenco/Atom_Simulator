@@ -24,6 +24,7 @@ public:
     void draw(sf::RenderWindow&) const override = 0;
     virtual void updatePosition(const sf::Vector2f& pos1, const sf::Vector2f& pos2) = 0;
     [[nodiscard]] sf::FloatRect getBounds() const override = 0;
+    [[nodiscard]] virtual int getOrder() const = 0;
 
     friend std::ostream& operator<<(std::ostream&, const bond&);
 };

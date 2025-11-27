@@ -48,6 +48,7 @@ int main()
     testMolecule.addAtom(N);
     testMolecule.addAtom(H);
     testMolecule.addAtom(Na);
+    testMolecule.addAtom(Cl);
 
     std::cout<<testMolecule<<" "<<testMolecule.moleculeMass()<<"\n";
 

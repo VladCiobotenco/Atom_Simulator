@@ -22,7 +22,7 @@ public:
     void removeBond(int);
     void removeEntities();
     [[nodiscard]] int moleculeMass() const;
-    [[nodiscard]] bool checkValenceLaws(int) const;
+    [[nodiscard]] int checkValenceLaws(int) const;
     [[nodiscard]] int findAtomAtPosition(const sf::Vector2f&) const;
     [[nodiscard]] int findBondPosition(int, int) const;
     void updateBondsPositions() const;

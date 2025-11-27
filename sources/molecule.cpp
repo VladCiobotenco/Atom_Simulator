@@ -3,6 +3,7 @@
 #include <utility>
 #include <stdexcept>
 
+#include "double_bond.hpp"
 #include "single_bond.h"
 
 molecule::molecule(std::string  t):name(std::move(t))
@@ -46,7 +47,13 @@ void molecule::addBond(const int index1, const int index2, const std::string& bo
         {
             const auto newBond = std::make_shared<single_bond>(index1, index2);
             entitiesList.push_back(newBond);
-            std::cout << "A fost adaugata o legatura intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
+            std::cout << "A fost adaugata o legatura simpla intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
+        }
+        else if (bondName == "double_bond")
+        {
+            const auto newBond = std::make_shared<double_bond>(index1, index2);
+            entitiesList.push_back(newBond);
+            std::cout << "A fost adaugata o legatura dubla intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
         }
     }
 }
@@ -79,7 +86,7 @@ int molecule::moleculeMass() const
     return totalMass;
 }
 
-bool molecule::checkValenceLaws(const int atomIndex) const
+int molecule::checkValenceLaws(const int atomIndex) const
 {
 
     const auto thisAtom = std::dynamic_pointer_cast<atom>(entitiesList[atomIndex]);
@@ -94,10 +101,10 @@ bool molecule::checkValenceLaws(const int atomIndex) const
         if (const auto bondPtr = std::dynamic_pointer_cast<bond>(entityPtr))
         {
             if (bondPtr->getAtomIndex1() == atomIndex || bondPtr->getAtomIndex2() == atomIndex)
-                currentBonds++;
+                currentBonds+=bondPtr->getOrder();
         }
     }
-    return currentBonds < valence;
+    return valence-currentBonds;
 }
 
 int molecule::findAtomAtPosition(const sf::Vector2f& worldPos) const {
