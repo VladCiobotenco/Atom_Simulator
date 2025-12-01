@@ -10,7 +10,7 @@ class single_bond: public bond
 
 public:
     single_bond(int, int);
-    explicit single_bond(const bond&);
+    explicit single_bond(const single_bond&);
     single_bond& operator=(const single_bond&);
     ~single_bond() override;
     std::shared_ptr<entity> clone() const override;

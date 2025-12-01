@@ -8,7 +8,7 @@ double_bond::double_bond(int atomIndex1, int atomIndex2): bond("double_bond", at
     bondLine2.setOrigin({0.f, 2.f - bondLinesOffset});
 }
 
-double_bond::double_bond(const double_bond& other): bond(other.getName(), other.getAtomIndex1(), other.getAtomIndex2()), bondLinesOffset(other.bondLinesOffset){}
+double_bond::double_bond(const double_bond& other): bond(other.getName(),other.atomIndex1, other.atomIndex2), bondLine1(other.bondLine1),bondLine2(other.bondLine2), bondLinesOffset(other.bondLinesOffset){}
 
 double_bond& double_bond::operator=(const double_bond& other)
 {
@@ -39,10 +39,10 @@ sf::FloatRect double_bond::getBounds() const
     const sf::FloatRect r1 = bondLine1.getGlobalBounds();
     const sf::FloatRect r2 = bondLine2.getGlobalBounds();
 
-    float left   = std::min(r1.position.x, r2.position.x);
-    float top    = std::min(r1.position.y, r2.position.y);
+    float left = std::min(r1.position.x, r2.position.x);
+    float top = std::min(r1.position.y, r2.position.y);
 
-    const float right  = std::max(r1.position.x + r1.size.x, r2.position.x + r2.size.x);
+    const float right = std::max(r1.position.x + r1.size.x, r2.position.x + r2.size.x);
     const float bottom = std::max(r1.position.y + r1.size.y, r2.position.y + r2.size.y);
 
     return sf::FloatRect({left, top},{right - left, bottom - top});

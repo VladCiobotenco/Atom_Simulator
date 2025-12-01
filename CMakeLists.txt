@@ -75,9 +75,11 @@ add_executable(${MAIN_EXECUTABLE_NAME}
 
         libraries/json.hpp
         sources/single_bond.cpp
-        sources/single_bond.h
+        sources/single_bond.hpp
         sources/double_bond.cpp
         sources/double_bond.hpp
+        sources/triple_bond.cpp
+        sources/triple_bond.hpp
 )
 
 

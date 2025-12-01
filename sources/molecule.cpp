@@ -4,7 +4,8 @@
 #include <stdexcept>
 
 #include "double_bond.hpp"
-#include "single_bond.h"
+#include "single_bond.hpp"
+#include "triple_bond.hpp"
 
 molecule::molecule(std::string  t):name(std::move(t))
 {
@@ -54,6 +55,12 @@ void molecule::addBond(const int index1, const int index2, const std::string& bo
             const auto newBond = std::make_shared<double_bond>(index1, index2);
             entitiesList.push_back(newBond);
             std::cout << "A fost adaugata o legatura dubla intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
+        }
+
+        else if (bondName == "triple_bond") {
+            const auto newBond = std::make_shared<triple_bond>(index1, index2);
+            entitiesList.push_back(newBond);
+            std::cout << "A fost adaugata o legatura tripla intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
         }
     }
 }

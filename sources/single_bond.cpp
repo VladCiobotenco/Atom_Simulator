@@ -1,4 +1,4 @@
-#include "single_bond.h"
+#include "single_bond.hpp"
 
 single_bond::single_bond(const int atomIndex1, const int atomIndex2)
     : bond("SingleBond", atomIndex1 , atomIndex2)
@@ -7,7 +7,7 @@ single_bond::single_bond(const int atomIndex1, const int atomIndex2)
     bondLine.setOrigin({0.f, 2.f});
 }
 
-single_bond::single_bond(const bond& other): bond(other.getName(), other.getAtomIndex1(), other.getAtomIndex2()){}
+single_bond::single_bond(const single_bond& other): bond(other.getName(), other.atomIndex1, other.atomIndex2), bondLine(other.bondLine){}
 
 single_bond & single_bond::operator=(const single_bond& other)
 {

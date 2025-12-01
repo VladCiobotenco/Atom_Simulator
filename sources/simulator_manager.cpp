@@ -84,11 +84,12 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule 
                             int availableBonds2=testMolecule.checkValenceLaws(selectedAtomIndex);
                             if (availableBonds1 && availableBonds2 && bondIndex==-1)
                             {
-                                if (availableBonds1>=2 && availableBonds2>=2) {
+                                if (availableBonds1>=3 && availableBonds2>=3)
+                                    testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"triple_bond");
+                                else if (availableBonds1>=2 && availableBonds2>=2)
                                     testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"double_bond");
-                                }
-
-                                else testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"single_bond");
+                                else
+                                    testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"single_bond");
                                 testMolecule.updateBondsPositions();
                             }
 

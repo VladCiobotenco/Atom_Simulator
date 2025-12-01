@@ -29,13 +29,12 @@ ion::ion(std::string n, const int p, const int g, const int Z, const int m, std:
         else
             chargeString = std::to_string(ionCharge) + "-";
         chargeText.setFillColor(sf::Color::Blue);
-        setAtomOutlineColor(sf::Color::Red);
+        setAtomOutlineColor(sf::Color::Blue);
     }
 
     chargeText.setString(chargeString);
     sf::FloatRect textBounds = chargeText.getLocalBounds();
     chargeText.setOrigin({textBounds.position.x + textBounds.size.x / 2.f, textBounds.position.y + textBounds.size.y / 2.f});
-
     chargeText.setPosition(getAtomPosition());
 }
 
@@ -53,8 +52,8 @@ std::shared_ptr<entity> ion::clone() const { return std::make_shared<ion>(*this)
 
 void ion::draw(sf::RenderWindow& window) const
 {
-    atom::draw(window);
     window.draw(chargeText);
+    atom::draw(window);
 }
 
 std::ostream& operator<<(std::ostream& os, const ion& ION)

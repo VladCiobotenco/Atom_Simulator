@@ -16,9 +16,8 @@ public:
 
     void draw(sf::RenderWindow&) const override;
     sf::FloatRect getBounds() const override;
-    void updatePosition(const sf::Vector2f& pos1, const sf::Vector2f& pos2) override;
+    void updatePosition(const sf::Vector2f&, const sf::Vector2f&) override;
     int getOrder() const override;
-
 };
 
 
