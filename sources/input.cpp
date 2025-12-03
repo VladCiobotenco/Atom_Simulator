@@ -6,6 +6,8 @@
 #include "ion.hpp"
 #include "../libraries/json.hpp"
 
+#include "exceptions.hpp"
+
 using json=nlohmann::json;
 
 std::vector<atom> readAtomsFromJson(const std::string& fileName)
@@ -15,22 +17,20 @@ std::vector<atom> readAtomsFromJson(const std::string& fileName)
     std::ifstream file(fileName);
 
     if (!file.is_open())
-    {
-        std::cerr << "Could not open file \"" << fileName << "\"" << std::endl;
-        return atomList;
-    }
+        throw fileLoadingException(fileName);
+
     try
     {
         file>>jsonData;
     }
     catch (json::parse_error& e)
     {
-        std::cerr<<"Error reading json file"<<e.what()<<"\n";
         file.close();
-        return atomList;
+        throw fileFormatException(fileName,"sintaxa JSON");
     }
 
     file.close();
+
     for (const auto& atomObject:jsonData)
     {
         int period_temporary = atomObject.at("period").get<int>();
@@ -52,19 +52,16 @@ std::vector<ion> readIonsFromJson(const std::string& fileName, const sf::Font fo
     std::ifstream file(fileName);
 
     if (!file.is_open())
-    {
-        std::cerr << "Could not open file \"" << fileName << "\"" << std::endl;
-        return ionList;
-    }
+        throw fileLoadingException(fileName);
+
     try
     {
         file>>jsonData;
     }
     catch (json::parse_error& e)
     {
-        std::cerr<<"Error reading json file"<<e.what()<<"\n";
         file.close();
-        return ionList;
+        throw fileFormatException(fileName,"sintaxa JSON");
     }
 
     file.close();
