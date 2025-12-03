@@ -23,7 +23,7 @@ std::vector<atom> readAtomsFromJson(const std::string& fileName)
     {
         file>>jsonData;
     }
-    catch (json::parse_error& e)
+    catch (json::parse_error&)
     {
         file.close();
         throw fileFormatException(fileName,"sintaxa JSON");
@@ -58,7 +58,7 @@ std::vector<ion> readIonsFromJson(const std::string& fileName, const sf::Font fo
     {
         file>>jsonData;
     }
-    catch (json::parse_error& e)
+    catch (json::parse_error&)
     {
         file.close();
         throw fileFormatException(fileName,"sintaxa JSON");
