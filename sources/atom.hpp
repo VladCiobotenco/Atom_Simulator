@@ -11,7 +11,7 @@ class atom : public entity
     int period, group, atomicNumber, atomicMass;
     std::string symbol;
     sf::CircleShape atomShape;
-    sf::Vector2f atomPosition;
+    //sf::Vector2f atomPosition;
 public:
     atom(std::string, int, int, int Z, int m, std::string);
     atom(const atom& other);
@@ -22,7 +22,8 @@ public:
     void setAtomOutlineColor(sf::Color);
     //[[nodiscard]] const std::string& getName() const;
     void setAtomThickness(float);
-    void setAtomPosition(sf::Vector2f);
+    //void setAtomPosition(sf::Vector2f);
+    void onPositionChanged() override;
     int getAtomicMass() const;
     const std::string& getSymbol() const;
     sf::FloatRect getBounds() const override;

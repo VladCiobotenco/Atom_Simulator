@@ -10,6 +10,8 @@ class bond: public entity
 protected:
     int atomIndex1, atomIndex2;
 
+    virtual void onDraw(sf::RenderWindow& window) const = 0;
+
 public:
     bond(std::string, int, int);
     bond(const bond&);
@@ -21,7 +23,7 @@ public:
     int getAtomIndex2()const;
 
     [[nodiscard]] std::pair<float, float> calculateGeometry(const sf::Vector2f&, const sf::Vector2f&)const;
-    void draw(sf::RenderWindow&) const override = 0;
+    void draw(sf::RenderWindow&) const override;
     virtual void updatePosition(const sf::Vector2f& pos1, const sf::Vector2f& pos2) = 0;
     [[nodiscard]] sf::FloatRect getBounds() const override = 0;
     [[nodiscard]] virtual int getOrder() const = 0;

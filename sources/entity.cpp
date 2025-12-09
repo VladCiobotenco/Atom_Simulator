@@ -15,6 +15,12 @@ entity& entity::operator=(const entity& other)
 
 entity::~entity()= default;
 
+void entity::setPosition(const sf::Vector2f& newPosition)
+{
+    position = newPosition;
+    onPositionChanged();
+}
+
 const std::string& entity::getName() const
 {
     return name;

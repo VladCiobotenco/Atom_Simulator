@@ -26,10 +26,15 @@ std::shared_ptr<entity> single_bond::clone() const
     return std::make_shared<single_bond>(*this);
 }
 
-void single_bond::draw(sf::RenderWindow& thisWindow) const
+void single_bond::onDraw(sf::RenderWindow& thisWindow) const
 {
     thisWindow.draw(bondLine);
 }
+
+// void single_bond::draw(sf::RenderWindow& thisWindow) const
+// {
+//     thisWindow.draw(bondLine);
+// }
 
 void single_bond::updatePosition(const sf::Vector2f& p1, const sf::Vector2f& p2)
 {

@@ -31,7 +31,7 @@ molecule::~molecule(){std::cout<<"O molecula a fost distrusa\n";}
 void molecule::addAtom(const atom& tempAtom, const sf::Vector2f& spawnPosition)
 {
     const auto newAtom = std::make_shared<atom>(tempAtom);
-    newAtom->setAtomPosition(spawnPosition);
+    newAtom->setPosition(spawnPosition);
     entitiesList.push_back(newAtom);
 }
 

@@ -22,33 +22,12 @@ int main()
 
 
         std::vector<atom> inputAtoms = readAtomsFromJson("atoms.json");
-
         std::vector<ion> inputIons = readIonsFromJson("ions.json", font);
-        // ion Na = inputIons[0];
-        // ion Cl = inputIons[1];
-        // std::cout<<Na;
-        //
-        // atom H = inputAtoms[0];
-        // atom C = inputAtoms[1];
-        // atom N = inputAtoms[2];
-        // atom O = inputAtoms[3];
-        //
-        // std::cout<<C<<" "<<C.atomValence()<<"\n";
 
         molecule testMolecule("practiceMolecule");
-
-        // testMolecule.addAtom(C);
-        // testMolecule.addAtom(O);
-        // testMolecule.addAtom(N);
-        // testMolecule.addAtom(H);
-        // testMolecule.addAtom(Na);
-        // testMolecule.addAtom(Cl);
-
-        std::cout<<testMolecule<<" "<<testMolecule.moleculeMass()<<"\n";
-
         std::string gameWindowName="Atom Simulator";
 
-        simulator_manager::simulationStart(gameWindowName, testMolecule, font, inputAtoms);
+        simulator_manager::simulationStart(gameWindowName, testMolecule, font, inputAtoms, inputIons);
 
         testMolecule.removeEntities();
     }

@@ -40,7 +40,8 @@ ion::ion(std::string n, const int p, const int g, const int Z, const int m, std:
 
 ion::ion(const ion& other) : atom(other), ionCharge(other.ionCharge), chargeFont(other.chargeFont), chargeText(other.chargeText)
 {
-    std::cout<<"Un ion a fost distrus\n";
+    std::cout<<"Un ion a fost copiat\n";
+    chargeText.setFont(other.chargeFont);
 }
 
 ion::~ion()
@@ -49,6 +50,11 @@ ion::~ion()
 }
 
 std::shared_ptr<entity> ion::clone() const { return std::make_shared<ion>(*this);}
+
+void ion::onPositionChanged() {
+    atom::onPositionChanged();
+    chargeText.setPosition(position);
+}
 
 void ion::draw(sf::RenderWindow& window) const
 {

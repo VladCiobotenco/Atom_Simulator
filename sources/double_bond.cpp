@@ -28,11 +28,17 @@ std::shared_ptr<entity> double_bond::clone() const
     return std::make_shared<double_bond>(*this);
 }
 
-void double_bond::draw(sf::RenderWindow& window) const
+void double_bond::onDraw(sf::RenderWindow& thisWindow) const
 {
-    window.draw(bondLine1);
-    window.draw(bondLine2);
+    thisWindow.draw(bondLine1);
+    thisWindow.draw(bondLine2);
 }
+
+// void double_bond::draw(sf::RenderWindow& window) const
+// {
+//     window.draw(bondLine1);
+//     window.draw(bondLine2);
+// }
 
 sf::FloatRect double_bond::getBounds() const
 {

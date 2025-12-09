@@ -5,6 +5,7 @@
 #include "../sources/atom.hpp"
 #include "../sources/bond.hpp"
 #include "../sources/molecule.hpp"
+#include "../sources/ion.hpp"
 
 #include "simulator_manager.hpp"
 
@@ -12,18 +13,26 @@
 
 #include "exceptions.hpp"
 
-void simulator_manager::simulationStart(const std::string& windowName, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms)
+void simulator_manager::simulationStart(const std::string& windowName, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons)
 {
     /// Crearea unei palete de atomi in zona de menu
     std::vector<std::shared_ptr<atom>> atomPalette;
+
     float currentX = 100.f;
     float currentY = 50.f;
     for (const auto& templateData : templateAtoms)
     {
         auto menuButton = std::make_shared<atom>(templateData);
-        menuButton->setAtomPosition({currentX, currentY});
+        menuButton->setPosition({currentX, currentY});
         atomPalette.push_back(std::move(menuButton));
-        currentY += 100.f;
+        currentY += 75.f;
+    }
+
+    for (const auto& templateData : templateIons) {
+        auto menuButton = std::make_shared<ion>(templateData);
+        menuButton->setPosition({currentX, currentY});
+        atomPalette.push_back(std::move(menuButton));
+        currentY += 75.f;
     }
 
     /// Infoboxul pentru atomi cand dam hover
@@ -128,10 +137,15 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
                             dragOffset=clickedAtom->getAtomPosition()-mousePosition;
                         }
                         else
-                        {
-                            if (auto templateAtom = std::dynamic_pointer_cast<atom>(atomPalette[selectedTemplateIndex]))        //// can still modify
-                                thisMolecule.addAtom(*templateAtom, mousePosition);
-                        }
+                            /// Se creaza un atom
+                                thisMolecule.addAtom(*atomPalette[selectedTemplateIndex], mousePosition);
+                        // {
+                        //     std::shared_ptr<entity> newEntity = templatePtr->clone();
+                        //     newEntity->setPosition(mousePosition);
+                        //     thisMolecule.addEntity(std::move(newEntity));
+                        // }
+                        ///////////////WORK IN PROGRESS
+
                     }
 
                 }
@@ -151,6 +165,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
 
                         else
                         {
+                            ///Se creaza o legatura
                             int bondIndex=thisMolecule.findBondPosition(selectedAtomIndex, clickAtomIndex);
                             int availableBonds1=thisMolecule.checkValenceLaws(clickAtomIndex);
                             int availableBonds2=thisMolecule.checkValenceLaws(selectedAtomIndex);
@@ -186,6 +201,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
             if (event->is<sf::Event::MouseButtonReleased>())
             {
                 const sf::Event::MouseButtonReleased* mouseButtonReleased = event->getIf<sf::Event::MouseButtonReleased>();
+                /// Se muta atomul
                 if (mouseButtonReleased->button == sf::Mouse::Button::Left && isDragging == true)
                 {
                     const auto draggedAtom = thisMolecule.getAtom(draggedAtomIndex);
@@ -197,6 +213,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
             }
         }
 
+        /// Atomul este mutat
         if (isDragging && draggedAtomIndex != -1)
         {
             sf::Vector2i pixelPos = sf::Mouse::getPosition(mainScreen);
@@ -204,13 +221,14 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
             const auto currentAtom = thisMolecule.getAtom(draggedAtomIndex);
             if (currentAtom)
             {
-                currentAtom->setAtomPosition(worldPos + dragOffset);
+                currentAtom->setPosition(worldPos + dragOffset);
                 currentAtom->restrictAtomToBounds(workArea);
                 thisMolecule.updateBondsPositions();
                 infoBoxVisibility=false;
             }
-
         }
+
+        /// Se afiseaza numele atomului cu hover
         if (!isDragging)
         {
             sf::Vector2i pixelPos = sf::Mouse::getPosition(mainScreen);
@@ -230,6 +248,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
             else infoBoxVisibility=false;
         }
 
+        /// Se afiseaza numele atomului selectat din menu
         if (selectedTemplateIndex>=0)
         {
             const auto& selectedMenuAtom=atomPalette[selectedTemplateIndex];
@@ -242,13 +261,10 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
         mainScreen.draw(atomMenuBackground);
         mainScreen.draw(dashboardBox);
         mainScreen.draw(dashboardText);
-
         for (const auto& menuAtom : atomPalette) {
             menuAtom->draw(mainScreen);
         }
-
         mainScreen.draw(selectionBox);
-
         if (infoBoxVisibility)
         {
             mainScreen.draw(infoBox);

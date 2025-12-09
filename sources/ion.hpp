@@ -15,7 +15,7 @@ public:
     ~ion() override;
     std::shared_ptr<entity>clone() const override;
 
-
+    void onPositionChanged() override;
     void draw(sf::RenderWindow&) const override;
     friend std::ostream& operator<<(std::ostream&, const ion&);
 };

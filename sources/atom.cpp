@@ -7,8 +7,7 @@
 #include "exceptions.hpp"
 #include "../libraries/json.hpp"
 
-atom::atom(std::string  n, const int p, const int g, const int Z, const int m, std::string  s): entity(std::move(n)), period(p), group(g), atomicNumber(Z), atomicMass(m), symbol(std::move(s)), atomPosition({100.f, 100.f})
-{
+atom::atom(std::string  n, const int p, const int g, const int Z, const int m, std::string  s): entity(std::move(n)), period(p), group(g), atomicNumber(Z), atomicMass(m), symbol(std::move(s)) {
     if (atomicMass < atomicNumber)
         throw chemistryLawsException("Atom invalid: masa atomica " + std::to_string(atomicMass) + " este mai mica decat numarul atomic " + std::to_string(atomicNumber));
 
@@ -21,11 +20,12 @@ atom::atom(std::string  n, const int p, const int g, const int Z, const int m, s
         radius=15.f;
     else radius=30.f;
 
+    position={100.f,100.f};
     atomShape.setRadius(radius);
     atomShape.setOutlineColor(sf::Color::Black);
     atomShape.setOutlineThickness(2.f);
     atomShape.setOrigin({radius,radius});
-    atomShape.setPosition(atomPosition);
+    atomShape.setPosition(position);
 
     switch (Z)
     {
@@ -41,8 +41,9 @@ atom::atom(std::string  n, const int p, const int g, const int Z, const int m, s
     }
 
 }
-atom::atom(const atom& other): entity(other), period(other.period), group(other.group), atomicNumber(other.atomicNumber),atomicMass(other.atomicMass), symbol(other.symbol), atomShape(other.atomShape), atomPosition(other.atomPosition)
+atom::atom(const atom& other): entity(other), period(other.period), group(other.group), atomicNumber(other.atomicNumber),atomicMass(other.atomicMass), symbol(other.symbol), atomShape(other.atomShape)
 {
+    position=other.position;
     std::cout<<"Un atom a fost copiat - "<<getName()<<"\n";
 }
 atom& atom::operator=(const atom& other)
@@ -57,7 +58,7 @@ atom& atom::operator=(const atom& other)
         atomicMass = other.atomicMass;
         symbol = other.symbol;
         atomShape = other.atomShape;
-        atomPosition = other.atomPosition;
+        //atomPosition = other.atomPosition;
     }
     return *this;
 }
@@ -74,11 +75,17 @@ void atom::setAtomThickness(float thickness)
     atomShape.setOutlineThickness(thickness);
 }
 
-void atom::setAtomPosition(const sf::Vector2f newPosition)
+// void atom::setAtomPosition(const sf::Vector2f newPosition)
+// {
+//     atomPosition=newPosition;
+//     atomShape.setPosition(atomPosition);
+// }
+
+void atom::onPositionChanged()
 {
-    atomPosition=newPosition;
-    atomShape.setPosition(atomPosition);
+    atomShape.setPosition(position);
 }
+
 
 //[[nodiscard]] const std::string& atom::getName() const {return getName();}
 int atom::getAtomicMass() const {return atomicMass;}
@@ -89,7 +96,7 @@ sf::FloatRect atom::getBounds() const
 }
 sf::Vector2f atom::getAtomPosition() const
 {
-    return atomPosition;
+    return position;
 }
 
 int atom::atomValence() const
@@ -104,8 +111,8 @@ void atom::draw(sf::RenderWindow& window) const
 }
 void atom::move(sf::Vector2f newPosition)
 {
-    atomPosition=newPosition;
-    atomShape.setPosition(atomPosition);
+    position=newPosition;
+    atomShape.setPosition(position);
 }
 
 void atom::restrictAtomToBounds(sf::FloatRect& bounds)
@@ -116,7 +123,7 @@ void atom::restrictAtomToBounds(sf::FloatRect& bounds)
     float maxY = bounds.position.y + bounds.size.y;
 
     float radius = atomShape.getRadius();
-    sf::Vector2f currentPosition = atomPosition;
+    sf::Vector2f currentPosition = position;
 
     if (currentPosition.x - radius < minX)
         currentPosition.x = minX + radius;
@@ -128,7 +135,7 @@ void atom::restrictAtomToBounds(sf::FloatRect& bounds)
     else if (currentPosition.y + radius > maxY)
         currentPosition.y = maxY - radius;
 
-    if (currentPosition != atomPosition)
+    if (currentPosition != position)
         move(currentPosition);
 }
 

@@ -7,6 +7,10 @@
 class entity
 {
     std::string name;
+protected:
+    sf::Vector2f position;
+    virtual void onPositionChanged(){}
+
 public:
     explicit entity(std::string);
     entity (const entity& other);
@@ -14,6 +18,7 @@ public:
     virtual ~entity();
     [[nodiscard]] virtual std::shared_ptr<entity> clone() const = 0;
 
+    virtual void setPosition(const sf::Vector2f&);
     [[nodiscard]] virtual sf::FloatRect getBounds() const = 0;
     virtual void draw(sf::RenderWindow& window) const = 0;
     [[nodiscard]] const std::string& getName()const;

@@ -32,12 +32,19 @@ std::shared_ptr<entity> triple_bond::clone() const
     return std::make_shared<triple_bond>(*this);
 }
 
-void triple_bond::draw(sf::RenderWindow& window) const
+void triple_bond::onDraw(sf::RenderWindow& thisWindow) const
 {
-    window.draw(bondLine1);
-    window.draw(bondLine2);
-    window.draw(bondLine3);
+    thisWindow.draw(bondLine1);
+    thisWindow.draw(bondLine2);
+    thisWindow.draw(bondLine3);
 }
+
+// void triple_bond::draw(sf::RenderWindow& window) const
+// {
+//     window.draw(bondLine1);
+//     window.draw(bondLine2);
+//     window.draw(bondLine3);
+// }
 
 sf::FloatRect triple_bond::getBounds() const
 {

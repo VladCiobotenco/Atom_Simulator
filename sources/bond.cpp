@@ -35,6 +35,10 @@ std::pair<float, float> bond::calculateGeometry(const sf::Vector2f& atomPos1, co
     return {length, angle};
 }
 
+void bond::draw(sf::RenderWindow& thisWindow) const {
+    onDraw(thisWindow);
+}
+
 std::ostream& operator<<(std::ostream& out, const bond& thisBond)
 {
     out<<"Legatura "<<thisBond.getName()<<" intre atomul cu indexul "<<thisBond.atomIndex1<<" si atomul cu indexul "<<thisBond.atomIndex2<<"\n";
