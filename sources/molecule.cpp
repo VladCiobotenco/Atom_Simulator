@@ -1,9 +1,9 @@
 #include "molecule.hpp"
 #include <iostream>
 #include <utility>
-#include <stdexcept>
 
 #include "double_bond.hpp"
+#include "exceptions.hpp"
 #include "single_bond.hpp"
 #include "triple_bond.hpp"
 
@@ -28,14 +28,20 @@ molecule& molecule::operator=(const molecule& other)
 }
 molecule::~molecule(){std::cout<<"O molecula a fost distrusa\n";}
 
-void molecule::addAtom(const atom& tempAtom)
+void molecule::addAtom(const atom& tempAtom, const sf::Vector2f& spawnPosition)
 {
     const auto newAtom = std::make_shared<atom>(tempAtom);
+    newAtom->setAtomPosition(spawnPosition);
     entitiesList.push_back(newAtom);
 }
 
 void molecule::addBond(const int index1, const int index2, const std::string& bondName)
 {
+    if (index1 == index2)
+    {
+        throw chemistryLawsException("Nu se poate lega un atom cu el insusi(indexul " + std::to_string(index1) + ")\n");
+    }
+
     if (index1 < 0 || static_cast<size_t>(index1) >entitiesList.size() || index2 < 0 || static_cast<size_t>(index2) > entitiesList.size())
         return;
 
@@ -65,16 +71,19 @@ void molecule::addBond(const int index1, const int index2, const std::string& bo
     }
 }
 
-void molecule::removeBond(const int bondIndex)
+void molecule::removeEntity(int index)
 {
-    if (bondIndex < 0 || static_cast<size_t>(bondIndex) >= entitiesList.size())
-        return;
-
-    if (auto bondPtr = std::dynamic_pointer_cast<bond>(entitiesList[bondIndex]))
+    if (auto bondPtr = std::dynamic_pointer_cast<bond>(entitiesList[index]))
     {
-        entitiesList.erase(entitiesList.begin() + bondIndex);
-        std::cout << "Legatura cu indexul " << bondIndex << " a fost stearsa.\n";
+        entitiesList.erase(entitiesList.begin() + index);
+        std::cout << "Legatura cu indexul " << index << " a fost stearsa.\n";
     }
+    else
+    {
+        entitiesList.erase(entitiesList.begin() + index);
+        std::cout << "Atomul cu indexul " << index << " a fost sters.\n";
+    }
+
 }
 
 void molecule::removeEntities()

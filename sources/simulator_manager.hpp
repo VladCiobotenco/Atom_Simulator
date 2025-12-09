@@ -8,7 +8,7 @@
 class simulator_manager
 {
 public:
-   static void simulationStart(const std::string&, molecule,const sf::Font&);
+   static void simulationStart(const std::string&, molecule&,const sf::Font&,const std::vector<atom>&);
 };
 
 #endif

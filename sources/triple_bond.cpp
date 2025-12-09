@@ -51,7 +51,7 @@ sf::FloatRect triple_bond::getBounds() const
     const float right = std::max(std::max(r1.position.x + r1.size.x, r2.position.x + r2.size.x),r3.position.x + r3.size.x);
     const float bottom = std::max(std::max(r1.position.y + r1.size.y, r2.position.y + r2.size.y),r3.position.y + r3.size.y);
 
-    return sf::FloatRect({left, top},{right-left,bottom-top});
+    return {{left, top},{right-left,bottom-top}};
 }
 
 void triple_bond::updatePosition(const sf::Vector2f& pos1, const sf::Vector2f& pos2) {

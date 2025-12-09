@@ -4,13 +4,22 @@
 #include "atom.hpp"
 #include "entity.hpp"
 
+#include "exceptions.hpp"
+#include "../libraries/json.hpp"
+
 atom::atom(std::string  n, const int p, const int g, const int Z, const int m, std::string  s): entity(std::move(n)), period(p), group(g), atomicNumber(Z), atomicMass(m), symbol(std::move(s)), atomPosition({100.f, 100.f})
 {
+    if (atomicMass < atomicNumber)
+        throw chemistryLawsException("Atom invalid: masa atomica " + std::to_string(atomicMass) + " este mai mica decat numarul atomic " + std::to_string(atomicNumber));
+
+    if (period < 1 || period > 7)
+        throw chemistryLawsException("Atom invalid: perioada trebuie sa fie un numar intre 1 si 7");
+
     std::cout<<"Un atom a fost construit - "<<getName()<<"\n";
     float radius;
     if (symbol=="H")
-        radius=25.f;
-    else radius=50.f;
+        radius=15.f;
+    else radius=30.f;
 
     atomShape.setRadius(radius);
     atomShape.setOutlineColor(sf::Color::Black);
@@ -65,6 +74,12 @@ void atom::setAtomThickness(float thickness)
     atomShape.setOutlineThickness(thickness);
 }
 
+void atom::setAtomPosition(const sf::Vector2f newPosition)
+{
+    atomPosition=newPosition;
+    atomShape.setPosition(atomPosition);
+}
+
 //[[nodiscard]] const std::string& atom::getName() const {return getName();}
 int atom::getAtomicMass() const {return atomicMass;}
 const std::string& atom::getSymbol()const {return symbol;}
@@ -93,22 +108,27 @@ void atom::move(sf::Vector2f newPosition)
     atomShape.setPosition(atomPosition);
 }
 
-void atom::restrictAtomToWindow(sf::RenderWindow &window) {
-    float windowWidth=window.getSize().x;
-    float windowHeight=window.getSize().y;
-    float radius=atomShape.getRadius();
-    sf::Vector2f currentPosition=atomPosition;
+void atom::restrictAtomToBounds(sf::FloatRect& bounds)
+{
+    float minX = bounds.position.x;
+    float maxX = bounds.position.x + bounds.size.x;
+    float minY = bounds.position.y;
+    float maxY = bounds.position.y + bounds.size.y;
 
-    if (currentPosition.x-radius<0)
-        currentPosition.x=radius;
-    if (currentPosition.x+radius>windowWidth)
-        currentPosition.x=windowWidth-radius;
-    if (currentPosition.y-radius<0)
-        currentPosition.y=radius;
-    if (currentPosition.y+radius>windowHeight)
-        currentPosition.y=windowHeight-radius;
+    float radius = atomShape.getRadius();
+    sf::Vector2f currentPosition = atomPosition;
 
-    if (currentPosition!=atomPosition)
+    if (currentPosition.x - radius < minX)
+        currentPosition.x = minX + radius;
+    else if (currentPosition.x + radius > maxX)
+        currentPosition.x = maxX - radius;
+
+    if (currentPosition.y - radius < minY)
+        currentPosition.y = minY + radius;
+    else if (currentPosition.y + radius > maxY)
+        currentPosition.y = maxY - radius;
+
+    if (currentPosition != atomPosition)
         move(currentPosition);
 }
 

@@ -28,10 +28,11 @@ public:
 
 class resourceMissingException: public atomSimulatorExceptions {
 public:
-    explicit resourceMissingException(const std::string& resourceName): atomSimulatorExceptions("Missing resource: " + resourceName){}
+    explicit resourceMissingException(const std::string& resourceName): atomSimulatorExceptions("Nu s-a gasit resursa: " + resourceName){}
 };
 
 class chemistryLawsException: public atomSimulatorExceptions {
+public:
     explicit chemistryLawsException(const std::string& details): atomSimulatorExceptions("Regula din chimie ignorata: " + details) {}
 };
 

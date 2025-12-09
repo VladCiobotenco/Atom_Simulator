@@ -22,6 +22,7 @@ public:
     void setAtomOutlineColor(sf::Color);
     //[[nodiscard]] const std::string& getName() const;
     void setAtomThickness(float);
+    void setAtomPosition(sf::Vector2f);
     int getAtomicMass() const;
     const std::string& getSymbol() const;
     sf::FloatRect getBounds() const override;
@@ -30,7 +31,7 @@ public:
     int atomValence() const;
     void draw(sf::RenderWindow&) const override;
     void move(sf::Vector2f);
-    void restrictAtomToWindow(sf::RenderWindow&);
+    void restrictAtomToBounds(sf::FloatRect&);
     friend std::ostream& operator<<(std::ostream&, const atom&);
 };
 

@@ -10,13 +10,26 @@
 
 #include <iostream>
 
-void simulator_manager::simulationStart(const std::string& windowName, molecule testMolecule, const sf::Font& font)
-{
+#include "exceptions.hpp"
 
+void simulator_manager::simulationStart(const std::string& windowName, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms)
+{
+    /// Crearea unei palete de atomi in zona de menu
+    std::vector<std::shared_ptr<atom>> atomPalette;
+    float currentX = 100.f;
+    float currentY = 50.f;
+    for (const auto& templateData : templateAtoms)
+    {
+        auto menuButton = std::make_shared<atom>(templateData);
+        menuButton->setAtomPosition({currentX, currentY});
+        atomPalette.push_back(std::move(menuButton));
+        currentY += 100.f;
+    }
+
+    /// Infoboxul pentru atomi cand dam hover
     sf::Text infoText(font);
     infoText.setCharacterSize(14);
     infoText.setFillColor(sf::Color::Black);
-
     sf::RectangleShape infoBox;
     infoBox.setFillColor(sf::Color::White);
     infoBox.setOutlineColor(sf::Color::Black);
@@ -24,16 +37,44 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule 
     infoBox.setSize({150.f, 25.f});
     bool infoBoxVisibility = false;
 
+    sf::RectangleShape atomMenuBackground({200,600});
+    atomMenuBackground.setFillColor(sf::Color(50, 50, 50));
+
+    sf::Text dashboardText(font);
+    dashboardText.setCharacterSize(14);
+    dashboardText.setFillColor(sf::Color::White);
+    dashboardText.setPosition({10.f, 560.f});
+    sf::RectangleShape dashboardBox;
+    dashboardBox.setFillColor(sf::Color(70, 70, 70));
+    dashboardBox.setOutlineColor(sf::Color::Black);
+    dashboardBox.setOutlineThickness(1.f); //-2.f
+    dashboardBox.setSize({200.f, 100.f});
+    dashboardBox.setPosition({0.f,550.f});
 
     ///Work in progress
-    sf::RenderWindow mainScreen(sf::VideoMode({800, 600}), windowName);
+    sf::RenderWindow mainScreen(sf::VideoMode({1000, 600}), windowName);
+    mainScreen.setFramerateLimit(60);
 
+
+    sf::RectangleShape selectionBox;
+    selectionBox.setFillColor(sf::Color::Transparent);
+    selectionBox.setOutlineColor(sf::Color::Yellow);
+    selectionBox.setOutlineThickness(3.f);
+    sf::FloatRect workArea({200, 0}, {800, 600});
+
+    int selectedTemplateIndex = 0;
     int draggedAtomIndex = -1; //folosit pentru dragging
     int selectedAtomIndex = -1; //folosit pentru bonding
     bool isDragging = false;
     sf::Vector2f dragOffset;
+
     while (mainScreen.isOpen())
     {
+        sf::FloatRect templateBounds = atomPalette[selectedTemplateIndex]->getBounds();
+        selectionBox.setSize({templateBounds.size.x + 10.f, templateBounds.size.y + 10.f});
+        selectionBox.setOrigin({5.f, 5.f});
+        selectionBox.setPosition(atomPalette[selectedTemplateIndex]->getAtomPosition() - sf::Vector2f(templateBounds.size.x/2, templateBounds.size.y/2));
+
         while (const std::optional event = mainScreen.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
@@ -44,58 +85,97 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule 
                 const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
                 if (keyPressed->code==sf::Keyboard::Key::Escape)
                     mainScreen.close();
+
+                if (keyPressed->code==sf::Keyboard::Key::Delete)
+                    if (selectedAtomIndex !=-1 )
+                    {
+                        thisMolecule.removeEntity(selectedAtomIndex);
+                        selectedAtomIndex = -1;
+                    }
+
+                if (keyPressed->code==sf::Keyboard::Key::R)
+                    thisMolecule.removeEntities();
             }
 
             if (event->is<sf::Event::MouseButtonPressed>())
             {
-               const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>();
+                const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>();
+
                 if (mouseButtonPressed->button == sf::Mouse::Button::Left)
                 {
                     sf::Vector2i pixelPosition = {mouseButtonPressed->position.x, mouseButtonPressed->position.y};
                     sf::Vector2f mousePosition = mainScreen.mapPixelToCoords(pixelPosition);
-                    int clickAtomIndex=testMolecule.findAtomAtPosition(mousePosition);
-                    if (clickAtomIndex != -1)
+                    if (mousePosition.x < 200)
                     {
-                        isDragging=true;
-                        draggedAtomIndex=clickAtomIndex;
-                        const auto clickedAtom=testMolecule.getAtom(draggedAtomIndex);
-                        clickedAtom->setAtomThickness(5.f);
-                        dragOffset=clickedAtom->getAtomPosition()-mousePosition;
+                        for (size_t i = 0; i < atomPalette.size(); ++i)
+                        {
+                            if (atomPalette[i]->getBounds().contains(mousePosition))
+                            {
+                                selectedTemplateIndex = (int)i;
+                                std::cout << "Selected: " << atomPalette[i]->getName() << "\n";
+                            }
+                        }
                     }
+                    else
+                    {
+                        int clickAtomIndex=thisMolecule.findAtomAtPosition(mousePosition);
+                        if (clickAtomIndex != -1)
+                        {
+                            isDragging=true;
+                            draggedAtomIndex=clickAtomIndex;
+                            const auto clickedAtom=thisMolecule.getAtom(draggedAtomIndex);
+                            clickedAtom->setAtomThickness(5.f);
+                            dragOffset=clickedAtom->getAtomPosition()-mousePosition;
+                        }
+                        else
+                        {
+                            if (auto templateAtom = std::dynamic_pointer_cast<atom>(atomPalette[selectedTemplateIndex]))        //// can still modify
+                                thisMolecule.addAtom(*templateAtom, mousePosition);
+                        }
+                    }
+
                 }
                 if (mouseButtonPressed->button == sf::Mouse::Button::Right)
                 {
                     sf::Vector2i pixelPosition = {mouseButtonPressed->position.x, mouseButtonPressed->position.y};
                     sf::Vector2f mousePosition = mainScreen.mapPixelToCoords(pixelPosition);
-                    int clickAtomIndex=testMolecule.findAtomAtPosition(mousePosition);
+                    int clickAtomIndex=thisMolecule.findAtomAtPosition(mousePosition);
                     if (clickAtomIndex != -1)
                     {
                         if (selectedAtomIndex == -1)
                         {
                             selectedAtomIndex=clickAtomIndex;
-                            const auto selectedAtom=testMolecule.getAtom(selectedAtomIndex);
+                            const auto selectedAtom=thisMolecule.getAtom(selectedAtomIndex);
                             selectedAtom->setAtomThickness(5.f);
                         }
 
                         else
                         {
-                            int bondIndex=testMolecule.findBondPosition(selectedAtomIndex, clickAtomIndex);
-                            int availableBonds1=testMolecule.checkValenceLaws(clickAtomIndex);
-                            int availableBonds2=testMolecule.checkValenceLaws(selectedAtomIndex);
-                            if (availableBonds1 && availableBonds2 && bondIndex==-1)
+                            int bondIndex=thisMolecule.findBondPosition(selectedAtomIndex, clickAtomIndex);
+                            int availableBonds1=thisMolecule.checkValenceLaws(clickAtomIndex);
+                            int availableBonds2=thisMolecule.checkValenceLaws(selectedAtomIndex);
+                            try
                             {
-                                if (availableBonds1>=3 && availableBonds2>=3)
-                                    testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"triple_bond");
-                                else if (availableBonds1>=2 && availableBonds2>=2)
-                                    testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"double_bond");
-                                else
-                                    testMolecule.addBond(selectedAtomIndex,clickAtomIndex,"single_bond");
-                                testMolecule.updateBondsPositions();
+                                if (availableBonds1 && availableBonds2 && bondIndex==-1)
+                                {
+                                    if (availableBonds1>=3 && availableBonds2>=3)
+                                        thisMolecule.addBond(selectedAtomIndex,clickAtomIndex,"triple_bond");
+                                    else if (availableBonds1>=2 && availableBonds2>=2)
+                                        thisMolecule.addBond(selectedAtomIndex,clickAtomIndex,"double_bond");
+                                    else
+                                        thisMolecule.addBond(selectedAtomIndex,clickAtomIndex,"single_bond");
+                                    thisMolecule.updateBondsPositions();
+                                }
+                            }
+                            catch (const atomSimulatorExceptions& e)
+                            {
+                                std::cerr << "EROARE: " << e.what() << "\n";
                             }
 
-                            else if (bondIndex!=-1)
-                                testMolecule.removeBond(bondIndex);
-                            const auto selectedAtom=testMolecule.getAtom(selectedAtomIndex);
+                            if (bondIndex!=-1)
+                                thisMolecule.removeEntity(bondIndex);
+
+                            const auto selectedAtom=thisMolecule.getAtom(selectedAtomIndex);
                             selectedAtom->setAtomThickness(2.f);
                             selectedAtomIndex=-1;
                         }
@@ -108,7 +188,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule 
                 const sf::Event::MouseButtonReleased* mouseButtonReleased = event->getIf<sf::Event::MouseButtonReleased>();
                 if (mouseButtonReleased->button == sf::Mouse::Button::Left && isDragging == true)
                 {
-                    const auto draggedAtom = testMolecule.getAtom(draggedAtomIndex);
+                    const auto draggedAtom = thisMolecule.getAtom(draggedAtomIndex);
                     draggedAtom->setAtomThickness(2.f);
                     isDragging=false;
                     draggedAtomIndex=-1;
@@ -121,21 +201,25 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule 
         {
             sf::Vector2i pixelPos = sf::Mouse::getPosition(mainScreen);
             sf::Vector2f worldPos = mainScreen.mapPixelToCoords(pixelPos);
-            const auto currentAtom = testMolecule.getAtom(draggedAtomIndex);
-            currentAtom->move(worldPos+dragOffset);
-            currentAtom->restrictAtomToWindow(mainScreen);
-            testMolecule.updateBondsPositions();
-            infoBoxVisibility=false;
+            const auto currentAtom = thisMolecule.getAtom(draggedAtomIndex);
+            if (currentAtom)
+            {
+                currentAtom->setAtomPosition(worldPos + dragOffset);
+                currentAtom->restrictAtomToBounds(workArea);
+                thisMolecule.updateBondsPositions();
+                infoBoxVisibility=false;
+            }
+
         }
         if (!isDragging)
         {
             sf::Vector2i pixelPos = sf::Mouse::getPosition(mainScreen);
             sf::Vector2f worldPos = mainScreen.mapPixelToCoords(pixelPos);
-            int hoveredAtomIndex=testMolecule.findAtomAtPosition(worldPos);
+            int hoveredAtomIndex=thisMolecule.findAtomAtPosition(worldPos);
             if (hoveredAtomIndex != -1)
             {
                 infoBoxVisibility=true;
-                const auto hoveredAtom = testMolecule.getAtom(hoveredAtomIndex);
+                const auto hoveredAtom = thisMolecule.getAtom(hoveredAtomIndex);
                 std::string info = hoveredAtom->getName() + " (" + hoveredAtom->getSymbol() + ")";
                 infoText.setString(info);
 
@@ -146,13 +230,31 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule 
             else infoBoxVisibility=false;
         }
 
+        if (selectedTemplateIndex>=0)
+        {
+            const auto& selectedMenuAtom=atomPalette[selectedTemplateIndex];
+            std::string info = "Selected atom: " + selectedMenuAtom->getName() + " (" + selectedMenuAtom->getSymbol() + ")";
+            dashboardText.setString(info);
+        }
+
         mainScreen.clear(sf::Color(232, 219, 135));
-        testMolecule.draw(mainScreen);
+        thisMolecule.draw(mainScreen);
+        mainScreen.draw(atomMenuBackground);
+        mainScreen.draw(dashboardBox);
+        mainScreen.draw(dashboardText);
+
+        for (const auto& menuAtom : atomPalette) {
+            menuAtom->draw(mainScreen);
+        }
+
+        mainScreen.draw(selectionBox);
+
         if (infoBoxVisibility)
         {
             mainScreen.draw(infoBox);
             mainScreen.draw(infoText);
         }
+
         mainScreen.display();
     }
 }

@@ -17,9 +17,9 @@ public:
     molecule& operator=(const molecule& other);
     ~molecule();
 
-    void addAtom(const atom&);
+    void addAtom(const atom&, const sf::Vector2f&);
     void addBond(int, int, const std::string&);
-    void removeBond(int);
+    void removeEntity(int);
     void removeEntities();
     [[nodiscard]] int moleculeMass() const;
     [[nodiscard]] int checkValenceLaws(int) const;

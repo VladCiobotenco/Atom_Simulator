@@ -16,37 +16,39 @@ int main()
 {
     try
     {
-        const sf::Font font("../fonts/Roboto-VariableFont_wdth,wght.ttf");
+        sf::Font font;
+        if (!font.openFromFile("../fonts/Roboto-VariableFont_wdth,wght.ttf"))
+            throw resourceMissingException("../fonts/Roboto-VariableFont_wdth,wght.ttf");
 
 
         std::vector<atom> inputAtoms = readAtomsFromJson("atoms.json");
 
         std::vector<ion> inputIons = readIonsFromJson("ions.json", font);
-        ion Na = inputIons[0];
-        ion Cl = inputIons[1];
-        std::cout<<Na;
-
-        atom H = inputAtoms[0];
-        atom C = inputAtoms[1];
-        atom N = inputAtoms[2];
-        atom O = inputAtoms[3];
-
-        std::cout<<C<<" "<<C.atomValence()<<"\n";
+        // ion Na = inputIons[0];
+        // ion Cl = inputIons[1];
+        // std::cout<<Na;
+        //
+        // atom H = inputAtoms[0];
+        // atom C = inputAtoms[1];
+        // atom N = inputAtoms[2];
+        // atom O = inputAtoms[3];
+        //
+        // std::cout<<C<<" "<<C.atomValence()<<"\n";
 
         molecule testMolecule("practiceMolecule");
 
-        testMolecule.addAtom(C);
-        testMolecule.addAtom(O);
-        testMolecule.addAtom(N);
-        testMolecule.addAtom(H);
-        testMolecule.addAtom(Na);
-        testMolecule.addAtom(Cl);
+        // testMolecule.addAtom(C);
+        // testMolecule.addAtom(O);
+        // testMolecule.addAtom(N);
+        // testMolecule.addAtom(H);
+        // testMolecule.addAtom(Na);
+        // testMolecule.addAtom(Cl);
 
         std::cout<<testMolecule<<" "<<testMolecule.moleculeMass()<<"\n";
 
         std::string gameWindowName="Atom Simulator";
 
-        simulator_manager::simulationStart(gameWindowName, testMolecule, font);
+        simulator_manager::simulationStart(gameWindowName, testMolecule, font, inputAtoms);
 
         testMolecule.removeEntities();
     }
@@ -72,14 +74,10 @@ int main()
         return 1;
     }
 
-    catch (const atomSimulatorExceptions& e)
-    {
-        std::cerr << "EROARE: " << e.what() << "\n";
-    }
-
     catch (const std::exception& e)
     {
         std::cerr << "Exception: " << e.what() << "\n";
+        return 1;
     }
 
 
