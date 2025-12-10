@@ -81,6 +81,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         sources/triple_bond.cpp
         sources/triple_bond.hpp
         sources/exceptions.hpp
+        sources/quad_bond.cpp
+        sources/quad_bond.hpp
 )
 
 
