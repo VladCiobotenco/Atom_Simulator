@@ -31,7 +31,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
     for (const auto& templateData : templateIons) {
         auto menuButton = std::make_shared<ion>(templateData);
         menuButton->setPosition({currentX, currentY});
-        atomPalette.push_back(std::move(menuButton));
+        //atomPalette.push_back(std::move(menuButton));
         currentY += 75.f;
     }
 
@@ -137,13 +137,13 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
                             dragOffset=clickedAtom->getAtomPosition()-mousePosition;
                         }
                         else
-                            /// Se creaza un atom
-                                thisMolecule.addAtom(*atomPalette[selectedTemplateIndex], mousePosition);
-                        // {
-                        //     std::shared_ptr<entity> newEntity = templatePtr->clone();
-                        //     newEntity->setPosition(mousePosition);
-                        //     thisMolecule.addEntity(std::move(newEntity));
-                        // }
+                            /// Se creaza un atom/ion
+                        {
+                            std::shared_ptr<entity> newEntity = atomPalette[selectedTemplateIndex]->clone();
+                            if (auto atomPtr = std::dynamic_pointer_cast<atom>(newEntity))
+                                thisMolecule.addAtom(atomPtr, mousePosition);
+                        }
+
                         ///////////////WORK IN PROGRESS
 
                     }

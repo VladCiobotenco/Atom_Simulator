@@ -1,3 +1,4 @@
+#include <atomic>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -29,7 +30,9 @@ int main()
 
         simulator_manager::simulationStart(gameWindowName, testMolecule, font, inputAtoms, inputIons);
 
+        std::cout<<testMolecule.moleculeMass();
         testMolecule.removeEntities();
+
     }
 
     catch (const fileLoadingException& e)

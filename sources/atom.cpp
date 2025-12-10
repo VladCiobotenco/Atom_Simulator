@@ -115,7 +115,7 @@ void atom::move(sf::Vector2f newPosition)
     atomShape.setPosition(position);
 }
 
-void atom::restrictAtomToBounds(sf::FloatRect& bounds)
+void atom::restrictAtomToBounds(const sf::FloatRect& bounds)
 {
     float minX = bounds.position.x;
     float maxX = bounds.position.x + bounds.size.x;

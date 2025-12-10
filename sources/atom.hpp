@@ -32,7 +32,7 @@ public:
     int atomValence() const;
     void draw(sf::RenderWindow&) const override;
     void move(sf::Vector2f);
-    void restrictAtomToBounds(sf::FloatRect&);
+    void restrictAtomToBounds(const sf::FloatRect&);
     friend std::ostream& operator<<(std::ostream&, const atom&);
 };
 
