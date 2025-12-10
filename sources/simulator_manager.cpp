@@ -60,6 +60,12 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
     dashboardBox.setSize({200.f, 100.f});
     dashboardBox.setPosition({0.f,550.f});
 
+    sf::Text formulaText(font);
+    formulaText.setCharacterSize(24);
+    formulaText.setFillColor(sf::Color::Black);
+    formulaText.setStyle(sf::Text::Bold);
+    formulaText.setPosition({220.f, 20.f});
+
     ///Work in progress
     sf::RenderWindow mainScreen(sf::VideoMode({1000, 600}), windowName);
     mainScreen.setFramerateLimit(60);
@@ -139,7 +145,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
                         else
                             /// Se creaza un atom/ion
                         {
-                            std::shared_ptr<entity> newEntity = atomPalette[selectedTemplateIndex]->clone();
+                            auto newEntity = atomPalette[selectedTemplateIndex]->clone();
                             if (auto atomPtr = std::dynamic_pointer_cast<atom>(newEntity))
                                 thisMolecule.addAtom(atomPtr, mousePosition);
                         }
@@ -256,6 +262,12 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
             dashboardText.setString(info);
         }
 
+        std::string currentFormula = thisMolecule.getMolecularFormula();
+        if (currentFormula.empty())
+            formulaText.setString("Formula: (Empty)");
+        else
+            formulaText.setString("Formula: " + currentFormula + "(Masa moleculei = " + std::to_string(thisMolecule.moleculeMass()) + ")");
+
         mainScreen.clear(sf::Color(232, 219, 135));
         thisMolecule.draw(mainScreen);
         mainScreen.draw(atomMenuBackground);
@@ -270,6 +282,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
             mainScreen.draw(infoBox);
             mainScreen.draw(infoText);
         }
+        mainScreen.draw(formulaText);
 
         mainScreen.display();
     }

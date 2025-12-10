@@ -1,5 +1,6 @@
 #include "molecule.hpp"
 #include <iostream>
+#include <map>
 #include <utility>
 
 #include "double_bond.hpp"
@@ -99,6 +100,43 @@ int molecule::moleculeMass() const
             totalMass = totalMass + thisAtom->getAtomicMass();
 
     return totalMass;
+}
+
+std::string molecule::getMolecularFormula() const
+{
+    if (entitiesList.empty()) return "";
+
+    std::map<std::string, int> counts;
+
+    for (const auto& entity : entitiesList)
+    {
+        if (auto atomPtr = std::dynamic_pointer_cast<atom>(entity))
+            counts[atomPtr->getSymbol()]++;
+    }
+
+    std::stringstream ss;
+    if (counts.count("C")) {
+        ss << "C";
+        if (counts["C"] > 1)
+            ss << counts["C"];
+        counts.erase("C");
+    }
+
+    if (counts.count("H")) {
+        ss << "H";
+        if (counts["H"] > 1)
+            ss << counts["H"];
+        counts.erase("H");
+    }
+
+    for (const auto& pair : counts)
+    {
+        ss << pair.first;
+        if (pair.second > 1)
+            ss << pair.second;
+    }
+
+    return ss.str();
 }
 
 int molecule::checkValenceLaws(const int atomIndex) const

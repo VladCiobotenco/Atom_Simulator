@@ -30,7 +30,6 @@ int main()
 
         simulator_manager::simulationStart(gameWindowName, testMolecule, font, inputAtoms, inputIons);
 
-        std::cout<<testMolecule.moleculeMass();
         testMolecule.removeEntities();
 
     }
