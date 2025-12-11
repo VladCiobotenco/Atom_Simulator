@@ -109,8 +109,8 @@ void molecule::removeEntity(int index)
         int i=0;
         for (const auto& entityPtr : entitiesList)
         {
-            if (auto bondPtr = std::dynamic_pointer_cast<bond>(entityPtr))
-                if (bondPtr->getAtomIndex1()==index || bondPtr->getAtomIndex2()==index)
+            if (auto otherBondPtr = std::dynamic_pointer_cast<bond>(entityPtr))
+                if (otherBondPtr->getAtomIndex1()==index || otherBondPtr->getAtomIndex2()==index)
                     removeEntity(i);
             i++;
         }
