@@ -80,6 +80,11 @@ void molecule::addBond(const int index1, const int index2, const std::string& bo
 
         else throw chemistryLawsException("Nu exista tipul de legatura");
     }
+
+    int newCount = checkValenceLaws(index1);
+    atom1->setAvailableElectrons(newCount);
+    newCount=checkValenceLaws(index2);
+    atom2->setAvailableElectrons(newCount);
 }
 
 void molecule::removeEntity(int index)
@@ -88,6 +93,16 @@ void molecule::removeEntity(int index)
     {
         entitiesList.erase(entitiesList.begin() + index);
         std::cout << "Legatura cu indexul " << index << " a fost stearsa.\n";
+
+        int index1=bondPtr->getAtomIndex1();
+        int index2=bondPtr->getAtomIndex2();
+        const auto atom1 = std::dynamic_pointer_cast<atom>(entitiesList[index1]);
+        const auto atom2 = std::dynamic_pointer_cast<atom>(entitiesList[index2]);
+
+        int newCount = checkValenceLaws(index1);
+        atom1->setAvailableElectrons(newCount);
+        newCount=checkValenceLaws(index2);
+        atom2->setAvailableElectrons(newCount);
     }
     else
     {
@@ -152,7 +167,6 @@ std::string molecule::getMolecularFormula() const
 
 int molecule::checkValenceLaws(const int atomIndex) const
 {
-
     const auto thisAtom = std::dynamic_pointer_cast<atom>(entitiesList[atomIndex]);
     if (!thisAtom)
         return false;

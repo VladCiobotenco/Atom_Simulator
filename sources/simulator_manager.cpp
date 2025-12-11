@@ -146,6 +146,8 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
                             /// Se creaza un atom/ion
                         {
                             auto newEntity = atomPalette[selectedTemplateIndex]->clone();
+                            auto newEntityAtom = std::dynamic_pointer_cast<atom>(newEntity);
+                            newEntityAtom->setShowElectrons(true);
                             if (auto atomPtr = std::dynamic_pointer_cast<atom>(newEntity))
                                 thisMolecule.addAtom(atomPtr, mousePosition);
                         }

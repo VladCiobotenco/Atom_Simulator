@@ -31,6 +31,5 @@ public:
     friend std::ostream& operator<<(std::ostream&, const bond&);
 };
 
-std::ostream& operator<<(std::ostream&, const bond&);
 
 #endif

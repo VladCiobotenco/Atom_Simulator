@@ -36,6 +36,5 @@ public:
     friend std::ostream& operator<<(std::ostream&, const molecule&);
 };
 
-std::ostream& operator<<(std::ostream&, const molecule&);
 
 #endif

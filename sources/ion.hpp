@@ -20,7 +20,6 @@ public:
     friend std::ostream& operator<<(std::ostream&, const ion&);
 };
 
-std::ostream& operator<<(std::ostream&, const ion&);
 
 
 #endif
