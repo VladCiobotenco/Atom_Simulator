@@ -27,7 +27,7 @@ bond::~bond(){};
 int bond::getAtomIndex1() const {return atomIndex1;}
 int bond::getAtomIndex2() const {return atomIndex2;}
 
-std::pair<float, float> bond::calculateGeometry(const sf::Vector2f& atomPos1, const sf::Vector2f& atomPos2) const
+std::pair<float, float> bond::calculateGeometry(const sf::Vector2f& atomPos1, const sf::Vector2f& atomPos2)
 {
     const sf::Vector2f direction = atomPos2 - atomPos1;
     float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);

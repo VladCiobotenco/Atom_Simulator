@@ -8,6 +8,7 @@ class ion final : public atom
     int ionCharge;
     sf::Font chargeFont;
     sf::Text chargeText;
+    sf::CircleShape chargeHalo;
 
 public:
     ion(std::string, int, int, int Z, int m, std::string, int, sf::Font);

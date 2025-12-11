@@ -29,15 +29,19 @@ atom::atom(std::string  n, const int p, const int g, const int Z, const int m, s
 
     switch (Z)
     {
-    case 1: atomShape.setFillColor(sf::Color::White);
-        break;
-    case 6: atomShape.setFillColor(sf::Color::Black);
-        break;
-    case 7: atomShape.setFillColor(sf::Color::Blue);
-        break;
-    case 8: atomShape.setFillColor(sf::Color::Red);
-        break;
-    default: atomShape.setFillColor(sf::Color::Magenta);
+        case 1: atomShape.setFillColor(sf::Color::White);
+            break;
+        case 6: atomShape.setFillColor(sf::Color::Black);
+            break;
+        case 7: atomShape.setFillColor(sf::Color::Blue);
+            break;
+        case 8: atomShape.setFillColor(sf::Color::Red);
+            break;
+        case 17: atomShape.setFillColor(sf::Color::Green);
+            break;
+        case 11: atomShape.setFillColor(sf::Color(253,169,255));
+            break;
+        default: atomShape.setFillColor(sf::Color(255,255,204));
     }
 
     int valence = atomValence();
@@ -68,6 +72,7 @@ atom& atom::operator=(const atom& other)
         atomicMass = other.atomicMass;
         symbol = other.symbol;
         atomShape = other.atomShape;
+        position=other.position;
 
         electrons=other.electrons;
         showElectrons=other.showElectrons;

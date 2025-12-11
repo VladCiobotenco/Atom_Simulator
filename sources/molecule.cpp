@@ -104,8 +104,17 @@ void molecule::removeEntity(int index)
         newCount=checkValenceLaws(index2);
         atom2->setAvailableElectrons(newCount);
     }
-    else
+    else if (auto atomPtr = std::dynamic_pointer_cast<atom>(entitiesList[index]))
     {
+        int i=0;
+        for (const auto& entityPtr : entitiesList)
+        {
+            if (auto bondPtr = std::dynamic_pointer_cast<bond>(entityPtr))
+                if (bondPtr->getAtomIndex1()==index || bondPtr->getAtomIndex2()==index)
+                    removeEntity(i);
+            i++;
+        }
+
         entitiesList.erase(entitiesList.begin() + index);
         std::cout << "Atomul cu indexul " << index << " a fost sters.\n";
     }

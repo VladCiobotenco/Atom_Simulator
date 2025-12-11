@@ -22,7 +22,7 @@ public:
     int getAtomIndex1()const;
     int getAtomIndex2()const;
 
-    [[nodiscard]] std::pair<float, float> calculateGeometry(const sf::Vector2f&, const sf::Vector2f&)const;
+    static std::pair<float, float> calculateGeometry(const sf::Vector2f&, const sf::Vector2f&);
     void draw(sf::RenderWindow&) const override;
     virtual void updatePosition(const sf::Vector2f& pos1, const sf::Vector2f& pos2) = 0;
     [[nodiscard]] sf::FloatRect getBounds() const override = 0;

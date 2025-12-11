@@ -8,6 +8,7 @@
 
 class atom : public entity
 {
+protected:
     int period, group, atomicNumber, atomicMass;
     std::string symbol;
     sf::CircleShape atomShape;
@@ -25,11 +26,13 @@ public:
 
     void setAtomOutlineColor(sf::Color);
     void setAtomThickness(float);
-    void onPositionChanged() override;
+
     int getAtomicMass() const;
     const std::string& getSymbol() const;
     sf::FloatRect getBounds() const override;
     sf::Vector2f getAtomPosition() const;
+
+    void onPositionChanged() override;
 
     int atomValence() const;
     void move(sf::Vector2f);

@@ -35,7 +35,16 @@ ion::ion(std::string n, const int p, const int g, const int Z, const int m, std:
     chargeText.setString(chargeString);
     sf::FloatRect textBounds = chargeText.getLocalBounds();
     chargeText.setOrigin({textBounds.position.x + textBounds.size.x / 2.f, textBounds.position.y + textBounds.size.y / 2.f});
-    chargeText.setPosition(getAtomPosition());
+    chargeText.setPosition(position);
+
+    float haloRadius = atomShape.getRadius() + 5.f;
+    chargeHalo.setRadius(haloRadius);
+    chargeHalo.setOrigin({haloRadius, haloRadius});
+    chargeHalo.setPosition(position);
+    if (ionCharge > 0)
+        chargeHalo.setFillColor(sf::Color(255, 0, 0, 50));
+    else
+        chargeHalo.setFillColor(sf::Color(0, 0, 255, 50));
 }
 
 ion::ion(const ion& other) : atom(other), ionCharge(other.ionCharge), chargeFont(other.chargeFont), chargeText(other.chargeText)
@@ -58,8 +67,8 @@ void ion::onPositionChanged() {
 
 void ion::draw(sf::RenderWindow& window) const
 {
-    window.draw(chargeText);
     atom::draw(window);
+    window.draw(chargeText);
 }
 
 std::ostream& operator<<(std::ostream& os, const ion& ION)
