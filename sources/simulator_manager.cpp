@@ -56,25 +56,30 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
     sf::RectangleShape dashboardBox;
     dashboardBox.setFillColor(sf::Color(70, 70, 70));
     dashboardBox.setOutlineColor(sf::Color::Black);
-    dashboardBox.setOutlineThickness(1.f); //-2.f
+    dashboardBox.setOutlineThickness(1.f);
     dashboardBox.setSize({200.f, 100.f});
     dashboardBox.setPosition({0.f,550.f});
 
     sf::Text formulaText(font);
     formulaText.setCharacterSize(24);
-    formulaText.setFillColor(sf::Color::Black);
+    formulaText.setFillColor(sf::Color::White);
     formulaText.setStyle(sf::Text::Bold);
     formulaText.setPosition({220.f, 20.f});
+    sf::RectangleShape formulaBox;
+    formulaBox.setFillColor(sf::Color(70, 70, 70));
+    formulaBox.setOutlineThickness(1.f);
+    formulaBox.setSize({200.f, 40.f});  // Dimensiunea acestui box se va mari in functie de masa atomica
+    formulaBox.setPosition({220.f, 20.f});
 
     ///Work in progress
     sf::RenderWindow mainScreen(sf::VideoMode({1000, 600}), windowName);
     mainScreen.setFramerateLimit(60);
 
-
     sf::RectangleShape selectionBox;
     selectionBox.setFillColor(sf::Color::Transparent);
     selectionBox.setOutlineColor(sf::Color::Yellow);
     selectionBox.setOutlineThickness(3.f);
+
     sf::FloatRect workArea({200, 0}, {800, 600});
 
     int selectedTemplateIndex = 0;
@@ -143,15 +148,13 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
                             dragOffset=clickedAtom->getAtomPosition()-mousePosition;
                         }
                         else
-                            /// Se creaza un atom/ion
+                            /// Se creeaza un atom/ion
                         {
                             auto newEntity = atomPalette[selectedTemplateIndex]->clone();
                             auto newEntityAtom = std::dynamic_pointer_cast<atom>(newEntity);
                             newEntityAtom->setShowElectrons(true);
-                            if (auto ionPtr = std::dynamic_pointer_cast<ion>(newEntity)) {
+                            if (auto ionPtr = std::dynamic_pointer_cast<ion>(newEntity))
                                 thisMolecule.addAtom(ionPtr,mousePosition);
-                                std::cout<<"Check ion\n";
-                            }
 
                             else if (auto atomPtr = std::dynamic_pointer_cast<atom>(newEntity))
                                 thisMolecule.addAtom(atomPtr, mousePosition);
@@ -272,10 +275,18 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
         }
 
         std::string currentFormula = thisMolecule.getMolecularFormula();
+        int currentMoleculeMass = thisMolecule.moleculeMass();
         if (currentFormula.empty())
             formulaText.setString("Formula: (Empty)");
         else
-            formulaText.setString("Formula: " + currentFormula + "(Masa moleculei = " + std::to_string(thisMolecule.moleculeMass()) + ")");
+            formulaText.setString("Formula: " + currentFormula + "(Masa moleculei = " + std::to_string(currentMoleculeMass) + ")");
+
+        sf::FloatRect textBounds = formulaText.getLocalBounds();
+        float paddingX = 10.f;
+        float paddingY = 10.f;
+        formulaBox.setSize({textBounds.size.x + paddingX * 2, textBounds.size.y + paddingY * 2});
+        formulaText.setPosition({formulaBox.getPosition().x + paddingX, formulaBox.getPosition().y + paddingY});
+
 
         mainScreen.clear(sf::Color(232, 219, 135));
         thisMolecule.draw(mainScreen);
@@ -291,6 +302,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
             mainScreen.draw(infoBox);
             mainScreen.draw(infoText);
         }
+        mainScreen.draw(formulaBox);
         mainScreen.draw(formulaText);
 
         mainScreen.display();

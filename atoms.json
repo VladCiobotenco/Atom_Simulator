@@ -13,7 +13,8 @@
     "atomicNumber": 6,
     "atomicMass": 12,
     "name": "Carbon",
-    "symbol": "C"
+    "symbol": "C",
+    "class": "metal"
   },
   {
     "period": 2,
