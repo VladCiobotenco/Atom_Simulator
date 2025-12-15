@@ -1,0 +1,15 @@
+[
+    { "formula": "H2", "name": "Hydrogen Gas" },
+    { "formula": "He", "name": "Helium" },
+    { "formula": "O2", "name": "Oxygen Gas" },
+    { "formula": "H2O", "name": "Water" },
+    { "formula": "CO2", "name": "Carbon Dioxide" },
+    { "formula": "CH4", "name": "Methane" },
+    { "formula": "NH3", "name": "Ammonia" },
+    { "formula": "H3N", "name": "Ammonia" },
+    { "formula": "NaCl", "name": "Sodium Chloride" },
+    { "formula": "ClNa", "name": "Sodium Chloride" },
+    { "formula": "C2H6O", "name": "Ethanol" },
+    { "formula": "C6H12O6", "name": "Glucose" },
+    { "formula": "H2SO4", "name": "Sulfuric Acid" }
+]

@@ -85,6 +85,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         sources/quad_bond.hpp
         sources/audio_manager.cpp
         sources/audio_manager.hpp
+        sources/chemical_database.cpp
+        sources/chemical_database.hpp
 )
 
 

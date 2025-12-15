@@ -8,12 +8,13 @@
 #include "../sources/ion.hpp"
 
 #include "simulator_manager.hpp"
+#include "audio_manager.hpp"
 
 #include <iostream>
 
 #include "exceptions.hpp"
 
-void simulator_manager::simulationStart(const std::string& windowName, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons)
+void simulator_manager::simulationStart(const std::string& windowName, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons, chemical_database& database, audio_manager& audio)
 {
     /// Crearea unei palete de atomi in zona de menu
     std::vector<std::shared_ptr<atom>> atomPalette;
@@ -120,7 +121,6 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
             if (event->is<sf::Event::MouseButtonPressed>())
             {
                 const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>();
-
                 if (mouseButtonPressed->button == sf::Mouse::Button::Left)
                 {
                     sf::Vector2i pixelPosition = {mouseButtonPressed->position.x, mouseButtonPressed->position.y};
@@ -138,6 +138,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
                     }
                     else
                     {
+                        audio.playSound("selectie");
                         int clickAtomIndex=thisMolecule.findAtomAtPosition(mousePosition);
                         if (clickAtomIndex != -1)
                         {
@@ -174,6 +175,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
                     {
                         if (selectedAtomIndex == -1)
                         {
+                            audio.playSound("selectie");
                             selectedAtomIndex=clickAtomIndex;
                             const auto selectedAtom=thisMolecule.getAtom(selectedAtomIndex);
                             selectedAtom->setAtomThickness(5.f);
@@ -189,6 +191,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
                             {
                                 if (availableBonds1 && availableBonds2 && bondIndex==-1)
                                 {
+                                    audio.playSound("selectie");
                                     if (availableBonds1>=4 && availableBonds2>=4)
                                         thisMolecule.addBond(selectedAtomIndex,clickAtomIndex,"quad_bond");
                                     else if (availableBonds1>=3 && availableBonds2>=3)
@@ -206,7 +209,11 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
                             }
 
                             if (bondIndex!=-1)
+                            {
                                 thisMolecule.removeEntity(bondIndex);
+                                audio.playSound("stergere");
+                            }
+
 
                             const auto selectedAtom=thisMolecule.getAtom(selectedAtomIndex);
                             selectedAtom->setAtomThickness(2.f);
@@ -278,7 +285,17 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
         if (currentFormula.empty())
             formulaText.setString("Formula: (Empty)");
         else
-            formulaText.setString("Formula: " + currentFormula + "(Masa moleculei = " + std::to_string(thisMolecule.moleculeMass()) + ")");
+        {
+            std::string outputMoleculeText;
+            outputMoleculeText = "Formula: " + currentFormula + "(Masa moleculei = " + std::to_string(thisMolecule.moleculeMass()) + ")";
+            std::string name = database.searchIntoDatabase(currentFormula);
+            if (!currentFormula.empty()) {
+                std::cout << "Looking for: [" << currentFormula << "] -> Found: [" << name << "]\n";
+            }
+            if (!name.empty())
+                formulaText.setString(outputMoleculeText + " (" + name + ")");
+            else formulaText.setString(outputMoleculeText);
+        }
 
         sf::FloatRect textBounds = formulaText.getLocalBounds();
         float paddingX = 10.f;
