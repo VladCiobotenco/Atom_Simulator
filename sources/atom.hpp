@@ -33,9 +33,7 @@ public:
     sf::Vector2f getAtomPosition() const;
 
     void onPositionChanged() override;
-
     int atomValence() const;
-    void move(sf::Vector2f);
     void restrictAtomToBounds(const sf::FloatRect&);
 
     void setShowElectrons(bool);

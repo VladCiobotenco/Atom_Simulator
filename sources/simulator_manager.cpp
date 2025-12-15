@@ -275,11 +275,10 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
         }
 
         std::string currentFormula = thisMolecule.getMolecularFormula();
-        int currentMoleculeMass = thisMolecule.moleculeMass();
         if (currentFormula.empty())
             formulaText.setString("Formula: (Empty)");
         else
-            formulaText.setString("Formula: " + currentFormula + "(Masa moleculei = " + std::to_string(currentMoleculeMass) + ")");
+            formulaText.setString("Formula: " + currentFormula + "(Masa moleculei = " + std::to_string(thisMolecule.moleculeMass()) + ")");
 
         sf::FloatRect textBounds = formulaText.getLocalBounds();
         float paddingX = 10.f;

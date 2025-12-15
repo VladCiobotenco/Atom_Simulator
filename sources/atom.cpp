@@ -116,12 +116,6 @@ int atom::atomValence() const
     return 8-group;
 }
 
-void atom::move(sf::Vector2f newPosition)
-{
-    position=newPosition;
-    atomShape.setPosition(position);
-}
-
 void atom::setShowElectrons(const bool show)
 {
     showElectrons=show;
@@ -188,7 +182,7 @@ void atom::restrictAtomToBounds(const sf::FloatRect& bounds)
         currentPosition.y = maxY - radius;
 
     if (currentPosition != position)
-        move(currentPosition);
+        setPosition(currentPosition);
 }
 
 std::ostream& operator<<(std::ostream& out, const atom& ATOM)

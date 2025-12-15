@@ -17,7 +17,7 @@ public:
     molecule& operator=(const molecule& other);
     ~molecule();
 
-    void addAtom(std::shared_ptr<atom>, const sf::Vector2f&);
+    void addAtom(const std::shared_ptr<atom>&, const sf::Vector2f&);
     void addBond(int, int, const std::string&);
     void removeEntity(int);
     void removeEntities();

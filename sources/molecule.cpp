@@ -30,7 +30,7 @@ molecule& molecule::operator=(const molecule& other)
 }
 molecule::~molecule(){std::cout<<"O molecula a fost distrusa\n";}
 
-void molecule::addAtom(std::shared_ptr<atom> tempAtom, const sf::Vector2f& spawnPosition)
+void molecule::addAtom(const std::shared_ptr<atom>& tempAtom, const sf::Vector2f& spawnPosition)
 {
     tempAtom->setPosition(spawnPosition);
     entitiesList.push_back(tempAtom);

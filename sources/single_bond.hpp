@@ -16,8 +16,6 @@ public:
     ~single_bond() override;
     std::shared_ptr<entity> clone() const override;
 
-    //void draw(sf::RenderWindow&) const override;
-
     sf::FloatRect getBounds() const override;
     void updatePosition(const sf::Vector2f& pos1, const sf::Vector2f& pos2) override;
     int getOrder() const override;

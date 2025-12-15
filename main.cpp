@@ -8,8 +8,9 @@
 #include "sources/atom.hpp"
 #include "sources/molecule.hpp"
 #include "sources/input.hpp"
-#include "sources/simulator_manager.hpp"
 
+#include "sources/simulator_manager.hpp"
+#include "sources/audio_manager.hpp"
 #include "sources/exceptions.hpp"
 
 
@@ -18,9 +19,12 @@ int main()
     try
     {
         sf::Font font;
-        if (!font.openFromFile("../fonts/Roboto-VariableFont_wdth,wght.ttf"))
-            throw resourceMissingException("../fonts/Roboto-VariableFont_wdth,wght.ttf");
+        if (!font.openFromFile("assets/Roboto-VariableFont_wdth,wght.ttf"))
+            throw resourceMissingException("assets/Roboto-VariableFont_wdth,wght.ttf");
 
+        audio_manager audio;
+        audio.playMusic("assets/MainMusic.ogg");
+        //audio.loadSound
 
         std::vector<atom> inputAtoms = readAtomsFromJson("atoms.json");
         std::vector<ion> inputIons = readIonsFromJson("ions.json", font);
