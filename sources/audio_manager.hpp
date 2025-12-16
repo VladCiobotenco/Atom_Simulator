@@ -1,7 +1,7 @@
 #ifndef OOP_AUDIO_MANAGER_HPP
 #define OOP_AUDIO_MANAGER_HPP
 
-#include "SFML/Audio.hpp"
+#include <SFML/Audio.hpp>
 #include <map>
 #include <string>
 
