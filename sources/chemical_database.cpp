@@ -3,6 +3,7 @@
 #include "../libraries/json.hpp"
 #include "exceptions.hpp"
 #include <fstream>
+//#include <map>
 
 using json = nlohmann::json;
 
@@ -15,6 +16,8 @@ void chemical_database::loadIntoDatabase(const std::string& fileName)
 
     try {
         file >> jsonData;
+        if (jsonData.empty())
+            throw fileFormatException(fileName, "fisier gol");
     }
     catch (const json::parse_error&)
     {
@@ -32,6 +35,8 @@ void chemical_database::loadIntoDatabase(const std::string& fileName)
     }
 }
 
+
+
 std::string chemical_database::searchIntoDatabase(const std::string& formula)
 {
     auto dbEntry = database.find(formula);
@@ -41,5 +46,27 @@ std::string chemical_database::searchIntoDatabase(const std::string& formula)
     }
 
     return "";
+}
+
+std::ostream& operator<<(std::ostream& out, const chemical_database& thisDatabase)
+{
+    out << "\n=== Chemical Database Content ===\n";
+
+    if (thisDatabase.database.empty()) {
+        out << "[EMPTY] No substances loaded.\n";
+        out << "=================================\n";
+    }
+    else
+    {
+        out << "Total Entries: " << thisDatabase.database.size() << "\n";
+        out << "---------------------------------\n";
+        out << std::left << std::setw(15) << "FORMULA" << "NAME\n";
+        out << "---------------------------------\n";
+        for (const auto& [formula, name] : thisDatabase.database)
+            out << std::left << std::setw(15) << formula << name << "\n";
+        out << "=================================\n\n";
+    }
+
+    return out;
 }
 

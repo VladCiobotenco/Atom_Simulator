@@ -28,6 +28,7 @@ int main()
 
         chemical_database database;
         database.loadIntoDatabase("elements.json");
+        std::cout<<database;
 
         molecule testMolecule("practiceMolecule");
         std::string gameWindowName="Atom Simulator";

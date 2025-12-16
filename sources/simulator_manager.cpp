@@ -289,10 +289,7 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
             std::string outputMoleculeText;
             outputMoleculeText = "Formula: " + currentFormula + "(Masa moleculei = " + std::to_string(thisMolecule.moleculeMass()) + ")";
             std::string name = database.searchIntoDatabase(currentFormula);
-            if (!currentFormula.empty()) {
-                std::cout << "Looking for: [" << currentFormula << "] -> Found: [" << name << "]\n";
-            }
-            if (!name.empty())
+            if (name != "")
                 formulaText.setString(outputMoleculeText + " (" + name + ")");
             else formulaText.setString(outputMoleculeText);
         }
