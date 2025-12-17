@@ -21,6 +21,7 @@ public:
 
     int getAtomIndex1()const;
     int getAtomIndex2()const;
+    void setIndices(int, int);
 
     static std::pair<float, float> calculateGeometry(const sf::Vector2f&, const sf::Vector2f&);
     void draw(sf::RenderWindow&) const override;

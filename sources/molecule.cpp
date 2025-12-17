@@ -1,6 +1,8 @@
 #include "molecule.hpp"
 #include <iostream>
 #include <map>
+#include <queue>
+#include <set>
 #include <utility>
 
 #include "double_bond.hpp"
@@ -91,32 +93,50 @@ void molecule::removeEntity(int index)
 {
     if (auto bondPtr = std::dynamic_pointer_cast<bond>(entitiesList[index]))
     {
-        entitiesList.erase(entitiesList.begin() + index);
-        std::cout << "Legatura cu indexul " << index << " a fost stearsa.\n";
-
         int index1=bondPtr->getAtomIndex1();
         int index2=bondPtr->getAtomIndex2();
         const auto atom1 = std::dynamic_pointer_cast<atom>(entitiesList[index1]);
         const auto atom2 = std::dynamic_pointer_cast<atom>(entitiesList[index2]);
 
-        int newCount = checkValenceLaws(index1);
-        atom1->setAvailableElectrons(newCount);
-        newCount=checkValenceLaws(index2);
-        atom2->setAvailableElectrons(newCount);
+        std::cout << "Legatura cu indexul " << index << " a fost stearsa.\n";
+        entitiesList.erase(entitiesList.begin() + index);
+        updateBondsIndices(index);
+
+        int finalIndex1, finalIndex2;
+        if (index1 > index)
+            finalIndex1 = index1-1;
+        else finalIndex1 = index1;
+        if (index2 > index)
+            finalIndex2 = index2-1;
+        else finalIndex2 = index2;
+
+        if (atom1) {
+            int newCount = checkValenceLaws(finalIndex1);
+            atom1->setAvailableElectrons(newCount);
+        }
+        if (atom2) {
+            int newCount = checkValenceLaws(finalIndex2);
+            atom2->setAvailableElectrons(newCount);
+        }
+
     }
     else if (auto atomPtr = std::dynamic_pointer_cast<atom>(entitiesList[index]))
     {
-        int i=0;
-        for (const auto& entityPtr : entitiesList)
+        for (int i = (int)entitiesList.size() - 1; i >= 0; --i)
         {
-            if (auto otherBondPtr = std::dynamic_pointer_cast<bond>(entityPtr))
-                if (otherBondPtr->getAtomIndex1()==index || otherBondPtr->getAtomIndex2()==index)
+            if (auto otherBondPtr = std::dynamic_pointer_cast<bond>(entitiesList[i]))
+            {
+                if (otherBondPtr->getAtomIndex1() == index || otherBondPtr->getAtomIndex2() == index)
+                {
                     removeEntity(i);
-            i++;
+                    if (i < index) index--;
+                }
+            }
         }
 
         entitiesList.erase(entitiesList.begin() + index);
         std::cout << "Atomul cu indexul " << index << " a fost sters.\n";
+        updateBondsIndices(index);
     }
 
 }
@@ -127,7 +147,7 @@ void molecule::removeEntities()
         entitiesList.pop_back();
 }
 
-int molecule::moleculeMass() const
+int molecule::getMoleculeMass() const
 {
     int totalMass=0;
     for (const auto& entityPtr : entitiesList)
@@ -139,7 +159,7 @@ int molecule::moleculeMass() const
 
 std::string molecule::getMolecularFormula() const
 {
-    if (entitiesList.empty()) return "";
+    if (entitiesList.empty() || checkAtomsConnections() == false) return "";
 
     std::map<std::string, int> counts;
 
@@ -150,6 +170,7 @@ std::string molecule::getMolecularFormula() const
     }
 
     std::stringstream ss;
+
     if (counts.count("C")) {
         ss << "C";
         if (counts["C"] > 1)
@@ -194,6 +215,53 @@ int molecule::checkValenceLaws(const int atomIndex) const
     return valence-currentBonds;
 }
 
+bool molecule::checkAtomsConnections() const {
+
+    int atomCount = 0, startAtomIndex = 0;
+    for (size_t i = 0; i < entitiesList.size(); ++i)
+    {
+        if (std::dynamic_pointer_cast<atom>(entitiesList[i]))
+        {
+            atomCount++;
+            startAtomIndex = i;
+        }
+    }
+
+    std::map<int, std::vector<int>> adjacencyList;
+
+    for (const auto& entityPtr : entitiesList)
+    {
+        if (auto bondPtr = std::dynamic_pointer_cast<bond>(entityPtr)) {
+            adjacencyList[bondPtr -> getAtomIndex1()].push_back(bondPtr -> getAtomIndex2());
+            adjacencyList[bondPtr -> getAtomIndex2()].push_back(bondPtr -> getAtomIndex1());
+        }
+    }
+
+    std::queue<int> q;
+    std::set<int> visited;
+    q.push(startAtomIndex);
+    visited.insert(startAtomIndex);
+    while (!q.empty())
+    {
+        int u = q.front();
+        q.pop();
+        for (int v : adjacencyList[u])
+        {
+            if (!visited.contains(v))
+            {
+                visited.insert(v);
+                q.push(v);
+            }
+        }
+    }
+
+    std::cout<<visited.size()<<" "<<atomCount<<std::endl;
+    if (visited.size() == static_cast<size_t>(atomCount))
+        return true;
+
+    return false;
+}
+
 int molecule::findAtomAtPosition(const sf::Vector2f& worldPos) const {
     int entityIndex=0;
     for (const auto& entityPtr : entitiesList)
@@ -228,6 +296,30 @@ void molecule::updateBondsPositions() const
             const auto atom1 = std::dynamic_pointer_cast<atom>(entitiesList[bondPtr->getAtomIndex1()]);
             const auto atom2 = std::dynamic_pointer_cast<atom>(entitiesList[bondPtr->getAtomIndex2()]);
             bondPtr->updatePosition(atom1->getAtomPosition(), atom2->getAtomPosition());
+        }
+}
+
+void molecule::updateBondsIndices(int removedIndex) const
+{
+    for (auto& entityPtr: entitiesList)
+        if (auto bondPtr = std::dynamic_pointer_cast<bond>(entityPtr))
+        {
+            int idx1 = bondPtr->getAtomIndex1();
+            int idx2 = bondPtr->getAtomIndex2();
+            bool changed = false;
+            if (idx1 > removedIndex)
+            {
+                idx1--;
+                changed = true;
+            }
+            if (idx2 > removedIndex)
+            {
+                idx2--;
+                changed = true;
+            }
+
+            if (changed)
+                bondPtr->setIndices(idx1, idx2);
         }
 }
 

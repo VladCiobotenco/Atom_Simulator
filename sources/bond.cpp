@@ -26,6 +26,11 @@ bond::~bond(){};
 
 int bond::getAtomIndex1() const {return atomIndex1;}
 int bond::getAtomIndex2() const {return atomIndex2;}
+void bond::setIndices(int index1, int index2)
+{
+    atomIndex1 = index1;
+    atomIndex2 = index2;
+}
 
 std::pair<float, float> bond::calculateGeometry(const sf::Vector2f& atomPos1, const sf::Vector2f& atomPos2)
 {

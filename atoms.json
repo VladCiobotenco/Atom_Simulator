@@ -4,7 +4,7 @@
     "group": 1,
     "atomicNumber": 1,
     "atomicMass": 1,
-    "name": "Hydrogen",
+    "name": "Hidrogen",
     "symbol": "H"
   },
   {
@@ -21,7 +21,7 @@
     "group": 5,
     "atomicNumber": 7,
     "atomicMass": 14,
-    "name": "Nitrogen",
+    "name": "Azot",
     "symbol": "N"
   },
   {
@@ -29,7 +29,7 @@
     "group": 6,
     "atomicNumber": 8,
     "atomicMass": 16,
-    "name": "Oxygen",
+    "name": "Oxigen",
     "symbol": "O"
   }
 ]

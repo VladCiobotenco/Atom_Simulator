@@ -4,7 +4,7 @@
     "group": 1,
     "atomicNumber": 11,
     "atomicMass": 23,
-    "name": "Sodium",
+    "name": "Sodiu",
     "symbol": "Na",
     "ionCharge": 1
   },
@@ -13,7 +13,7 @@
     "group": 7,
     "atomicNumber": 17,
     "atomicMass": 35.5,
-    "name": "Chlorine",
+    "name": "Clor",
     "symbol": "Cl",
     "ionCharge": -1
   }

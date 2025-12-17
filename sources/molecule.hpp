@@ -21,13 +21,20 @@ public:
     void addBond(int, int, const std::string&);
     void removeEntity(int);
     void removeEntities();
-    [[nodiscard]] int moleculeMass() const;
+
+    [[nodiscard]] int getMoleculeMass() const;
     [[nodiscard]] std::string getMolecularFormula() const;
+
     [[nodiscard]] int checkValenceLaws(int) const;
+    [[nodiscard]] bool checkAtomsConnections() const;
+
     [[nodiscard]] int findAtomAtPosition(const sf::Vector2f&) const;
     [[nodiscard]] int findBondPosition(int, int) const;
+
     void updateBondsPositions() const;
+    void updateBondsIndices(int) const;
     void draw(sf::RenderWindow&) const;
+
 
     [[nodiscard]] std::shared_ptr<atom> getAtom(size_t index) const;
     //[[nodiscard]] bond* getBond(size_t index) const;
