@@ -34,6 +34,10 @@ void double_bond::onDraw(sf::RenderWindow& thisWindow) const
     thisWindow.draw(bondLine2);
 }
 
+void double_bond::bondInfoPrint(std::ostream& out) const {
+    out<<"dubla";
+}
+
 // void double_bond::draw(sf::RenderWindow& window) const
 // {
 //     window.draw(bondLine1);

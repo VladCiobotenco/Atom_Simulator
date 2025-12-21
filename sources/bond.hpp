@@ -11,6 +11,7 @@ protected:
     int atomIndex1, atomIndex2;
 
     virtual void onDraw(sf::RenderWindow& window) const = 0;
+    virtual void bondInfoPrint(std::ostream&) const = 0;
 
 public:
     bond(std::string, int, int);

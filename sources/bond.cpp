@@ -26,7 +26,7 @@ bond::~bond(){};
 
 int bond::getAtomIndex1() const {return atomIndex1;}
 int bond::getAtomIndex2() const {return atomIndex2;}
-void bond::setIndices(int index1, int index2)
+void bond::setIndices(const int index1, const int index2)
 {
     atomIndex1 = index1;
     atomIndex2 = index2;
@@ -46,6 +46,8 @@ void bond::draw(sf::RenderWindow& thisWindow) const {
 
 std::ostream& operator<<(std::ostream& out, const bond& thisBond)
 {
-    out<<"Legatura "<<thisBond.getName()<<" intre atomul cu indexul "<<thisBond.atomIndex1<<" si atomul cu indexul "<<thisBond.atomIndex2<<"\n";
+    out<<"A fost creata o legatura ";
+    thisBond.bondInfoPrint(out);
+    out<<" intre atomul cu indexul "<<thisBond.atomIndex1<<" si atomul cu indexul "<<thisBond.atomIndex2<<"\n";
     return out;
 }

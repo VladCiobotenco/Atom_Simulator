@@ -39,6 +39,11 @@ void triple_bond::onDraw(sf::RenderWindow& thisWindow) const
     thisWindow.draw(bondLine3);
 }
 
+void triple_bond::bondInfoPrint(std::ostream& out) const
+{
+    out<<"tripla";
+}
+
 // void triple_bond::draw(sf::RenderWindow& window) const
 // {
 //     window.draw(bondLine1);

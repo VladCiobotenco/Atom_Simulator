@@ -9,8 +9,11 @@ class triple_bond: public bond
     sf::RectangleShape bondLine2;
     sf::RectangleShape bondLine3;
     float bondLinesOffset;
+
 protected:
     void onDraw(sf::RenderWindow&) const override;
+    void bondInfoPrint(std::ostream &) const override;
+
 public:
     triple_bond(int, int);
     triple_bond(const triple_bond &);

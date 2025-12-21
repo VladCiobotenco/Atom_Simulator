@@ -43,6 +43,11 @@ void quad_bond::onDraw(sf::RenderWindow& thisWindow) const
     thisWindow.draw(bondLine4);
 }
 
+void quad_bond::bondInfoPrint(std::ostream& out) const
+{
+    out<<"cvadrupla";
+}
+
 sf::FloatRect quad_bond::getBounds() const
 {
     const sf::FloatRect r1 = bondLine1.getGlobalBounds();

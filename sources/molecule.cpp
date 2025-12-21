@@ -51,7 +51,7 @@ void molecule::addBond(const int index1, const int index2, const std::string& bo
     const auto atom1 = std::dynamic_pointer_cast<atom>(entitiesList[index1]);
     const auto atom2 = std::dynamic_pointer_cast<atom>(entitiesList[index2]);
 
-    if (atom1 && atom2)
+    if (atom1 && atom2)                                             /// Va fi creat o clasa factory pentru bonds
     {
         if (bondName == "single_bond")
         {

@@ -31,6 +31,11 @@ void single_bond::onDraw(sf::RenderWindow& thisWindow) const
     thisWindow.draw(bondLine);
 }
 
+void single_bond::bondInfoPrint(std::ostream& out) const
+{
+    out<<"simpla";
+}
+
 // void single_bond::draw(sf::RenderWindow& thisWindow) const
 // {
 //     thisWindow.draw(bondLine);

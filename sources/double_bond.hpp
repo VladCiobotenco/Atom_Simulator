@@ -7,8 +7,11 @@ class double_bond: public bond{
     sf::RectangleShape bondLine1;
     sf::RectangleShape bondLine2;
     float bondLinesOffset;
+
 protected:
     void onDraw(sf::RenderWindow&) const override;
+    void bondInfoPrint(std::ostream &) const override;
+
 public:
     double_bond(int,int);
     double_bond(const double_bond&);

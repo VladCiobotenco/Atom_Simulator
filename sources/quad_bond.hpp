@@ -10,8 +10,11 @@ class quad_bond: public bond
     sf::RectangleShape bondLine3;
     sf::RectangleShape bondLine4;
     float bondLinesOffset;
+
 protected:
     void onDraw(sf::RenderWindow&) const override;
+    void bondInfoPrint(std::ostream &) const override;
+
 public:
     quad_bond(int, int);
     quad_bond(const quad_bond &);

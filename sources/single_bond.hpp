@@ -9,6 +9,7 @@ class single_bond: public bond
     sf::RectangleShape bondLine;
 protected:
     void onDraw(sf::RenderWindow&) const override;
+    void bondInfoPrint(std::ostream &) const override;
 public:
     single_bond(int, int);
     single_bond(const single_bond&);
