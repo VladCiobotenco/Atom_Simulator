@@ -18,7 +18,7 @@ protected:
     int availableElectrons;
 
 public:
-    atom(std::string, int, int, int Z, int m, std::string);
+    atom(std::string, int, int, int, int, std::string);
     atom(const atom& other);
     atom& operator=(const atom& other);
     ~atom() override;

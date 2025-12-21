@@ -160,9 +160,6 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
                             else if (auto atomPtr = std::dynamic_pointer_cast<atom>(newEntity))
                                 thisMolecule.addAtom(atomPtr, mousePosition);
                         }
-
-                        ///////////////WORK IN PROGRESS
-
                     }
 
                 }

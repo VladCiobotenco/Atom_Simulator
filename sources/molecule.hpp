@@ -12,9 +12,9 @@ class molecule
     std::vector<std::shared_ptr<entity>> entitiesList;
 
 public:
-    explicit molecule(std::string  n);
-    molecule(const molecule& other);
-    molecule& operator=(const molecule& other);
+    explicit molecule(std::string);
+    molecule(const molecule&);
+    molecule& operator=(const molecule&);
     ~molecule();
 
     void addAtom(const std::shared_ptr<atom>&, const sf::Vector2f&);
@@ -37,7 +37,6 @@ public:
 
 
     [[nodiscard]] std::shared_ptr<atom> getAtom(size_t index) const;
-    //[[nodiscard]] bond* getBond(size_t index) const;
 
 
     friend std::ostream& operator<<(std::ostream&, const molecule&);

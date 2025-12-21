@@ -51,7 +51,7 @@ void molecule::addBond(const int index1, const int index2, const std::string& bo
     const auto atom1 = std::dynamic_pointer_cast<atom>(entitiesList[index1]);
     const auto atom2 = std::dynamic_pointer_cast<atom>(entitiesList[index2]);
 
-    if (atom1 && atom2)                                             /// Va fi creat o clasa factory pentru bonds
+    if (atom1 && atom2)                                                                                                             /// Va fi creat o clasa factory pentru bonds
     {
         if (bondName == "single_bond")
         {
@@ -73,12 +73,12 @@ void molecule::addBond(const int index1, const int index2, const std::string& bo
             std::cout << "A fost adaugata o legatura tripla intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
         }
 
-        // else if (bondName == "quad_bond")
-        // {
-        //     const auto newBond = std::make_shared<quad_bond>(index1, index2);
-        //     entitiesList.push_back(newBond);
-        //     std::cout << "A fost adaugata o legatura quad intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
-        // }
+        else if (bondName == "quad_bond")
+        {
+            const auto newBond = std::make_shared<quad_bond>(index1, index2);
+            entitiesList.push_back(newBond);
+            std::cout << "A fost adaugata o legatura quad intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
+        }
 
         else throw chemistryLawsException("Nu exista tipul de legatura");
     }
@@ -255,7 +255,6 @@ bool molecule::checkAtomsConnections() const {
         }
     }
 
-    std::cout<<visited.size()<<" "<<atomCount<<std::endl;
     if (visited.size() == static_cast<size_t>(atomCount))
         return true;
 

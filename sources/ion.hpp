@@ -11,7 +11,7 @@ class ion final : public atom
     sf::CircleShape chargeHalo;
 
 public:
-    ion(std::string, int, int, int Z, int m, std::string, int, sf::Font);
+    ion(std::string, int, int, int, int, std::string, int, sf::Font);
     ion(const ion&);
     ~ion() override;
     std::shared_ptr<entity>clone() const override;

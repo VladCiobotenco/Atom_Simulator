@@ -20,7 +20,7 @@ public:
 
     void setPosition(const sf::Vector2f&);
     [[nodiscard]] virtual sf::FloatRect getBounds() const = 0;
-    [[nodiscard]] const std::string& getName()const;
+    [[nodiscard]] const std::string& getName()const;                                        // cu toate ca este stupid acest get, am decis sa il pastrez pentru a-mi aminti mereu ca exista variable private
 
     virtual void draw(sf::RenderWindow& window) const = 0;
 };

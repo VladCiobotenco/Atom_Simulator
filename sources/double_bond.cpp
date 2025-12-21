@@ -38,12 +38,6 @@ void double_bond::bondInfoPrint(std::ostream& out) const {
     out<<"dubla";
 }
 
-// void double_bond::draw(sf::RenderWindow& window) const
-// {
-//     window.draw(bondLine1);
-//     window.draw(bondLine2);
-// }
-
 sf::FloatRect double_bond::getBounds() const
 {
     const sf::FloatRect r1 = bondLine1.getGlobalBounds();

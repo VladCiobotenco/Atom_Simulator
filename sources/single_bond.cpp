@@ -36,11 +36,6 @@ void single_bond::bondInfoPrint(std::ostream& out) const
     out<<"simpla";
 }
 
-// void single_bond::draw(sf::RenderWindow& thisWindow) const
-// {
-//     thisWindow.draw(bondLine);
-// }
-
 void single_bond::updatePosition(const sf::Vector2f& p1, const sf::Vector2f& p2)
 {
     auto [len, angle] = calculateGeometry(p1, p2);

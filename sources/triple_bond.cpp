@@ -1,6 +1,6 @@
 #include "triple_bond.hpp"
 
-triple_bond::triple_bond(int atomIndex1, int atomIndex2) : bond("triple_bond",atomIndex1, atomIndex2), bondLinesOffset(3.f)
+triple_bond::triple_bond(const int atomIndex1, const int atomIndex2) : bond("triple_bond",atomIndex1, atomIndex2), bondLinesOffset(3.f)
 {
     bondLine1.setFillColor(sf::Color(80, 80, 80));
     bondLine1.setOrigin({0.f, 2.f - 2*bondLinesOffset});
@@ -43,13 +43,6 @@ void triple_bond::bondInfoPrint(std::ostream& out) const
 {
     out<<"tripla";
 }
-
-// void triple_bond::draw(sf::RenderWindow& window) const
-// {
-//     window.draw(bondLine1);
-//     window.draw(bondLine2);
-//     window.draw(bondLine3);
-// }
 
 sf::FloatRect triple_bond::getBounds() const
 {
