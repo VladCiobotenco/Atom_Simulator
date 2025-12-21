@@ -1,22 +1,40 @@
 # Atom simulator
 
-### O scurta descriere
+## O scurta descriere
 
 __Atom simulator__ este o aplicatie educationala destinat elevilor ce doresc sa inteleaga principiile fundamentale ale chimiei. Programul permite utilizatorului sa simuleze molecule, sa vizualizeze legaturile chimice care se stabilesc intre atomi pe baza valentelor acestora si sa descopere informatii despre elemente precum _oxigenul_, _hidrogenul_, _carbonul_ si altele.
 
-### Mecanica simulatorului
+## Notiuni de chimie
 
-Versiunea actuala a aplicatiei permite utilizatorului sa vizualizeze o molecule ce contine 4 atomi (reprezentati prin cercuri de culori si dimensiuni diferite):
+Versiunea actuala a aplicatiei permite utilizatorului sa vizualizeze o molecule ce contine 6 atomi (reprezentati prin cercuri de culori si dimensiuni diferite):
 - Carbon - negru
 - Oxigen - rosu
 - Hidrogen - alb
 - Azot - albastru
+- Sodiu (in forma de ion) - roz
+- Clor (in forma de ion) - verde
 
-Utilizatorul poate muta atomii pe ecran prin urmatorul procedeu: click-stanga pe atom + drag and drop la noua pozitie dorita. De asemenea, pot fi realizate legaturi intre atomi pe baza valentelor acestora. Legaturile se pot crea prin click-dreapta pe atomii intre care se doreste sa existe o legatura, iar pentru stergerea unei legaturi existente se apasa click-dreapta pe atomii intre care exista respectiva legatura. Legaturile intre atomi se realizeaza dupa urmatoarea regula:
+Pentru utilizarea simulatorului utilizatorul trebuie sa cunoasca cateva reguli importante din chimie:
 - atomul de hidrogen accepta maxim o legatura
 - atomul de oxigen accepta maxim 2 legaturi
 - atomul de azot accepta maxim 3 legaturi
-- atomic de carbon accepta maxim 4 legaturi 
+- atomul de carbon accepta maxim 4 legaturi 
+- atomul de sodiu accepta maxim o legatura
+- atomul de clor accepta maxim o legatura
+
+## Mecanica simulatorului
+Aplicatia dezvoltata este foarte intuitiva. Scopul utilizatorului este de a crea molecule cu ajutorul unor atomi prestabiliti si a legaturilor ce se formeaza intre atomi. Modul de functionare al simulatorului este exemplificat mai jos:
+1) se selecteaza un tip de atom din meniul de atomi
+2) se efectueaza _click_stanga_ in spatiu de lucru pentru a adauga atomi
+3) se efectueaza _click_dreapta_ pe atomi pentru a-i selecta
+   - pentru a crea o legatura -> _click_dreapta pe alt atom care are electroni disponibili_
+   - pentru a sterge o legatura -> _click_dreapta_ pe atomul cu care imparte legatura pe care vrem sa o stergem
+   - pentru a sterge atomul selectat -> tasta _delete_
+4) pentru a reseta spatiul de lucru -> tasta _R_
+5) pentru inchiderea simulatorului -> tasta _ESC_
+
+Odata ce toti atomii din spatiul de lucru sunt __conectati__, programul va afisa numele moleculei formate si masa moleculara. Daca molecula creata este __recunoscuta__ de aplicatie, va afisa si denumirea ei. 
+
 
 ### Folosiți template-ul corespunzător grupei voastre!
 
@@ -67,38 +85,38 @@ O cerință nu se consideră îndeplinită dacă este realizată doar prin cod g
 - [x] minim 50-55% din codul propriu să fie C++, `.gitattributes` configurat corect
 - [x] tag de `git`: de exemplu `v0.1`
 - [x] serviciu de integrare continuă (CI) cu **toate bifele**; exemplu: GitHub Actions
-- [ ] code review #1 2 proiecte
+- [x] code review #1 2 proiecte
 
 ## Tema 2
 
 #### Cerințe
-- [ ] separarea codului din clase în `.h` (sau `.hpp`) și `.cpp`
-- [ ] moșteniri:
+- [x] separarea codului din clase în `.h` (sau `.hpp`) și `.cpp`
+- [x] moșteniri:
   - minim o clasă de bază și **3 clase derivate** din aceeași ierarhie
   - ierarhia trebuie să fie cu bază proprie, nu derivată dintr-o clasă predefinită
-  - [ ] funcții virtuale (pure) apelate prin pointeri de bază din clasa care conține atributul de tip pointer de bază
+  - [x] funcții virtuale (pure) apelate prin pointeri de bază din clasa care conține atributul de tip pointer de bază
     - minim o funcție virtuală va fi **specifică temei** (i.e. nu simple citiri/afișări sau preluate din biblioteci i.e. draw/update/render)
     - constructori virtuali (clone): sunt necesari, dar nu se consideră funcții specifice temei
     - afișare virtuală, interfață non-virtuală
-  - [ ] apelarea constructorului din clasa de bază din constructori din derivate
-  - [ ] clasă cu atribut de tip pointer la o clasă de bază cu derivate; aici apelați funcțiile virtuale prin pointer de bază, eventual prin interfața non-virtuală din bază
-    - [ ] suprascris cc/op= pentru copieri/atribuiri corecte, copy and swap
-    - [ ] `dynamic_cast`/`std::dynamic_pointer_cast` pentru downcast cu sens
-    - [ ] smart pointers (recomandat, opțional)
-- [ ] excepții
-  - [ ] ierarhie proprie cu baza `std::exception` sau derivată din `std::exception`; minim **3** clase pentru erori specifice distincte
+  - [x] apelarea constructorului din clasa de bază din constructori din derivate
+  - [x] clasă cu atribut de tip pointer la o clasă de bază cu derivate; aici apelați funcțiile virtuale prin pointer de bază, eventual prin interfața non-virtuală din bază
+    - [x] suprascris cc/op= pentru copieri/atribuiri corecte, copy and swap
+    - [x] `dynamic_cast`/`std::dynamic_pointer_cast` pentru downcast cu sens
+    - [x] smart pointers (recomandat, opțional)
+- [x] excepții
+  - [x] ierarhie proprie cu baza `std::exception` sau derivată din `std::exception`; minim **3** clase pentru erori specifice distincte
     - clasele de excepții trebuie să trateze categorii de erori distincte (exemplu de erori echivalente: citire fișiere cu diverse extensii)
-  - [ ] utilizare cu sens: de exemplu, `throw` în constructor (sau funcție care întoarce un obiect), `try`/`catch` în `main`
+  - [x] utilizare cu sens: de exemplu, `throw` în constructor (sau funcție care întoarce un obiect), `try`/`catch` în `main`
   - această ierarhie va fi complet independentă de ierarhia cu funcții virtuale
-- [ ] funcții și atribute `static`
-- [ ] STL
-- [ ] cât mai multe `const`
-- [ ] funcții *de nivel înalt*, de eliminat cât mai mulți getters/setters/funcții low-level
-- [ ] minim 75-80% din codul propriu să fie C++
-- [ ] la sfârșit: commit separat cu adăugarea unei noi clase derivate fără a modifica restul codului, **pe lângă cele 3 derivate deja adăugate** din aceeași ierarhie
+- [x] funcții și atribute `static`
+- [x] STL
+- [x] cât mai multe `const`
+- [x] funcții *de nivel înalt*, de eliminat cât mai mulți getters/setters/funcții low-level
+- [x] minim 75-80% din codul propriu să fie C++
+- [x] la sfârșit: commit separat cu adăugarea unei noi clase derivate fără a modifica restul codului, **pe lângă cele 3 derivate deja adăugate** din aceeași ierarhie
   - noua derivată nu poate fi una existentă care a fost ștearsă și adăugată din nou
   - noua derivată va fi integrată în codul existent (adică va fi folosită, nu adăugată doar ca să fie)
-- [ ] tag de `git` pe commit cu **toate bifele**: de exemplu `v0.2`
+- [x] tag de `git` pe commit cu **toate bifele**: de exemplu `v0.2`
 - [ ] code review #2 2 proiecte
 
 ## Tema 3
