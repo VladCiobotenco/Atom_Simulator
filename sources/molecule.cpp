@@ -73,12 +73,12 @@ void molecule::addBond(const int index1, const int index2, const std::string& bo
             std::cout << "A fost adaugata o legatura tripla intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
         }
 
-        else if (bondName == "quad_bond")
-        {
-            const auto newBond = std::make_shared<quad_bond>(index1, index2);
-            entitiesList.push_back(newBond);
-            std::cout << "A fost adaugata o legatura quad intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
-        }
+        // else if (bondName == "quad_bond")
+        // {
+        //     const auto newBond = std::make_shared<quad_bond>(index1, index2);
+        //     entitiesList.push_back(newBond);
+        //     std::cout << "A fost adaugata o legatura quad intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
+        // }
 
         else throw chemistryLawsException("Nu exista tipul de legatura");
     }
