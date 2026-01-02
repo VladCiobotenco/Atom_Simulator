@@ -1,5 +1,5 @@
-#include "atom.hpp"
-#include "bond.hpp"
+#include "../include/atom.hpp"
+#include "../include/bond.hpp"
 
 #include <cmath>
 #include <utility>

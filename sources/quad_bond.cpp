@@ -1,4 +1,4 @@
-#include "quad_bond.hpp"
+#include "../include/quad_bond.hpp"
 
 quad_bond::quad_bond(const int atomIndex1, const int atomIndex2) : bond("quad_bond",atomIndex1, atomIndex2), bondLinesOffset(3.f)
 {

@@ -58,35 +58,35 @@ endif()
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
-        sources/atom.hpp
+        include/atom.hpp
         sources/atom.cpp
-        sources/bond.hpp
+        include/bond.hpp
         sources/bond.cpp
-        sources/molecule.hpp
+        include/molecule.hpp
         sources/molecule.cpp
-        sources/input.hpp
+        include/input.hpp
         sources/input.cpp
-        sources/simulator_manager.hpp
+        include/simulator_manager.hpp
         sources/simulator_manager.cpp
-        sources/entity.hpp
+        include/entity.hpp
         sources/entity.cpp
         sources/ion.cpp
-        sources/ion.hpp
+        include/ion.hpp
 
         libraries/json.hpp
         sources/single_bond.cpp
-        sources/single_bond.hpp
+        include/single_bond.hpp
         sources/double_bond.cpp
-        sources/double_bond.hpp
+        include/double_bond.hpp
         sources/triple_bond.cpp
-        sources/triple_bond.hpp
-        sources/exceptions.hpp
+        include/triple_bond.hpp
+        include/exceptions.hpp
         sources/quad_bond.cpp
-        sources/quad_bond.hpp
+        include/quad_bond.hpp
         sources/audio_manager.cpp
-        sources/audio_manager.hpp
+        include/audio_manager.hpp
         sources/chemical_database.cpp
-        sources/chemical_database.hpp
+        include/chemical_database.hpp
 )
 
 
@@ -120,6 +120,6 @@ if(APPLE)
 endif()
 
 
-copy_files(FILES atoms.json ions.json elements.json DIRECTORY assets COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
+copy_files(FILES data/atoms.json data/ions.json data/elements.json DIRECTORY assets COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(FILES tastatura.txt config.json DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})

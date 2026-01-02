@@ -2,8 +2,8 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-#include "ion.hpp"
-#include "atom.hpp"
+#include "../include/ion.hpp"
+#include "../include/atom.hpp"
 
 ion::ion(std::string n, const int p, const int g, const int Z, const int m, std::string s, const int c, sf::Font f) :
     atom(std::move(n), p, g, Z, m, std::move(s)), ionCharge(c), chargeFont(std::move(f)), chargeText(sf::Text(chargeFont,"",30))

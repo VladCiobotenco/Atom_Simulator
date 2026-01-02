@@ -1,4 +1,4 @@
-#include "single_bond.hpp"
+#include "../include/single_bond.hpp"
 
 single_bond::single_bond(const int atomIndex1, const int atomIndex2)
     : bond("SingleBond", atomIndex1 , atomIndex2)

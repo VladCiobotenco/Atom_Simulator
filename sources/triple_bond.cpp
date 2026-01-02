@@ -1,4 +1,4 @@
-#include "triple_bond.hpp"
+#include "../include/triple_bond.hpp"
 
 triple_bond::triple_bond(const int atomIndex1, const int atomIndex2) : bond("triple_bond",atomIndex1, atomIndex2), bondLinesOffset(3.f)
 {

@@ -5,14 +5,14 @@
 #include <SFML/Graphics.hpp>
 
 
-#include "sources/atom.hpp"
-#include "sources/molecule.hpp"
-#include "sources/input.hpp"
+#include "include/atom.hpp"
+#include "include/molecule.hpp"
+#include "include/input.hpp"
 
-#include "sources/simulator_manager.hpp"
-#include "sources/audio_manager.hpp"
-#include "sources/chemical_database.hpp"
-#include "sources/exceptions.hpp"
+#include "include/simulator_manager.hpp"
+#include "include/audio_manager.hpp"
+#include "include/chemical_database.hpp"
+#include "include/exceptions.hpp"
 
 
 int main()

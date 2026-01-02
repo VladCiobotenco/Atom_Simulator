@@ -1,5 +1,5 @@
-#include "audio_manager.hpp"
-#include "exceptions.hpp"
+#include "../include/audio_manager.hpp"
+#include "../include/exceptions.hpp"
 
 void audio_manager::playMusic(const std::string& fileName)
 {

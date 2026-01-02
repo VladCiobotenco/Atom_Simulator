@@ -1,15 +1,15 @@
-#include "molecule.hpp"
+#include "../include/molecule.hpp"
 #include <iostream>
 #include <map>
 #include <queue>
 #include <set>
 #include <utility>
 
-#include "double_bond.hpp"
-#include "exceptions.hpp"
-#include "quad_bond.hpp"
-#include "single_bond.hpp"
-#include "triple_bond.hpp"
+#include "../include/double_bond.hpp"
+#include "../include/exceptions.hpp"
+#include "../include/quad_bond.hpp"
+#include "../include/single_bond.hpp"
+#include "../include/triple_bond.hpp"
 
 molecule::molecule(std::string  t):name(std::move(t))
 {

@@ -1,4 +1,4 @@
-#include "double_bond.hpp"
+#include "../include/double_bond.hpp"
 
 double_bond::double_bond(int atomIndex1, int atomIndex2): bond("double_bond", atomIndex1, atomIndex2), bondLinesOffset(3.f)
 {

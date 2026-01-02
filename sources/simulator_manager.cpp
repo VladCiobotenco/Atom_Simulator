@@ -2,17 +2,17 @@
 #include <SFML/Graphics.hpp>
 #include <optional>
 
-#include "../sources/atom.hpp"
-#include "../sources/bond.hpp"
-#include "../sources/molecule.hpp"
-#include "../sources/ion.hpp"
+#include "../include/atom.hpp"
+#include "../include/bond.hpp"
+#include "../include/molecule.hpp"
+#include "../include/ion.hpp"
 
-#include "simulator_manager.hpp"
-#include "audio_manager.hpp"
+#include "../include/simulator_manager.hpp"
+#include "../include/audio_manager.hpp"
 
 #include <iostream>
 
-#include "exceptions.hpp"
+#include "../include/exceptions.hpp"
 
 void simulator_manager::simulationStart(const std::string& windowName, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons, chemical_database& database, audio_manager& audio)
 {

@@ -1,10 +1,10 @@
 #include <iostream>
 #include <utility>
 
-#include "atom.hpp"
-#include "entity.hpp"
+#include "../include/atom.hpp"
+#include "../include/entity.hpp"
 
-#include "exceptions.hpp"
+#include "../include/exceptions.hpp"
 #include "../libraries/json.hpp"
 
 atom::atom(std::string  n, const int p, const int g, const int Z, const int m, std::string  s): entity(std::move(n)), period(p), group(g), atomicNumber(Z), atomicMass(m), symbol(std::move(s)) {

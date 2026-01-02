@@ -1,7 +1,7 @@
-#include "chemical_database.hpp"
+#include "../include/chemical_database.hpp"
 
 #include "../libraries/json.hpp"
-#include "exceptions.hpp"
+#include "../include/exceptions.hpp"
 #include <fstream>
 //#include <map>
 

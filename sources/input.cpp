@@ -2,11 +2,11 @@
 #include <fstream>
 #include <string>
 
-#include "atom.hpp"
-#include "ion.hpp"
+#include "../include/atom.hpp"
+#include "../include/ion.hpp"
 #include "../libraries/json.hpp"
 
-#include "exceptions.hpp"
+#include "../include/exceptions.hpp"
 
 using json=nlohmann::json;
 
