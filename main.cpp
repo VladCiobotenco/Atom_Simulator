@@ -14,34 +14,15 @@
 #include "include/chemical_database.hpp"
 #include "include/exceptions.hpp"
 
+simulator_manager simulator_manager::instance;
 
 int main()
 {
     try
     {
-        sf::Font font;
-        if (!font.openFromFile("assets/Roboto-VariableFont_wdth,wght.ttf"))
-            throw resourceMissingException("assets/Roboto-VariableFont_wdth,wght.ttf");
+        simulator_manager& simulator=simulator_manager::getInstance();
 
-        std::vector<atom> inputAtoms = readAtomsFromJson("atoms.json");
-        std::vector<ion> inputIons = readIonsFromJson("ions.json", font);
-
-        chemical_database database;
-        database.loadIntoDatabase("elements.json");
-        std::cout<<database;
-
-        molecule testMolecule("practiceMolecule");
-        std::string gameWindowName="Atom Simulator";
-
-        audio_manager audio;
-        audio.playMusic("assets/MainMusic.ogg");
-        audio.loadSound("selectie","assets/click-selectare.wav");
-        audio.loadSound("stergere","assets/click-stergere.wav");
-
-        simulator_manager::simulationStart(gameWindowName, testMolecule, font, inputAtoms, inputIons, database, audio);
-
-        testMolecule.removeEntities();
-
+        simulator.simulation();
     }
 
     catch (const fileLoadingException& e)

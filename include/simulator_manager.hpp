@@ -9,8 +9,20 @@
 
 class simulator_manager
 {
+   static simulator_manager instance;
+
+   simulator_manager() = default;
+   simulator_manager(const simulator_manager&) = delete;
+   simulator_manager& operator=(const simulator_manager&) = delete;
+   ~simulator_manager() = default;
+
 public:
-   static void simulationStart(const std::string&, molecule&, const sf::Font&, const std::vector<atom>&, const std::vector<ion>&, chemical_database&, audio_manager&);
+   static void simulation();
+   static void workArea(const std::string&, molecule&, const sf::Font&, const std::vector<atom>&, const std::vector<ion>&, chemical_database&, audio_manager&);
+
+   static simulator_manager& getInstance();
+
+
 };
 
 #endif

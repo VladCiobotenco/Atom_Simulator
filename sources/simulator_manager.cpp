@@ -6,6 +6,7 @@
 #include "../include/bond.hpp"
 #include "../include/molecule.hpp"
 #include "../include/ion.hpp"
+#include "../include/input.hpp"
 
 #include "../include/simulator_manager.hpp"
 #include "../include/audio_manager.hpp"
@@ -14,7 +15,33 @@
 
 #include "../include/exceptions.hpp"
 
-void simulator_manager::simulationStart(const std::string& windowName, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons, chemical_database& database, audio_manager& audio)
+void simulator_manager::simulation()
+{
+    sf::Font font;
+    if (!font.openFromFile("assets/Roboto-VariableFont_wdth,wght.ttf"))
+        throw resourceMissingException("assets/Roboto-VariableFont_wdth,wght.ttf");
+
+    std::vector<atom> inputAtoms = readAtomsFromJson("atoms.json");
+    std::vector<ion> inputIons = readIonsFromJson("ions.json", font);
+
+    chemical_database database;
+    database.loadIntoDatabase("elements.json");
+    std::cout<<database;
+
+    molecule testMolecule("practiceMolecule");
+    std::string gameWindowName="Atom Simulator";
+
+    audio_manager audio;
+    audio.playMusic("assets/MainMusic.ogg");
+    audio.loadSound("selectie","assets/click-selectare.wav");
+    audio.loadSound("stergere","assets/click-stergere.wav");
+
+    workArea(gameWindowName, testMolecule, font, inputAtoms, inputIons, database, audio);
+
+    testMolecule.removeEntities();
+}
+
+void simulator_manager::workArea(const std::string& windowName, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons, chemical_database& database, audio_manager& audio)
 {
     /// Crearea unei palete de atomi in zona de menu
     std::vector<std::shared_ptr<atom>> atomPalette;
@@ -317,4 +344,9 @@ void simulator_manager::simulationStart(const std::string& windowName, molecule&
 
         mainScreen.display();
     }
+}
+
+simulator_manager &simulator_manager::getInstance()
+{
+    return instance;
 }
