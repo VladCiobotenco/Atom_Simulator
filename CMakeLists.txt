@@ -65,7 +65,6 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         include/molecule.hpp
         sources/molecule.cpp
         include/input.hpp
-        sources/input.cpp
         include/simulator_manager.hpp
         sources/simulator_manager.cpp
         include/entity.hpp

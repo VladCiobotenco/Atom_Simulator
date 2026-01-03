@@ -21,8 +21,8 @@ void simulator_manager::simulation()
     if (!font.openFromFile("assets/Roboto-VariableFont_wdth,wght.ttf"))
         throw resourceMissingException("assets/Roboto-VariableFont_wdth,wght.ttf");
 
-    std::vector<atom> inputAtoms = readAtomsFromJson("atoms.json");
-    std::vector<ion> inputIons = readIonsFromJson("ions.json", font);
+    std::vector<atom> inputAtoms = input<atom>::read("atoms.json");
+    std::vector<ion> inputIons = input<ion>::read("ions.json", font);
 
     chemical_database database;
     database.loadIntoDatabase("elements.json");
@@ -443,7 +443,7 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
     }
 }
 
-void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons, chemical_database& database, audio_manager& audio)
+void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons, const chemical_database& database, audio_manager& audio)
 {
     window.setTitle("Atom Simulator - Trivia Mode");
 
