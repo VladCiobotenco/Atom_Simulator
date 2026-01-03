@@ -10,6 +10,7 @@ class chemical_database
 public:
     void loadIntoDatabase(const std::string&);
     std::string searchIntoDatabase(const std::string&);
+    [[nodiscard]] std::pair<std::string, std::string> getRandomEntry() const;
     friend std::ostream& operator<<(std::ostream&, const chemical_database&);
 };
 

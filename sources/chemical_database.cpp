@@ -48,6 +48,13 @@ std::string chemical_database::searchIntoDatabase(const std::string& formula)
     return "";
 }
 
+std::pair<std::string, std::string> chemical_database::getRandomEntry() const
+{
+    auto it = database.begin();
+    std::advance(it, rand() % database.size());
+    return *it;
+}
+
 std::ostream& operator<<(std::ostream& out, const chemical_database& thisDatabase)
 {
     out << "\n=== Chemical Database Content ===\n";

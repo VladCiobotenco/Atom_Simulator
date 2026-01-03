@@ -102,7 +102,9 @@ void simulator_manager::simulation()
                         }
                         else if (triviaButton.getGlobalBounds().contains(mousePos)) {
                             audio.playSound("selectie");
-                            triviaMode();
+                            molecule testMolecule("triviaMolecule");
+                            triviaMode(window, testMolecule, font, inputAtoms, inputIons, database, audio);
+                            testMolecule.removeEntities();
                         }
                         else if (exitBtn.getGlobalBounds().contains(mousePos)) {
                             window.close();
@@ -280,7 +282,6 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
                             newEntityAtom->setShowElectrons(true);
                             if (auto ionPtr = std::dynamic_pointer_cast<ion>(newEntity))
                                 thisMolecule.addAtom(ionPtr,mousePosition);
-
                             else if (auto atomPtr = std::dynamic_pointer_cast<atom>(newEntity))
                                 thisMolecule.addAtom(atomPtr, mousePosition);
                         }
@@ -334,7 +335,6 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
                                 thisMolecule.removeEntity(bondIndex);
                                 audio.playSound("stergere");
                             }
-
 
                             const auto selectedAtom=thisMolecule.getAtom(selectedAtomIndex);
                             selectedAtom->setAtomThickness(2.f);
@@ -443,9 +443,273 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
     }
 }
 
-void simulator_manager::triviaMode()
+void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons, chemical_database& database, audio_manager& audio)
 {
-    return;
+    window.setTitle("Atom Simulator - Trivia Mode");
+
+    thisMolecule.removeEntities();
+    int score = 0;
+
+    auto currentTarget = database.getRandomEntry();
+    std::string targetFormula = currentTarget.first;
+    std::string targetName = currentTarget.second;
+
+    std::vector<std::shared_ptr<atom>> atomPalette;
+    float currentX = 100.f;
+    float currentY = 50.f;
+
+    for (const auto& templateData : templateAtoms)
+    {
+        auto menuButton = std::make_shared<atom>(templateData);
+        menuButton->setPosition({currentX, currentY});
+        atomPalette.push_back(std::move(menuButton));
+        currentY += 75.f;
+    }
+    for (const auto& templateData : templateIons)
+    {
+        auto menuButton = std::make_shared<ion>(templateData);
+        menuButton->setPosition({currentX, currentY});
+        atomPalette.push_back(std::move(menuButton));
+        currentY += 75.f;
+    }
+
+    sf::Text targetText(font, "Create: " + targetName, 30);
+    targetText.setFillColor(sf::Color::White);
+    targetText.setPosition({250.f, 20.f});
+
+    sf::Text scoreText(font, "Score: 0", 30);
+    scoreText.setFillColor(sf::Color::Yellow);
+    scoreText.setPosition({800.f, 20.f});
+
+    sf::Text feedbackText(font, "", 24);
+    feedbackText.setFillColor(sf::Color::Red);
+    feedbackText.setPosition({400.f, 550.f});
+
+    sf::RectangleShape submitBtn({150.f, 50.f});
+    submitBtn.setFillColor(sf::Color(0, 150, 0)); // Green
+    submitBtn.setPosition({800.f, 530.f});
+
+    sf::Text submitLabel(font, "SUBMIT", 20);
+    sf::FloatRect sbBounds = submitLabel.getLocalBounds();
+    submitLabel.setOrigin({sbBounds.size.x/2.f, sbBounds.size.y/2.f});
+    submitLabel.setPosition({800.f + 75.f, 530.f + 25.f});
+
+    sf::RectangleShape atomMenuBackground({200.f, 600.f});
+    atomMenuBackground.setFillColor(sf::Color(50, 50, 50));
+
+    sf::FloatRect workArea({200.f, 0.f}, {800.f, 600.f});
+    sf::RectangleShape selectionBox;
+    selectionBox.setFillColor(sf::Color::Transparent);
+    selectionBox.setOutlineColor(sf::Color::Yellow);
+    selectionBox.setOutlineThickness(3.f);
+
+    int selectedTemplateIndex = 0;
+    int draggedAtomIndex = -1;
+    int selectedAtomIndex = -1;
+    bool isDragging = false;
+    sf::Vector2f dragOffset;
+
+    while (window.isOpen())
+    {
+        if (!atomPalette.empty())
+        {
+            sf::FloatRect b = atomPalette[selectedTemplateIndex]->getBounds();
+            selectionBox.setSize({b.size.x + 10.f, b.size.y + 10.f});
+            selectionBox.setOrigin({5.f, 5.f});
+            selectionBox.setPosition(atomPalette[selectedTemplateIndex]->getAtomPosition() - sf::Vector2f(b.size.x/2, b.size.y/2));
+        }
+
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+            {
+                window.close();
+                return;
+            }
+
+            if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>())
+            {
+                if (keyEvent->code == sf::Keyboard::Key::Escape)
+                    return;
+                if (keyEvent->code == sf::Keyboard::Key::Delete && selectedAtomIndex != -1)
+                {
+                    thisMolecule.removeEntity(selectedAtomIndex);
+                    selectedAtomIndex = -1;
+                }
+                if (keyEvent->code == sf::Keyboard::Key::R)
+                    thisMolecule.removeEntities();
+            }
+
+            if (const auto* mousePress = event->getIf<sf::Event::MouseButtonPressed>())
+            {
+                sf::Vector2f mousePos = window.mapPixelToCoords(mousePress->position);
+
+                if (mousePress->button == sf::Mouse::Button::Left)
+                {
+                    if (submitBtn.getGlobalBounds().contains(mousePos))
+                    {
+                        std::string userFormula = thisMolecule.getMolecularFormula();
+
+                        if (userFormula == targetFormula)
+                        {
+                            score++;
+                            scoreText.setString("Score: " + std::to_string(score));
+                            feedbackText.setString("Correct! Next molecule...");
+                            feedbackText.setFillColor(sf::Color::Green);
+                            feedbackText.setPosition({400.f, 550.f});
+                            audio.playSound("selectie");
+                            thisMolecule.removeEntities();
+                            currentTarget = database.getRandomEntry();
+                            targetFormula = currentTarget.first;
+                            targetName = currentTarget.second;
+                            targetText.setString("Create: " + targetName);
+                        }
+
+                        else
+                        {
+                            feedbackText.setString("Wrong molecule! Try again!");
+                            feedbackText.setFillColor(sf::Color::Red);
+                            sf::FloatRect fb = feedbackText.getLocalBounds();
+                            feedbackText.setPosition({500.f - fb.size.x/2, 550.f});
+                            audio.playSound("selectie");
+                        }
+                    }
+
+                    else if (mousePos.x < 200)
+                    {
+                        for (size_t i = 0; i < atomPalette.size(); ++i)
+                        {
+                            if (atomPalette[i]->getBounds().contains(mousePos))
+                            {
+                                selectedTemplateIndex = static_cast<int>(i);
+                                audio.playSound("selectie");
+                            }
+                        }
+                    }
+
+                    else
+                    {
+                        int clickIndex = thisMolecule.findAtomAtPosition(mousePos);
+
+                        if (clickIndex != -1)
+                        {
+                            isDragging = true;
+                            draggedAtomIndex = clickIndex;
+                            auto atom = thisMolecule.getAtom(draggedAtomIndex);
+                            if(atom)
+                            {
+                                atom->setAtomThickness(5.f);
+                                dragOffset = atom->getAtomPosition() - mousePos;
+                            }
+                        }
+                        else
+                        {
+                            auto newEntity = atomPalette[selectedTemplateIndex]->clone();
+                            auto newAtom = std::dynamic_pointer_cast<atom>(newEntity);
+                            if(newAtom)
+                                newAtom->setShowElectrons(true);
+
+                            if (auto ionPtr = std::dynamic_pointer_cast<ion>(newEntity))
+                                thisMolecule.addAtom(ionPtr, mousePos);
+                            else if (auto atomPtr = std::dynamic_pointer_cast<atom>(newEntity))
+                                thisMolecule.addAtom(atomPtr, mousePos);
+                        }
+                    }
+                }
+
+                else if (mousePress->button == sf::Mouse::Button::Right)
+                {
+                    int clickAtomIndex = thisMolecule.findAtomAtPosition(mousePos);
+
+                    if (clickAtomIndex != -1)
+                    {
+                        if (selectedAtomIndex == -1)
+                        {
+                            audio.playSound("selectie");
+                            selectedAtomIndex = clickAtomIndex;
+                            auto atom = thisMolecule.getAtom(selectedAtomIndex);
+                            if(atom) atom->setAtomThickness(5.f);
+
+                        }
+                        else
+                        {
+                            ///Se creaza o legatura
+                            int bondIndex=thisMolecule.findBondPosition(selectedAtomIndex, clickAtomIndex);
+                            int availableBonds1=thisMolecule.checkValenceLaws(clickAtomIndex);
+                            int availableBonds2=thisMolecule.checkValenceLaws(selectedAtomIndex);
+                            try
+                            {
+                                if (availableBonds1 && availableBonds2 && bondIndex==-1)
+                                {
+                                    audio.playSound("selectie");
+                                    if (availableBonds1>=4 && availableBonds2>=4)
+                                        thisMolecule.addBond(selectedAtomIndex,clickAtomIndex,"quad_bond");
+                                    else if (availableBonds1>=3 && availableBonds2>=3)
+                                        thisMolecule.addBond(selectedAtomIndex,clickAtomIndex,"triple_bond");
+                                    else if (availableBonds1>=2 && availableBonds2>=2)
+                                        thisMolecule.addBond(selectedAtomIndex,clickAtomIndex,"double_bond");
+                                    else
+                                        thisMolecule.addBond(selectedAtomIndex,clickAtomIndex,"single_bond");
+                                    thisMolecule.updateBondsPositions();
+                                }
+                            }
+                            catch (const atomSimulatorExceptions& e)
+                            {
+                                std::cerr << "EROARE: " << e.what() << "\n";
+                            }
+
+                            if (bondIndex!=-1)
+                            {
+                                thisMolecule.removeEntity(bondIndex);
+                                audio.playSound("stergere");
+                            }
+
+                            const auto selectedAtom=thisMolecule.getAtom(selectedAtomIndex);
+                            selectedAtom->setAtomThickness(2.f);
+                            selectedAtomIndex=-1;
+                        }
+                    }
+                }
+            }
+
+            if (const auto* mouseRel = event->getIf<sf::Event::MouseButtonReleased>()) {
+                if (mouseRel->button == sf::Mouse::Button::Left && isDragging) {
+                    if (draggedAtomIndex != -1) {
+                        auto atom = thisMolecule.getAtom(draggedAtomIndex);
+                        if(atom) atom->setAtomThickness(2.f);
+                    }
+                    isDragging = false;
+                    draggedAtomIndex = -1;
+                }
+            }
+        }
+
+        if (isDragging && draggedAtomIndex != -1) {
+            sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+            auto atom = thisMolecule.getAtom(draggedAtomIndex);
+            if(atom) {
+                atom->setPosition(mousePos + dragOffset);
+                atom->restrictAtomToBounds(workArea);
+                thisMolecule.updateBondsPositions();
+            }
+        }
+
+        window.clear(sf::Color(40, 44, 52)); // Darker background for Trivia
+
+        window.draw(targetText);
+        window.draw(scoreText);
+        window.draw(feedbackText);
+
+        thisMolecule.draw(window);
+        window.draw(atomMenuBackground);
+        for (const auto& btn : atomPalette) btn->draw(window);
+        window.draw(selectionBox);
+
+        window.draw(submitBtn);
+        window.draw(submitLabel);
+
+        window.display();
+    }
 }
 
 simulator_manager &simulator_manager::getInstance()
