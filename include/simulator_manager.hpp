@@ -18,7 +18,8 @@ class simulator_manager
 
 public:
    static void simulation();
-   static void workArea(const std::string&, molecule&, const sf::Font&, const std::vector<atom>&, const std::vector<ion>&, chemical_database&, audio_manager&);
+   static void sandboxMode(sf::RenderWindow&, molecule&, const sf::Font&, const std::vector<atom>&, const std::vector<ion>&, chemical_database&, audio_manager&);
+   static void triviaMode();
 
    static simulator_manager& getInstance();
 
