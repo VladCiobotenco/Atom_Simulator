@@ -86,6 +86,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         include/audio_manager.hpp
         sources/chemical_database.cpp
         include/chemical_database.hpp
+        include/bond_factory.hpp
+        sources/bond_factory.cpp
 )
 
 

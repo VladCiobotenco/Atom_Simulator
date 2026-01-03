@@ -10,6 +10,7 @@
 #include "../include/quad_bond.hpp"
 #include "../include/single_bond.hpp"
 #include "../include/triple_bond.hpp"
+#include "../include/bond_factory.hpp"
 
 molecule::molecule(std::string  t):name(std::move(t))
 {
@@ -53,34 +54,9 @@ void molecule::addBond(const int index1, const int index2, const std::string& bo
 
     if (atom1 && atom2)                                                                                                             /// Va fi creat o clasa factory pentru bonds
     {
-        if (bondName == "single_bond")
-        {
-            const auto newBond = std::make_shared<single_bond>(index1, index2);
-            entitiesList.push_back(newBond);
-            std::cout << "A fost adaugata o legatura simpla intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
-        }
-        else if (bondName == "double_bond")
-        {
-            const auto newBond = std::make_shared<double_bond>(index1, index2);
-            entitiesList.push_back(newBond);
-            std::cout << "A fost adaugata o legatura dubla intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
-        }
-
-        else if (bondName == "triple_bond")
-        {
-            const auto newBond = std::make_shared<triple_bond>(index1, index2);
-            entitiesList.push_back(newBond);
-            std::cout << "A fost adaugata o legatura tripla intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
-        }
-
-        else if (bondName == "quad_bond")
-        {
-            const auto newBond = std::make_shared<quad_bond>(index1, index2);
-            entitiesList.push_back(newBond);
-            std::cout << "A fost adaugata o legatura quad intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
-        }
-
-        else throw chemistryLawsException("Nu exista tipul de legatura");
+        const auto newBond = bond_factory::createBond(bondName, index1, index2);
+        entitiesList.push_back(newBond);
+        std::cout << "A fost adaugata o legatura de tip \""<<bondName<<"\" intre atomii cu indexul  " << index1 << " si indexul "<< index2<<"\n";
     }
 
     int newCount = checkValenceLaws(index1);
