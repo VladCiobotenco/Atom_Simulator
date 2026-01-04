@@ -6,6 +6,7 @@
 #include "chemical_database.hpp"
 #include "audio_manager.hpp"
 #include "molecule.hpp"
+#include "ion.hpp"
 
 class simulator_manager
 {
@@ -20,7 +21,7 @@ public:
    static void simulation();
    static void sandboxMode(sf::RenderWindow&, molecule&, const sf::Font&, const std::vector<atom>&, const std::vector<ion>&, chemical_database&, audio_manager&);
    static void triviaMode(sf::RenderWindow&, molecule&, const sf::Font&, const std::vector<atom>&, const std::vector<ion>&, const chemical_database&, audio_manager&);
-
+   static void leaderboardMode(sf::RenderWindow&, const sf::Font&, audio_manager&);
    static simulator_manager& getInstance();
 
 

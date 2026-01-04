@@ -14,6 +14,7 @@
 #include <iostream>
 
 #include "../include/exceptions.hpp"
+#include "../include/leaderboard.hpp"
 
 void simulator_manager::simulation() {
     sf::Font font;
@@ -84,9 +85,22 @@ void simulator_manager::simulation() {
     triviaText.setOrigin({triviaBounds.position.x + triviaBounds.size.x/ 2, triviaBounds.position.y + triviaBounds.size.y / 2});
     triviaText.setPosition({buttonX, startY + gapY});
 
+    sf::RectangleShape leaderboardButton(buttonSize);
+    leaderboardButton.setOrigin({buttonSize.x / 2, buttonSize.y / 2});
+    leaderboardButton.setPosition({buttonX, startY + gapY*2});
+    leaderboardButton.setFillColor(sf::Color(70, 70, 70));
+    leaderboardButton.setOutlineThickness(2.f);
+    leaderboardButton.setOutlineColor(sf::Color(100, 100, 100));
+    sf::Text leaderboardText(font);
+    leaderboardText.setCharacterSize(24);
+    leaderboardText.setString("Leaderboard");
+    sf::FloatRect leaderboardBounds = leaderboardText.getLocalBounds();
+    leaderboardText.setOrigin({leaderboardBounds.position.x + leaderboardBounds.size.x/2, leaderboardBounds.position.y + leaderboardBounds.size.y/2});
+    leaderboardText.setPosition({buttonX, startY + gapY*2});
+
     sf::RectangleShape exitButton(buttonSize);
     exitButton.setOrigin({buttonSize.x / 2, buttonSize.y / 2});
-    exitButton.setPosition({buttonX, startY + gapY * 2});
+    exitButton.setPosition({buttonX, startY + gapY * 3});
     exitButton.setFillColor(sf::Color(192, 192, 192));
     exitButton.setOutlineThickness(2.f);
     exitButton.setOutlineColor(sf::Color(100, 100, 100));
@@ -95,9 +109,10 @@ void simulator_manager::simulation() {
     exitText.setString("Exit");
     sf::FloatRect exitBounds = exitText.getLocalBounds();
     exitText.setOrigin({exitBounds.position.x + exitBounds.size.x / 2, exitBounds.position.y + exitBounds.size.y / 2});
-    exitText.setPosition({buttonX, startY + gapY * 2});
+    exitText.setPosition({buttonX, startY + gapY * 3});
 
-    while (window.isOpen()) {
+    while (window.isOpen())
+    {
         while (const std::optional event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
@@ -124,6 +139,10 @@ void simulator_manager::simulation() {
                         triviaMode(window, testMolecule, font, inputAtoms, inputIons, database, audio);
                         testMolecule.removeEntities();
                     }
+                    else if (leaderboardButton.getGlobalBounds().contains(mousePos)) {
+                        audio.playSound("selectie");
+                        leaderboardMode(window,font,audio);
+                    }
                     else if (exitButton.getGlobalBounds().contains(mousePos))
                     {
                         window.close();
@@ -135,15 +154,16 @@ void simulator_manager::simulation() {
                 break;
 
             sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-            auto updateHover = [&](sf::RectangleShape& btn)
+            auto updateHover = [&](sf::RectangleShape& button)
             {
-                if (btn.getGlobalBounds().contains(mousePos))
-                    btn.setFillColor(sf::Color(100, 100, 100));
+                if (button.getGlobalBounds().contains(mousePos))
+                    button.setFillColor(sf::Color(100, 100, 100));
                 else
-                    btn.setFillColor(sf::Color(70, 70, 70));
+                    button.setFillColor(sf::Color(70, 70, 70));
             };
             updateHover(sandboxButton);
             updateHover(triviaButton);
+            updateHover(leaderboardButton);
             updateHover(exitButton);
 
             window.clear(sf::Color(30, 30, 30));
@@ -157,6 +177,9 @@ void simulator_manager::simulation() {
 
             window.draw(triviaButton);
             window.draw(triviaText);
+
+            window.draw(leaderboardButton);
+            window.draw(leaderboardText);
 
             window.draw(exitButton);
             window.draw(exitText);
@@ -534,6 +557,9 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
     sf::Clock clock;
     bool waitNewMolecule = false;
 
+    // Variabila de leaderboard
+    leaderboard board("../data/scores.txt");
+
     while (window.isOpen())
     {
         if (!atomPalette.empty())
@@ -555,7 +581,11 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
             if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>())
             {
                 if (keyEvent->code == sf::Keyboard::Key::Escape)
+                {
+                    if (score > 0)
+                        board.addScore("Player",score);
                     return;
+                }
                 if (keyEvent->code == sf::Keyboard::Key::Delete && selectedAtomIndex != -1)
                 {
                     thisMolecule.removeEntity(selectedAtomIndex);
@@ -743,6 +773,93 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
 
         window.draw(submitButton);
         window.draw(submitLabel);
+
+        window.display();
+    }
+}
+
+void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font& font, audio_manager& audio)
+{
+    leaderboard board("../data/scores.txt");
+
+    audio.playMusic("../assets/Leaderboard.ogg");
+
+    sf::Text leaderboardTitle(font, "High Scores", 40);
+    leaderboardTitle.setFillColor(sf::Color::Yellow);
+    sf::FloatRect leaderboardTitleBounds = leaderboardTitle.getLocalBounds();
+    leaderboardTitle.setOrigin({leaderboardTitleBounds.size.x/2.f, leaderboardTitleBounds.size.y/2.f});
+    leaderboardTitle.setPosition({500.f, 50.f});
+
+    sf::RectangleShape leaderboardPanel({600.f, 420.f});
+    leaderboardPanel.setFillColor(sf::Color(0, 0, 0, 160));
+    leaderboardPanel.setOutlineThickness(2.f);
+    leaderboardPanel.setOutlineColor(sf::Color(255, 215, 0));
+    leaderboardPanel.setOrigin({300.f, 0.f});
+    leaderboardPanel.setPosition({500.f, 110.f});
+
+    std::vector<sf::Text> scoreLines;
+    const auto& top = board.getScores();
+    int rank = 1;
+    float startY = 140.f;
+
+    for (const auto& entry : top)
+    {
+        std::string line = std::to_string(rank) + ". " + entry.second + "   " + std::to_string(entry.first);
+        sf::Text text(font, line, 26);
+
+        if (rank == 1) text.setFillColor(sf::Color(255, 215, 0));
+        else if (rank == 2) text.setFillColor(sf::Color(192, 192, 192));
+        else if (rank == 3) text.setFillColor(sf::Color(205, 127, 50));
+        else text.setFillColor(sf::Color::White);
+
+        sf::FloatRect bounds = text.getLocalBounds();
+        text.setOrigin({bounds.size.x / 2.f, 0.f});
+        text.setPosition({500.f, startY});
+
+        scoreLines.push_back(text);
+        startY += 35.f;
+        rank++;
+    }
+
+    if (scoreLines.empty()) {
+        sf::Text emptyText(font, "No scores yet!", 30);
+        sf::FloatRect eb = emptyText.getLocalBounds();
+        emptyText.setOrigin({eb.size.x/2.f, eb.size.y/2.f});
+        emptyText.setPosition({500.f, 300.f});
+        scoreLines.push_back(emptyText);
+    }
+
+    sf::Text backText(font, "Press ESC to return", 20);
+    backText.setFillColor(sf::Color(150, 150, 150));
+    backText.setPosition({20.f, 560.f});
+
+    while (window.isOpen())
+    {
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+            {
+                window.close();
+                return;
+            }
+            if (const auto* key = event->getIf<sf::Event::KeyPressed>())
+            {
+                if (key->code == sf::Keyboard::Key::Escape)
+                {
+                    audio.playMusic("../assets/MainMusic.ogg");
+                    return;
+                }
+            }
+        }
+
+        window.clear(sf::Color(20, 20, 30));
+
+        window.draw(leaderboardTitle);
+        //window.draw(listText);
+        window.draw(backText);
+        window.draw(leaderboardPanel);
+        for (const auto& line: scoreLines)
+            window.draw(line);
 
         window.display();
     }

@@ -88,6 +88,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         include/chemical_database.hpp
         include/bond_factory.hpp
         sources/bond_factory.cpp
+        include/leaderboard.hpp
+        sources/leaderboard.cpp
 )
 
 

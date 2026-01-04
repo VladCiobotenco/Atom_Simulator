@@ -1,3 +1,6 @@
+#ifndef BOND_FACTORY_HPP
+#define BOND_FACTORY_HPP
+
 #include <memory>
 
 #include "bond.hpp"
@@ -11,3 +14,5 @@ class bond_factory
 public:
     static std::shared_ptr<bond> createBond(const std::string&, int, int);
 };
+
+#endif
