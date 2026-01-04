@@ -1,20 +1,9 @@
-#include <atomic>
 #include <fstream>
 #include <iostream>
-#include <string>
-#include <SFML/Graphics.hpp>
-
-
-#include "include/atom.hpp"
-#include "include/molecule.hpp"
 #include "include/input.hpp"
 
 #include "include/simulator_manager.hpp"
-#include "include/audio_manager.hpp"
-#include "include/chemical_database.hpp"
 #include "include/exceptions.hpp"
-
-simulator_manager simulator_manager::instance;
 
 int main()
 {

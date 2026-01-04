@@ -15,133 +15,155 @@
 
 #include "../include/exceptions.hpp"
 
-void simulator_manager::simulation()
-{
+void simulator_manager::simulation() {
     sf::Font font;
-    if (!font.openFromFile("assets/Roboto-VariableFont_wdth,wght.ttf"))
-        throw resourceMissingException("assets/Roboto-VariableFont_wdth,wght.ttf");
+    if (!font.openFromFile("../assets/Roboto-VariableFont_wdth,wght.ttf"))
+        throw resourceMissingException("../assets/Roboto-VariableFont_wdth,wght.ttf");
 
-    std::vector<atom> inputAtoms = input<atom>::read("atoms.json");
-    std::vector<ion> inputIons = input<ion>::read("ions.json", font);
+    sf::Texture texture;
+    if (!texture.loadFromFile("../assets/menu-background.png"))
+        throw resourceMissingException("../assets/menu-background.png");
+    sf::Sprite background(texture);
+    float scaleX = 1000.f/740.f;
+    float scaleY = 600.f/495.f;
+    background.setScale({scaleX, scaleY});
+    background.setPosition({0, 0});
+
+    std::vector<atom> inputAtoms = input<atom>::read("../data/atoms.json");
+    std::vector<ion> inputIons = input<ion>::read("../data/ions.json", font);
 
     chemical_database database;
-    database.loadIntoDatabase("elements.json");
+    database.loadIntoDatabase("../data/elements.json");
 
     audio_manager audio;
-    audio.playMusic("assets/MainMusic.ogg");
-    audio.loadSound("selectie","assets/click-selectare.wav");
-    audio.loadSound("stergere","assets/click-stergere.wav");
+    audio.playMusic("../assets/MainMusic.ogg");
+    audio.loadSound("selectie","../assets/click-selectare.wav");
+    audio.loadSound("stergere","../assets/click-stergere.wav");
+    audio.loadSound("corect","../assets/trivia-corect.wav");
+    audio.loadSound("gresit","../assets/trivia-gresit.wav");
 
     sf::RenderWindow window(sf::VideoMode({1000, 600}), "Atom Simulator");
 
     sf::Text titleText(font);
-        titleText.setCharacterSize(50);
-        titleText.setString("Atom Simulator");
-        titleText.setFillColor(sf::Color::White);
-        titleText.setStyle(sf::Text::Bold);
-        sf::FloatRect titleBounds = titleText.getLocalBounds();
-        titleText.setOrigin({titleBounds.size.x / 2, titleBounds.size.y / 2});
-        titleText.setPosition({400.f, 100.f});
+    titleText.setCharacterSize(50);
+    titleText.setString("Atom Simulator");
+    titleText.setFillColor(sf::Color::Black);
+    titleText.setStyle(sf::Text::Bold);
+    sf::FloatRect titleBounds = titleText.getLocalBounds();
+    titleText.setOrigin({titleBounds.position.x + titleBounds.size.x / 2, titleBounds.position.y + titleBounds.size.y / 2});
+    titleText.setPosition({500.f, 50.f});
 
-        sf::Vector2f buttonSize(300.f, 60.f);
-        float buttonX = 400.f;
-        float startY = 250.f;
-        float gapY = 100.f;
+    sf::Vector2f buttonSize(300.f, 60.f);
+    float buttonX = 500.f;
+    float startY = 250.f;
+    float gapY = 100.f;
 
-        sf::RectangleShape sandboxButton(buttonSize);
-        sandboxButton.setOrigin({buttonSize.x / 2, buttonSize.y / 2});
-        sandboxButton.setPosition({buttonX, startY});
-        sandboxButton.setFillColor(sf::Color(70, 70, 70));
-        sf::Text sandboxText(font);
-        sandboxText.setCharacterSize(24);
-        sandboxText.setString("Sandbox mode");
-        sf::FloatRect sandboxBounds = sandboxText.getLocalBounds();
-        sandboxText.setOrigin({sandboxBounds.position.x / 2, sandboxBounds.position.y / 2});
-        sandboxText.setPosition({buttonX, startY - 5.f});
+    sf::RectangleShape sandboxButton(buttonSize);
+    sandboxButton.setOrigin({buttonSize.x / 2, buttonSize.y / 2});
+    sandboxButton.setPosition({buttonX, startY});
+    sandboxButton.setFillColor(sf::Color(192, 192, 192));
+    sandboxButton.setOutlineThickness(2.f);
+    sandboxButton.setOutlineColor(sf::Color(100, 100, 100));
+    sf::Text sandboxText(font);
+    sandboxText.setCharacterSize(24);
+    sandboxText.setString("Sandbox mode");
+    sf::FloatRect sandboxBounds = sandboxText.getLocalBounds();
+    sandboxText.setOrigin({sandboxBounds.position.x + sandboxBounds.size.x/ 2, sandboxBounds.position.y + sandboxBounds.size.y/ 2});
+    sandboxText.setPosition({buttonX, startY});
 
-        sf::RectangleShape triviaButton(buttonSize);
-        triviaButton.setOrigin({buttonSize.x / 2, buttonSize.y / 2});
-        triviaButton.setPosition({buttonX, startY + gapY});
-        triviaButton.setFillColor(sf::Color(70, 70, 70));
-        sf::Text triviaText(font);
-        triviaText.setCharacterSize(24);
-        triviaText.setString("Trivia mode");
-        sf::FloatRect triviaBounds = triviaText.getLocalBounds();
-        triviaText.setOrigin({triviaBounds.position.x / 2, triviaBounds.position.y / 2});
-        triviaText.setPosition({buttonX, startY + gapY - 5.f});
+    sf::RectangleShape triviaButton(buttonSize);
+    triviaButton.setOrigin({buttonSize.x / 2, buttonSize.y / 2});
+    triviaButton.setPosition({buttonX, startY + gapY});
+    triviaButton.setFillColor(sf::Color(192, 192, 192));
+    triviaButton.setOutlineThickness(2.f);
+    triviaButton.setOutlineColor(sf::Color(100, 100, 100));
+    sf::Text triviaText(font);
+    triviaText.setCharacterSize(24);
+    triviaText.setString("Trivia mode");
+    sf::FloatRect triviaBounds = triviaText.getLocalBounds();
+    triviaText.setOrigin({triviaBounds.position.x + triviaBounds.size.x/ 2, triviaBounds.position.y + triviaBounds.size.y / 2});
+    triviaText.setPosition({buttonX, startY + gapY});
 
-        sf::RectangleShape exitBtn(buttonSize);
-        exitBtn.setOrigin({buttonSize.x / 2, buttonSize.y / 2});
-        exitBtn.setPosition({buttonX, startY + gapY * 2});
-        exitBtn.setFillColor(sf::Color(70, 70, 70));
-        sf::Text exitText(font);
-        exitText.setCharacterSize(24);
-        exitText.setString("Exit");
-        sf::FloatRect exitBounds = exitText.getLocalBounds();
-        exitText.setOrigin({exitBounds.position.x / 2, exitBounds.position.y / 2});
-        exitText.setPosition({buttonX, startY + gapY * 2 - 5.f});
+    sf::RectangleShape exitButton(buttonSize);
+    exitButton.setOrigin({buttonSize.x / 2, buttonSize.y / 2});
+    exitButton.setPosition({buttonX, startY + gapY * 2});
+    exitButton.setFillColor(sf::Color(192, 192, 192));
+    exitButton.setOutlineThickness(2.f);
+    exitButton.setOutlineColor(sf::Color(100, 100, 100));
+    sf::Text exitText(font);
+    exitText.setCharacterSize(24);
+    exitText.setString("Exit");
+    sf::FloatRect exitBounds = exitText.getLocalBounds();
+    exitText.setOrigin({exitBounds.position.x + exitBounds.size.x / 2, exitBounds.position.y + exitBounds.size.y / 2});
+    exitText.setPosition({buttonX, startY + gapY * 2});
 
-        while (window.isOpen()) {
-            while (const std::optional event = window.pollEvent())
+    while (window.isOpen()) {
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
             {
-                if (event->is<sf::Event::Closed>())
+                window.close();
+                return;
+            }
+            if (const auto* mousePress = event->getIf<sf::Event::MouseButtonPressed>())
+            {
+                if (mousePress->button == sf::Mouse::Button::Left)
                 {
-                    window.close();
-                    return;
-                }
-                if (const auto* mousePress = event->getIf<sf::Event::MouseButtonPressed>())
-                {
-                    if (mousePress->button == sf::Mouse::Button::Left)
+                    sf::Vector2f mousePos = window.mapPixelToCoords(mousePress->position);
+                    if (sandboxButton.getGlobalBounds().contains(mousePos))
                     {
-                        sf::Vector2f mousePos = window.mapPixelToCoords(mousePress->position);
-                        if (sandboxButton.getGlobalBounds().contains(mousePos)) {
-                            audio.playSound("selectie");
-                            molecule testMolecule("sandboxMolecule");
-                            sandboxMode(window, testMolecule, font, inputAtoms, inputIons, database, audio);
-                            testMolecule.removeEntities();
-                        }
-                        else if (triviaButton.getGlobalBounds().contains(mousePos)) {
-                            audio.playSound("selectie");
-                            molecule testMolecule("triviaMolecule");
-                            triviaMode(window, testMolecule, font, inputAtoms, inputIons, database, audio);
-                            testMolecule.removeEntities();
-                        }
-                        else if (exitBtn.getGlobalBounds().contains(mousePos)) {
-                            window.close();
-                            return;
-                        }
+                        audio.playSound("selectie");
+                        molecule testMolecule("sandboxMolecule");
+                        sandboxMode(window, testMolecule, font, inputAtoms, inputIons, database, audio);
+                        testMolecule.removeEntities();
+                    }
+                    else if (triviaButton.getGlobalBounds().contains(mousePos))
+                    {
+                        audio.playSound("selectie");
+                        molecule testMolecule("triviaMolecule");
+                        triviaMode(window, testMolecule, font, inputAtoms, inputIons, database, audio);
+                        testMolecule.removeEntities();
+                    }
+                    else if (exitButton.getGlobalBounds().contains(mousePos))
+                    {
+                        window.close();
+                        return;
                     }
                 }
-
-                if (!window.isOpen())
-                    break;
-
-                sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-                auto updateHover = [&](sf::RectangleShape& btn) {
-                    if (btn.getGlobalBounds().contains(mousePos))
-                        btn.setFillColor(sf::Color(100, 100, 100));
-                    else
-                        btn.setFillColor(sf::Color(70, 70, 70));
-                };
-                updateHover(sandboxButton);
-                updateHover(triviaButton);
-                updateHover(exitBtn);
-
-                window.clear(sf::Color(30, 30, 30));
-                window.draw(titleText);
-
-                window.draw(sandboxButton);
-                window.draw(sandboxText);
-
-                window.draw(triviaButton);
-                window.draw(triviaText);
-
-                window.draw(exitBtn);
-                window.draw(exitText);
-
-                window.display();
             }
+            if (!window.isOpen())
+                break;
+
+            sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+            auto updateHover = [&](sf::RectangleShape& btn)
+            {
+                if (btn.getGlobalBounds().contains(mousePos))
+                    btn.setFillColor(sf::Color(100, 100, 100));
+                else
+                    btn.setFillColor(sf::Color(70, 70, 70));
+            };
+            updateHover(sandboxButton);
+            updateHover(triviaButton);
+            updateHover(exitButton);
+
+            window.clear(sf::Color(30, 30, 30));
+
+            window.draw(background);
+
+            window.draw(titleText);
+
+            window.draw(sandboxButton);
+            window.draw(sandboxText);
+
+            window.draw(triviaButton);
+            window.draw(triviaText);
+
+            window.draw(exitButton);
+            window.draw(exitText);
+
+            window.display();
         }
+    }
 }
 
 void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons, chemical_database& database, audio_manager& audio)
@@ -473,11 +495,11 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
         currentY += 75.f;
     }
 
-    sf::Text targetText(font, "Create: " + targetName, 30);
+    sf::Text targetText(font, "Construieste urmatoarea molecula: " + targetName, 30);
     targetText.setFillColor(sf::Color::White);
     targetText.setPosition({250.f, 20.f});
 
-    sf::Text scoreText(font, "Score: 0", 30);
+    sf::Text scoreText(font, "Scor: 0", 30);
     scoreText.setFillColor(sf::Color::Yellow);
     scoreText.setPosition({800.f, 20.f});
 
@@ -485,13 +507,12 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
     feedbackText.setFillColor(sf::Color::Red);
     feedbackText.setPosition({400.f, 550.f});
 
-    sf::RectangleShape submitBtn({150.f, 50.f});
-    submitBtn.setFillColor(sf::Color(0, 150, 0)); // Green
-    submitBtn.setPosition({800.f, 530.f});
-
+    sf::RectangleShape submitButton({150.f, 50.f});
+    submitButton.setFillColor(sf::Color(0, 150, 0));
+    submitButton.setPosition({800.f, 530.f});
     sf::Text submitLabel(font, "SUBMIT", 20);
-    sf::FloatRect sbBounds = submitLabel.getLocalBounds();
-    submitLabel.setOrigin({sbBounds.size.x/2.f, sbBounds.size.y/2.f});
+    sf::FloatRect submitBounds = submitLabel.getLocalBounds();
+    submitLabel.setOrigin({submitBounds.size.x/2.f, submitBounds.size.y/2.f});
     submitLabel.setPosition({800.f + 75.f, 530.f + 25.f});
 
     sf::RectangleShape atomMenuBackground({200.f, 600.f});
@@ -508,6 +529,10 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
     int selectedAtomIndex = -1;
     bool isDragging = false;
     sf::Vector2f dragOffset;
+
+    // Variabile pentru timer
+    sf::Clock clock;
+    bool waitNewMolecule = false;
 
     while (window.isOpen())
     {
@@ -546,32 +571,29 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
 
                 if (mousePress->button == sf::Mouse::Button::Left)
                 {
-                    if (submitBtn.getGlobalBounds().contains(mousePos))
+                    if (submitButton.getGlobalBounds().contains(mousePos))
                     {
                         std::string userFormula = thisMolecule.getMolecularFormula();
 
-                        if (userFormula == targetFormula)
+                        if (waitNewMolecule == false && userFormula == targetFormula)
                         {
                             score++;
-                            scoreText.setString("Score: " + std::to_string(score));
-                            feedbackText.setString("Correct! Next molecule...");
+                            scoreText.setString("Scor: " + std::to_string(score));
+                            feedbackText.setString("Corect! Urmatoarea molecula este...");
                             feedbackText.setFillColor(sf::Color::Green);
                             feedbackText.setPosition({400.f, 550.f});
-                            audio.playSound("selectie");
-                            thisMolecule.removeEntities();
-                            currentTarget = database.getRandomEntry();
-                            targetFormula = currentTarget.first;
-                            targetName = currentTarget.second;
-                            targetText.setString("Create: " + targetName);
+                            audio.playSound("corect");
+                            clock.restart();
+                            waitNewMolecule = true;
                         }
 
                         else
                         {
-                            feedbackText.setString("Wrong molecule! Try again!");
+                            feedbackText.setString("Gresit! Mai incearca!");
                             feedbackText.setFillColor(sf::Color::Red);
                             sf::FloatRect fb = feedbackText.getLocalBounds();
                             feedbackText.setPosition({500.f - fb.size.x/2, 550.f});
-                            audio.playSound("selectie");
+                            audio.playSound("gresit");
                         }
                     }
 
@@ -694,6 +716,20 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
             }
         }
 
+        if (waitNewMolecule == true)
+        {
+            if (clock.getElapsedTime().asSeconds() > 1.0f)
+            {
+                waitNewMolecule = false;
+                feedbackText.setString("");
+                thisMolecule.removeEntities();
+                currentTarget = database.getRandomEntry();
+                targetFormula = currentTarget.first;
+                targetName = currentTarget.second;
+                targetText.setString("Create: " + targetName);
+            }
+        }
+
         window.clear(sf::Color(40, 44, 52)); // Darker background for Trivia
 
         window.draw(targetText);
@@ -705,7 +741,7 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
         for (const auto& btn : atomPalette) btn->draw(window);
         window.draw(selectionBox);
 
-        window.draw(submitBtn);
+        window.draw(submitButton);
         window.draw(submitLabel);
 
         window.display();
@@ -716,3 +752,5 @@ simulator_manager &simulator_manager::getInstance()
 {
     return instance;
 }
+
+simulator_manager simulator_manager::instance;
