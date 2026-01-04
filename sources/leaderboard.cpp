@@ -41,7 +41,7 @@ void leaderboard::save() const
     out.close();
 }
 
-std::vector<std::pair<int, std::string>> leaderboard::getScores() const
+const std::vector<std::pair<int, std::string>>& leaderboard::getScores() const
 {
     return scores;
 }

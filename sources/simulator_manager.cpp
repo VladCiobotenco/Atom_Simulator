@@ -518,7 +518,7 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
         currentY += 75.f;
     }
 
-    sf::Text targetText(font, "Construieste urmatoarea molecula: " + targetName, 30);
+    sf::Text targetText(font, "Creeaza: " + targetName, 30);
     targetText.setFillColor(sf::Color::White);
     targetText.setPosition({250.f, 20.f});
 
@@ -583,7 +583,76 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
                 if (keyEvent->code == sf::Keyboard::Key::Escape)
                 {
                     if (score > 0)
-                        board.addScore("Player",score);
+                    {
+                        const float centerX = 500.f;
+                        const float centerY = 300.f;
+
+                        sf::RectangleShape overlay({800.f, 600.f});
+                        overlay.setFillColor(sf::Color(0, 0, 0, 150));
+
+                        sf::RectangleShape inputBox({300.f, 50.f});
+                        inputBox.setOrigin({150.f, 25.f});
+                        inputBox.setPosition({centerX, centerY});
+                        inputBox.setFillColor(sf::Color(50, 50, 50));
+                        inputBox.setOutlineThickness(2.f);
+                        inputBox.setOutlineColor(sf::Color::Cyan);
+
+                        sf::Text promptText(font, "Introdu numele: ", 24);
+                        sf::FloatRect promptBounds = promptText.getLocalBounds();
+                        promptText.setOrigin({promptBounds.position.x + promptBounds.size.x / 2.f, promptBounds.position.y + promptBounds.size.y / 2.f});
+                        promptText.setPosition({centerX, centerY - 50.f});
+
+                        sf::Text nameText(font, "", 24);
+                        nameText.setFillColor(sf::Color::White);
+                        nameText.setPosition({260.f, 285.f});
+
+                        std::string playerName;
+                        bool nameSubmitted = false;
+
+                        while (window.isOpen() && !nameSubmitted)
+                        {
+                            while (const std::optional inputEvent = window.pollEvent())
+                            {
+                                if (inputEvent->is<sf::Event::Closed>())
+                                {
+                                    window.close();
+                                    return;
+                                }
+
+                                if (const auto* textEvt = inputEvent->getIf<sf::Event::TextEntered>())
+                                {
+                                    if (textEvt->unicode == 8)
+                                    {
+                                        if (!playerName.empty())
+                                            playerName.pop_back();
+                                    }
+                                    else if (textEvt->unicode == 13) {
+                                        if (!playerName.empty())
+                                            nameSubmitted = true;
+                                    }
+                                    else if (textEvt->unicode >31 && textEvt->unicode < 128 && playerName.size() < 12)
+                                        playerName += static_cast<char>(textEvt->unicode);
+
+                                    nameText.setString(playerName);
+
+                                    sf::FloatRect nb = nameText.getLocalBounds();
+                                    nameText.setOrigin({nb.position.x + nb.size.x / 2.f, nb.position.y + nb.size.y / 2.f});
+                                    nameText.setPosition({centerX, centerY});
+                                }
+                            }
+                            window.clear();
+
+                            thisMolecule.draw(window);
+                            window.draw(overlay);
+                            window.draw(promptText);
+                            window.draw(inputBox);
+                            window.draw(nameText);
+
+                            window.display();
+                        }
+
+                        board.addScore(playerName, score);
+                    }
                     return;
                 }
                 if (keyEvent->code == sf::Keyboard::Key::Delete && selectedAtomIndex != -1)
@@ -756,7 +825,7 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
                 currentTarget = database.getRandomEntry();
                 targetFormula = currentTarget.first;
                 targetName = currentTarget.second;
-                targetText.setString("Create: " + targetName);
+                targetText.setString("Creeaza: " + targetName);
             }
         }
 
@@ -798,11 +867,11 @@ void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font
     leaderboardPanel.setPosition({500.f, 110.f});
 
     std::vector<sf::Text> scoreLines;
-    const auto& top = board.getScores();
+    const auto& topScores = board.getScores();
     int rank = 1;
     float startY = 140.f;
 
-    for (const auto& entry : top)
+    for (const auto& entry : topScores)
     {
         std::string line = std::to_string(rank) + ". " + entry.second + "   " + std::to_string(entry.first);
         sf::Text text(font, line, 26);

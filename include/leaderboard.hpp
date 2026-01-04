@@ -12,7 +12,7 @@ public:
     void addScore(const std::string&, int);
     void load();
     void save() const;
-    [[nodiscard]] std::vector<std::pair<int, std::string>> getScores() const;
+    [[nodiscard]] const std::vector<std::pair<int, std::string>>& getScores() const;
 };
 
 #endif
