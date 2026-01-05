@@ -21,7 +21,6 @@ public:
 
     void addAtom(const std::shared_ptr<atom>&, const sf::Vector2f&);
     void addBond(int, int, const std::string&);
-    //void removeEntity(int);
     void removeBond(int);
     void removeAtom(int);
     void removeEntities();
@@ -31,8 +30,10 @@ public:
 
     [[nodiscard]] int checkValenceLaws(int) const;
     [[nodiscard]] bool checkAtomsConnections() const;
+    [[nodiscard]] bool checkHydrocarbon() const;
 
     [[nodiscard]] int findAtomAtPosition(const sf::Vector2f&) const;
+    [[nodiscard]] int findBondAtPosition(const sf::Vector2f&) const;
     [[nodiscard]] int findBondPosition(int, int) const;
 
     void updateBondsPositions() const;
@@ -41,6 +42,7 @@ public:
 
 
     [[nodiscard]] std::shared_ptr<atom> getAtom(size_t index) const;
+    [[nodiscard]] std::shared_ptr<bond> getBond(size_t index) const;
 
 
     friend std::ostream& operator<<(std::ostream&, const molecule&);

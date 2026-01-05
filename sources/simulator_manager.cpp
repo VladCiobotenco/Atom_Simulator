@@ -13,6 +13,7 @@
 
 #include <iostream>
 
+#include "../include/double_bond.hpp"
 #include "../include/exceptions.hpp"
 #include "../include/leaderboard.hpp"
 
@@ -283,6 +284,7 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
                     {
                         thisMolecule.removeAtom(selectedAtomIndex);
                         selectedAtomIndex = -1;
+                        audio.playSound("stergere");
                     }
 
                 if (keyPressed->code==sf::Keyboard::Key::R)
@@ -337,6 +339,7 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
                 {
                     sf::Vector2i pixelPosition = {mouseButtonPressed->position.x, mouseButtonPressed->position.y};
                     sf::Vector2f mousePosition = window.mapPixelToCoords(pixelPosition);
+
                     int clickAtomIndex=thisMolecule.findAtomAtPosition(mousePosition);
                     if (clickAtomIndex != -1)
                     {
@@ -384,6 +387,20 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
                             const auto selectedAtom=thisMolecule.getAtom(selectedAtomIndex);
                             selectedAtom->setAtomThickness(2.f);
                             selectedAtomIndex=-1;
+                        }
+                    }
+
+                    int clickBondIndex = thisMolecule.findBondAtPosition(mousePosition);
+                    if (clickBondIndex != -1)
+                    {
+                        auto bondPtr = thisMolecule.getBond(clickBondIndex);
+                        if (auto doubleBondPtr = std::dynamic_pointer_cast<double_bond>(bondPtr))
+                        {
+                            if (thisMolecule.checkHydrocarbon())
+                            {
+                                doubleBondPtr->toggleConfiguration();
+                                audio.playSound("selectie");
+                            }
                         }
                     }
                 }
@@ -659,6 +676,7 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
                 {
                     thisMolecule.removeAtom(selectedAtomIndex);
                     selectedAtomIndex = -1;
+                    audio.playSound("stergere");
                 }
                 if (keyEvent->code == sf::Keyboard::Key::R)
                     thisMolecule.removeEntities();

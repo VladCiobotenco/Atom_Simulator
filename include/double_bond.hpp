@@ -7,6 +7,7 @@ class double_bond: public bond{
     sf::RectangleShape bondLine1;
     sf::RectangleShape bondLine2;
     float bondLinesOffset;
+    bool isCis;
 
 protected:
     void onDraw(sf::RenderWindow&) const override;
@@ -20,8 +21,11 @@ public:
     std::shared_ptr<entity> clone() const override;
 
     sf::FloatRect getBounds() const override;
-    void updatePosition(const sf::Vector2f&, const sf::Vector2f&) override;
     int getOrder() const override;
+    bool getConfiguration() const;
+
+    void updatePosition(const sf::Vector2f&, const sf::Vector2f&) override;
+    void toggleConfiguration();
 };
 
 

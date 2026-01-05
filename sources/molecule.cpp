@@ -87,31 +87,26 @@ void molecule::removeBond(int index)
     auto bondPtr = std::static_pointer_cast<bond>(bondsList[index]);
     int index1=bondPtr->getAtomIndex1();
     int index2=bondPtr->getAtomIndex2();
-    const auto atom1 = std::static_pointer_cast<atom>(atomsList[index1]);
-    const auto atom2 = std::static_pointer_cast<atom>(atomsList[index2]);
 
     std::cout << "Legatura cu indexul " << index << " a fost stearsa.\n";
     bondsList.erase(bondsList.begin() + index);
 
-    int finalIndex1, finalIndex2;
-    if (index1 > index)
-        finalIndex1 = index1-1;
-    else
-        finalIndex1 = index1;
-    if (index2 > index)
-        finalIndex2 = index2-1;
-    else
-        finalIndex2 = index2;
-
-    if (atom1)
+    if (static_cast<size_t>(index1) < atomsList.size())
     {
-        int newCount = checkValenceLaws(finalIndex1);
-        atom1->setAvailableElectrons(newCount);
+        auto atom1 = std::static_pointer_cast<atom>(atomsList[index1]);
+        if (atom1) {
+            const int newCount = checkValenceLaws(index1);
+            atom1->setAvailableElectrons(newCount);
+        }
     }
-    if (atom2)
+
+    if (static_cast<size_t>(index2) < atomsList.size())
     {
-        int newCount = checkValenceLaws(finalIndex2);
-        atom2->setAvailableElectrons(newCount);
+        auto atom2 = std::static_pointer_cast<atom>(atomsList[index2]);
+        if (atom2) {
+            const int newCount = checkValenceLaws(index2);
+            atom2->setAvailableElectrons(newCount);
+        }
     }
 }
 
@@ -231,7 +226,22 @@ bool molecule::checkAtomsConnections() const {
     return false;
 }
 
-int molecule::findAtomAtPosition(const sf::Vector2f& worldPos) const {
+bool molecule::checkHydrocarbon() const
+{
+    bool containsC = false, containsH = false;
+    for (const auto& entityPtr : atomsList)
+    {
+        auto thisAtom = std::static_pointer_cast<atom>(entityPtr);
+        if (thisAtom->getSymbol() == "C")
+            containsC = true;
+        if (thisAtom->getSymbol() == "H")
+            containsH = true;
+    }
+    return containsC && containsH;
+}
+
+int molecule::findAtomAtPosition(const sf::Vector2f& worldPos) const
+{
     int entityIndex=0;
     for (const auto& entityPtr : atomsList)
     {
@@ -243,6 +253,17 @@ int molecule::findAtomAtPosition(const sf::Vector2f& worldPos) const {
 
     return -1;
 }
+
+int molecule::findBondAtPosition(const sf::Vector2f& mousePos) const
+{
+    for (size_t i = 0; i < bondsList.size(); ++i)
+    {
+        if (bondsList[i]->getBounds().contains(mousePos))
+            return static_cast<int>(i);
+    }
+    return -1;
+}
+
 
 int molecule::findBondPosition(int atomIndex1,int atomIndex2) const
 {
@@ -307,6 +328,14 @@ std::shared_ptr<atom> molecule::getAtom(const size_t index) const
         return nullptr;
 
     return std::static_pointer_cast<atom>(atomsList[index]);
+}
+
+std::shared_ptr<bond> molecule::getBond(size_t index) const
+{
+    if (index >= bondsList.size())
+        return nullptr;
+
+    return std::static_pointer_cast<bond>(bondsList[index]);
 }
 
 std::ostream& operator<<(std::ostream& out, const molecule& thisMolecule)
