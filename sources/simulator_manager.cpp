@@ -281,7 +281,7 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
                 if (keyPressed->code==sf::Keyboard::Key::Delete)
                     if (selectedAtomIndex !=-1 )
                     {
-                        thisMolecule.removeEntity(selectedAtomIndex);
+                        thisMolecule.removeAtom(selectedAtomIndex);
                         selectedAtomIndex = -1;
                     }
 
@@ -377,7 +377,7 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
 
                             if (bondIndex!=-1)
                             {
-                                thisMolecule.removeEntity(bondIndex);
+                                thisMolecule.removeBond(bondIndex);
                                 audio.playSound("stergere");
                             }
 
@@ -657,7 +657,7 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
                 }
                 if (keyEvent->code == sf::Keyboard::Key::Delete && selectedAtomIndex != -1)
                 {
-                    thisMolecule.removeEntity(selectedAtomIndex);
+                    thisMolecule.removeAtom(selectedAtomIndex);
                     selectedAtomIndex = -1;
                 }
                 if (keyEvent->code == sf::Keyboard::Key::R)
@@ -781,7 +781,7 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
 
                             if (bondIndex!=-1)
                             {
-                                thisMolecule.removeEntity(bondIndex);
+                                thisMolecule.removeBond(bondIndex);
                                 audio.playSound("stergere");
                             }
 

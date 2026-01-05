@@ -9,7 +9,9 @@
 class molecule
 {
     std::string name;
-    std::vector<std::shared_ptr<entity>> entitiesList;
+    //std::vector<std::shared_ptr<entity>> entitiesList;
+    std::vector<std::shared_ptr<entity>> atomsList;
+    std::vector<std::shared_ptr<entity>> bondsList;
 
 public:
     explicit molecule(std::string);
@@ -19,7 +21,9 @@ public:
 
     void addAtom(const std::shared_ptr<atom>&, const sf::Vector2f&);
     void addBond(int, int, const std::string&);
-    void removeEntity(int);
+    //void removeEntity(int);
+    void removeBond(int);
+    void removeAtom(int);
     void removeEntities();
 
     [[nodiscard]] int getMoleculeMass() const;
