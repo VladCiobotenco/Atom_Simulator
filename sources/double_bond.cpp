@@ -111,10 +111,10 @@ int double_bond::getOrder() const
     return 2;
 }
 
-bool double_bond::getConfiguration() const
-{
-    return isCis;
-}
+// bool double_bond::getConfiguration() const
+// {
+//     return isCis;
+// }
 
 void double_bond::toggleConfiguration()
 {

@@ -22,7 +22,7 @@ public:
 
     sf::FloatRect getBounds() const override;
     int getOrder() const override;
-    bool getConfiguration() const;
+    //bool getConfiguration() const; // il voi seta mai tarziu pentru a afisa tipul configuratiei la hover
 
     void updatePosition(const sf::Vector2f&, const sf::Vector2f&) override;
     void toggleConfiguration();
