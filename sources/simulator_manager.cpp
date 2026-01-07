@@ -25,6 +25,7 @@ void simulator_manager::simulation() {
     sf::Texture texture;
     if (!texture.loadFromFile("../assets/menu-background.png"))
         throw resourceMissingException("../assets/menu-background.png");
+
     sf::Sprite background(texture);
     float scaleX = 1000.f/740.f;
     float scaleY = 600.f/495.f;
@@ -112,6 +113,19 @@ void simulator_manager::simulation() {
     exitText.setOrigin({exitBounds.position.x + exitBounds.size.x / 2, exitBounds.position.y + exitBounds.size.y / 2});
     exitText.setPosition({buttonX, startY + gapY * 3});
 
+    sf::Vector2f tutorialButtonSize(100.f, 40.f);
+
+    sf::RectangleShape tutorialButton(tutorialButtonSize);
+    tutorialButton.setOrigin({tutorialButtonSize.x / 2.f, tutorialButtonSize.y / 2.f});
+    tutorialButton.setPosition({920.f, 50.f});
+    tutorialButton.setFillColor(sf::Color(70, 70, 70));
+    tutorialButton.setOutlineThickness(2.f);
+    tutorialButton.setOutlineColor(sf::Color(100, 100, 100));
+    sf::Text tutorialText(font, "Tutorial", 20);
+    sf::FloatRect tutBounds = tutorialText.getLocalBounds();
+    tutorialText.setOrigin({tutBounds.position.x + tutBounds.size.x/2.f, tutBounds.position.y + tutBounds.size.y/2.f});
+    tutorialText.setPosition(tutorialButton.getPosition());
+
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -143,6 +157,11 @@ void simulator_manager::simulation() {
                     else if (leaderboardButton.getGlobalBounds().contains(mousePos)) {
                         audio.playSound("selectie");
                         leaderboardMode(window,font,audio);
+                    }
+                    else if (tutorialButton.getGlobalBounds().contains(mousePos)) {
+                        audio.playSound("selectie");
+                        // No molecule needed for tutorial mode
+                        tutorialMode(window, font, audio);
                     }
                     else if (exitButton.getGlobalBounds().contains(mousePos))
                     {
@@ -184,6 +203,9 @@ void simulator_manager::simulation() {
 
             window.draw(exitButton);
             window.draw(exitText);
+
+            window.draw(tutorialButton);
+            window.draw(tutorialText);
 
             window.display();
         }
@@ -645,6 +667,163 @@ void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font
     }
 }
 
+void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& font, audio_manager& audio) {
+
+    audio.playMusic("../assets/TutorialMusic.ogg");
+
+    sf::Texture periodicTableTexture;
+    if (!periodicTableTexture.loadFromFile("../assets/periodic-table.jpg")) {
+        throw resourceMissingException("../assets/periodic-table.jpg");
+    }
+
+    sf::Sprite backgroundSprite(periodicTableTexture);
+
+    float scaleX = window.getSize().x / static_cast<float>(periodicTableTexture.getSize().x);
+    float scaleY = window.getSize().y / static_cast<float>(periodicTableTexture.getSize().y);
+    backgroundSprite.setScale({scaleX, scaleY});
+    backgroundSprite.setPosition({0, 0});
+
+    float bgX = 0;
+    float bgY = 0;
+
+    struct TutorialStep {
+        std::string symbol;
+        std::string infoText;
+        sf::FloatRect highlightRect;
+    };
+
+    float rawTileW = 120.f;
+    float rawTileH = 140.f;
+
+    auto makeRect = [&](float rawX, float rawY) {
+        return sf::FloatRect(
+            {bgX + (rawX * scaleX), bgY + (rawY * scaleY)},{rawTileW * scaleX, rawTileH * scaleY}
+        );
+    };
+
+    std::vector<TutorialStep> steps = {
+        { "H", "Hidrogen\n...", makeRect(72.f, 250.f) },
+        { "C", "Carbon\n...", makeRect(1706.f, 392.f) },
+        { "N", "Azot\n...", makeRect(1831.f, 392.f) },
+        { "O", "Oxigen\n...", makeRect(1956.f, 392.f) },
+        { "Na", "Sodiu\n...", makeRect(72.f, 535.f) },
+        { "S", "Sulf\n...", makeRect(1956.f, 535.f) },
+        { "Cl", "Clor\n...", makeRect(2083.f, 535.f) }
+    };
+
+    int currentStepIndex = 0;
+
+    sf::RectangleShape infoBoxRect({600.f, 120.f});
+    infoBoxRect.setFillColor(sf::Color(0, 0, 0, 220));
+    infoBoxRect.setOutlineColor(sf::Color::White);
+    infoBoxRect.setOutlineThickness(2.f);
+    infoBoxRect.setPosition({200.f, 430.f});
+
+    sf::Text infoText(font, "", 20);
+    infoText.setFillColor(sf::Color::White);
+    infoText.setPosition({220.f, 440.f});
+
+    sf::RectangleShape nextButton({120.f, 50.f});
+    nextButton.setPosition({820.f, 465.f});
+    sf::Text nextTxt(font, "Next >", 24);
+    nextTxt.setPosition({845.f, 475.f});
+
+    sf::RectangleShape previousButton({120.f, 50.f});
+    previousButton.setPosition({60.f, 465.f});
+    sf::Text prevTxt(font, "< Prev", 24);
+    prevTxt.setPosition({85.f, 475.f});
+
+    sf::Text exitText(font, "Press ESC to return to Menu", 18);
+    exitText.setFillColor(sf::Color::Black);
+    exitText.setPosition({20.f, 570.f});
+
+    while (window.isOpen())
+    {
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+            {
+                window.close();
+                return;
+            }
+
+            if (const auto* key = event->getIf<sf::Event::KeyPressed>())
+            {
+                if (key->code == sf::Keyboard::Key::Escape)
+                {
+                    audio.playMusic("../assets/MainMusic.ogg");
+                    return;
+                }
+
+
+                if (key->code == sf::Keyboard::Key::Right && static_cast<size_t>(currentStepIndex) < steps.size() - 1)
+                {
+                    currentStepIndex++;
+                    audio.playSound("selectie");
+                }
+                if (key->code == sf::Keyboard::Key::Left && currentStepIndex > 0)
+                {
+                    currentStepIndex--;
+                    audio.playSound("selectie");
+                }
+            }
+
+            if (const auto* press = event->getIf<sf::Event::MouseButtonPressed>())
+            {
+                 if (press->button == sf::Mouse::Button::Left)
+                 {
+                     sf::Vector2f mousePos = window.mapPixelToCoords(press->position);
+                     if(static_cast<size_t>(currentStepIndex) < steps.size() - 1 && nextButton.getGlobalBounds().contains(mousePos))
+                     {
+                         currentStepIndex++;
+                         audio.playSound("selectie");
+                     }
+                     if (currentStepIndex > 0 && previousButton.getGlobalBounds().contains(mousePos))
+                     {
+                         currentStepIndex--;
+                         audio.playSound("selectie");
+                     }
+                 }
+            }
+        }
+
+        infoText.setString(steps[currentStepIndex].infoText);
+
+        if (currentStepIndex==0)
+            previousButton.setFillColor(sf::Color(100, 50, 50));
+        else
+            previousButton.setFillColor(sf::Color(150, 0, 0));
+
+        if (static_cast<size_t>(currentStepIndex) == steps.size()-1)
+            nextButton.setFillColor(sf::Color(50, 100, 50));
+        else
+            nextButton.setFillColor(sf::Color(0, 150, 0));
+
+        sf::RectangleShape highlightBox;
+        sf::FloatRect r = steps[currentStepIndex].highlightRect;
+        highlightBox.setPosition({r.position.x, r.position.y});
+        highlightBox.setSize({r.size.x, r.size.y});
+        highlightBox.setFillColor(sf::Color::Transparent);
+        highlightBox.setOutlineThickness(4.0f);
+        highlightBox.setOutlineColor(sf::Color(0, 255, 255));
+
+        window.clear(sf::Color(30, 30, 40));
+
+        window.draw(backgroundSprite);
+        window.draw(highlightBox);
+
+        window.draw(infoBoxRect);
+        window.draw(infoText);
+
+        window.draw(previousButton); window.draw(prevTxt);
+        window.draw(nextButton); window.draw(nextTxt);
+
+        window.draw(exitText);
+
+        window.display();
+    }
+}
+
 std::vector<std::shared_ptr<atom>> simulator_manager::setupPalette(const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons)
 {
     std::vector<std::shared_ptr<atom>> palette;
@@ -865,6 +1044,40 @@ void simulator_manager::scoreSaveMode(sf::RenderWindow& window, int score, sf::F
 
         board.addScore(playerName, score);
     }
+}
+
+void simulator_manager::drawDynamicArrow(sf::RenderWindow& window, sf::Vector2f startPos, sf::Vector2f endPos, sf::Color color)
+{
+    sf::Vector2f direction = endPos - startPos;
+    float length = std::sqrt(direction.x*direction.x + direction.y*direction.y);
+    if (length < 1.f) return;
+
+    sf::Vector2f unitDir = direction / length;
+    sf::Vector2f perpDir(-unitDir.y, unitDir.x);
+
+    float shaftThickness = 5.0f;
+    sf::RectangleShape shaft({length - 15.0f, shaftThickness});
+    shaft.setOrigin({0.f, shaftThickness / 2.f});
+    shaft.setPosition(startPos);
+    float angle = std::atan2(direction.y, direction.x) * 180.f / 3.14159265f;
+    shaft.setRotation(sf::radians(angle));
+    shaft.setFillColor(color);
+    window.draw(shaft);
+
+    const float headLength = 20.0f;
+    const float headWidth = 15.0f;
+    sf::ConvexShape head(3);
+    head.setPoint(0, endPos);
+    head.setPoint(1, endPos - unitDir * headLength + perpDir * (headWidth / 2.f));
+    head.setPoint(2, endPos - unitDir * headLength - perpDir * (headWidth / 2.f));
+    head.setFillColor(color);
+
+    window.draw(head);
+}
+
+void simulator_manager::createButton(sf::Text &, sf::RectangleShape &, int, const sf::Vector2f &)
+{
+
 }
 
 simulator_manager &simulator_manager::getInstance()
