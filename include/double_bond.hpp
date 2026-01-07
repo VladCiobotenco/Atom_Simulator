@@ -8,6 +8,7 @@ class double_bond: public bond{
     sf::RectangleShape bondLine2;
     float bondLinesOffset;
     bool isCis;
+    bool showConfiguration;
 
 protected:
     void onDraw(sf::RenderWindow&) const override;
@@ -20,6 +21,7 @@ public:
     ~double_bond() override;
     std::shared_ptr<entity> clone() const override;
 
+    void setVisibility(bool);
     sf::FloatRect getBounds() const override;
     int getOrder() const override;
     //bool getConfiguration() const; // il voi seta mai tarziu pentru a afisa tipul configuratiei la hover

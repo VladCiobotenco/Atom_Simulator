@@ -237,7 +237,10 @@ bool molecule::checkHydrocarbon() const
         if (thisAtom->getSymbol() == "H")
             containsH = true;
     }
-    return containsC && containsH;
+    if (containsC == true and containsH == true)
+        return true;
+
+    return false;
 }
 
 int molecule::findAtomAtPosition(const sf::Vector2f& worldPos) const
@@ -316,7 +319,22 @@ void molecule::updateBondsIndices(int removedIndex) const
 void molecule::draw(sf::RenderWindow& window) const
 {
     for (const auto& entityPtr : bondsList)
-            entityPtr->draw(window);
+    {
+        if (const auto& db = dynamic_pointer_cast<double_bond>(entityPtr))
+        {
+            int index1 = db->getAtomIndex1();
+            int index2 = db->getAtomIndex2();
+            auto atom1 = std::static_pointer_cast<atom>(atomsList[index1]);
+            auto atom2 = std::static_pointer_cast<atom>(atomsList[index2]);
+
+
+            if (checkHydrocarbon() && atom1->getSymbol()=="C" && atom2->getSymbol()=="C")                   // Verificam daca o legatura dubla leaga 2 atomi de carbon intr-o hidrocarbura
+                db->setVisibility(true);
+            else
+                db->setVisibility(false);
+        }
+                entityPtr->draw(window);
+    }
 
     for (const auto& entityPtr : atomsList)
             entityPtr->draw(window);

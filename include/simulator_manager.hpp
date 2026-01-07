@@ -22,7 +22,7 @@ class simulator_manager
     static void handleLeftClick(sf::Vector2f mousePos, molecule& thisMolecule, const std::vector<std::shared_ptr<atom>>& atomPalette, int& selectedTemplateIndex, int& draggedAtomIndex, bool& isDragging, sf::Vector2f& dragOffset, audio_manager& audio);
     static void handleRightClick(sf::Vector2f mousePos, molecule& thisMolecule, int& selectedAtomIndex, audio_manager& audio);
     static void drawPalette(sf::RenderWindow& window, const std::vector<std::shared_ptr<atom>>& atomPalette, const sf::RectangleShape& menuBg, const sf::RectangleShape& selectionBox);
-    static void scoreSaveMode(sf::RenderWindow&, int, sf::Font, molecule&, leaderboard&);
+    static void scoreSaveMode(sf::RenderWindow&, int, sf::Font, const molecule&, leaderboard&);
 
 
 public:

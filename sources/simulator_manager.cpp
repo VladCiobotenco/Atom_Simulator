@@ -484,7 +484,7 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
                 {
                     if (submitButton.getGlobalBounds().contains(mousePos))
                     {
-                        if (!waitNewMolecule && thisMolecule.getMolecularFormula() == currentTarget.first)
+                        if (!waitNewMolecule && thisMolecule.getMolecularFormula() == targetFormula)
                         {
                             score++;
                             scoreText.setString("Scor: " + std::to_string(score));
@@ -543,7 +543,7 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
             }
         }
 
-        window.clear(sf::Color(40, 44, 52)); // Darker background for Trivia
+        window.clear(sf::Color(40, 44, 52));
 
         window.draw(targetText);
         window.draw(scoreText);
@@ -636,7 +636,6 @@ void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font
         window.clear(sf::Color(20, 20, 30));
 
         window.draw(leaderboardTitle);
-        //window.draw(listText);
         window.draw(backText);
         window.draw(leaderboardPanel);
         for (const auto& line: scoreLines)
@@ -794,7 +793,7 @@ void simulator_manager::drawPalette(sf::RenderWindow& window, const std::vector<
     window.draw(selectionBox);
 }
 
-void simulator_manager::scoreSaveMode(sf::RenderWindow& window, int score, sf::Font font, molecule& thisMolecule, leaderboard& board)
+void simulator_manager::scoreSaveMode(sf::RenderWindow& window, int score, sf::Font font,const molecule& thisMolecule, leaderboard& board)
 {
     if (score > 0)
     {

@@ -1,7 +1,7 @@
 #include "../include/double_bond.hpp"
 #include <cmath>
 
-double_bond::double_bond(int atomIndex1, int atomIndex2): bond("double_bond", atomIndex1, atomIndex2), bondLinesOffset(3.f), isCis(false)
+double_bond::double_bond(int atomIndex1, int atomIndex2): bond("double_bond", atomIndex1, atomIndex2), bondLinesOffset(3.f), isCis(false), showConfiguration(false)
 {
     bondLine1.setFillColor(sf::Color(80, 80, 80));
     bondLine1.setOrigin({0.f, 2.f + bondLinesOffset});
@@ -9,7 +9,8 @@ double_bond::double_bond(int atomIndex1, int atomIndex2): bond("double_bond", at
     bondLine2.setOrigin({0.f, 2.f - bondLinesOffset});
 }
 
-double_bond::double_bond(const double_bond& other): bond(other.getName(),other.atomIndex1, other.atomIndex2), bondLine1(other.bondLine1),bondLine2(other.bondLine2), bondLinesOffset(other.bondLinesOffset), isCis(other.isCis){}
+double_bond::double_bond(const double_bond& other): bond(other.getName(),other.atomIndex1, other.atomIndex2), bondLine1(other.bondLine1),bondLine2(other.bondLine2),
+                                                    bondLinesOffset(other.bondLinesOffset), isCis(other.isCis), showConfiguration(other.showConfiguration){}
 
 double_bond& double_bond::operator=(const double_bond& other)
 {
@@ -19,6 +20,7 @@ double_bond& double_bond::operator=(const double_bond& other)
         bondLine2=other.bondLine2;
         bondLinesOffset=other.bondLinesOffset;
         isCis=other.isCis;
+        showConfiguration=other.showConfiguration;
     }
     return *this;
 }
@@ -30,48 +32,54 @@ std::shared_ptr<entity> double_bond::clone() const
     return std::make_shared<double_bond>(*this);
 }
 
+void double_bond::setVisibility(const bool newValue) {
+    showConfiguration = newValue;
+}
+
 void double_bond::onDraw(sf::RenderWindow& thisWindow) const
 {
     thisWindow.draw(bondLine1);
     thisWindow.draw(bondLine2);
 
-    // Vizualizarea configuratiei izomerului geometric
-    const float angleDeg = bondLine1.getRotation().asDegrees();
-    const float angleRad = angleDeg * 3.14159265f / 180.f;
-
-    sf::Vector2f direction(std::cos(angleRad), std::sin(angleRad));
-    sf::Vector2f normal(-direction.y, direction.x);
-
-    sf::Vector2f startPos = bondLine1.getPosition();
-    float length = bondLine1.getSize().x;
-
-    const float markerW = 4.0f;
-    const float markerH = 8.0f;
-    sf::Color markerColor = sf::Color::Yellow;
-
-    sf::RectangleShape marker({markerW, markerH});
-    marker.setOrigin({markerW / 2.f, markerH});
-    marker.setFillColor(markerColor);
-    marker.setRotation(sf::degrees(angleDeg));
-
-    sf::Vector2f pos1 = startPos + direction * (length * 0.25f);
-    sf::Vector2f pos2 = startPos + direction * (length * 0.75f);
-    float verticalOffset = bondLinesOffset + 4.0f;
-
-    if (isCis)
+    if (showConfiguration == true)                                                  // Vizualizarea configuratiei izomerului geometric
     {
-        marker.setPosition(pos1 + normal * verticalOffset);
-        thisWindow.draw(marker);
-        marker.setPosition(pos2 + normal * verticalOffset);
-        thisWindow.draw(marker);
-    }
-    else
-    {
-        marker.setPosition(pos1 + normal * verticalOffset);
-        thisWindow.draw(marker);
-        marker.setRotation(sf::degrees(angleDeg + 180.f));
-        marker.setPosition(pos2 - normal * verticalOffset);
-        thisWindow.draw(marker);
+        const float angleDeg = bondLine1.getRotation().asDegrees();
+        const float angleRad = angleDeg * 3.14159265f / 180.f;
+
+        sf::Vector2f direction(std::cos(angleRad), std::sin(angleRad));
+        sf::Vector2f normal(-direction.y, direction.x);
+
+        sf::Vector2f startPos = bondLine1.getPosition();
+        float length = bondLine1.getSize().x;
+
+        const float markerW = 4.0f;
+        const float markerH = 8.0f;
+        sf::Color markerColor = sf::Color::Yellow;
+
+        sf::RectangleShape marker({markerW, markerH});
+        marker.setOrigin({markerW / 2.f, markerH});
+        marker.setFillColor(markerColor);
+        marker.setRotation(sf::degrees(angleDeg));
+
+        sf::Vector2f pos1 = startPos + direction * (length * 0.25f);
+        sf::Vector2f pos2 = startPos + direction * (length * 0.75f);
+        float verticalOffset = bondLinesOffset + 4.0f;
+
+        if (isCis)
+        {
+            marker.setPosition(pos1 + normal * verticalOffset);
+            thisWindow.draw(marker);
+            marker.setPosition(pos2 + normal * verticalOffset);
+            thisWindow.draw(marker);
+        }
+        else
+        {
+            marker.setPosition(pos1 + normal * verticalOffset);
+            thisWindow.draw(marker);
+            marker.setRotation(sf::degrees(angleDeg + 180.f));
+            marker.setPosition(pos2 - normal * verticalOffset);
+            thisWindow.draw(marker);
+        }
     }
 }
 
