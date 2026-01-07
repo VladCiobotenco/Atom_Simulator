@@ -1,13 +1,11 @@
 [
     { "formula": "H2", "name": "Hidrogen" },
-    { "formula": "He", "name": "Heliu" },
     { "formula": "O2", "name": "Oxigen" },
     { "formula": "H2O", "name": "Apa" },
     { "formula": "CO2", "name": "Dioxid de carbon" },
     { "formula": "CH4", "name": "Metan" },
     { "formula": "NH3", "name": "Amoniac" },
     { "formula": "NaCl", "name": "Clorura de sodiu" },
-    { "formula": "ClNa", "name": "Clorura de sodiu" },
     { "formula": "C2H6O", "name": "Etanol" },
     { "formula": "C6H12O6", "name": "Glucoza" },
     { "formula": "H2SO4", "name": "Acid sulfuric" }

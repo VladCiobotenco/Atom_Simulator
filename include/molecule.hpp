@@ -27,10 +27,12 @@ public:
 
     [[nodiscard]] int getMoleculeMass() const;
     [[nodiscard]] std::string getMolecularFormula() const;
+    static int getAtomsPriority(const std::string&);
 
     [[nodiscard]] int checkValenceLaws(int) const;
     [[nodiscard]] bool checkAtomsConnections() const;
     [[nodiscard]] bool checkHydrocarbon() const;
+    [[nodiscard]] bool checkMetal() const;
 
     [[nodiscard]] int findAtomAtPosition(const sf::Vector2f&) const;
     [[nodiscard]] int findBondAtPosition(const sf::Vector2f&) const;

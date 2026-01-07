@@ -146,28 +146,96 @@ std::string molecule::getMolecularFormula() const
 
     std::stringstream ss;
 
-    if (counts.count("C")) {
-        ss << "C";
-        if (counts["C"] > 1)
-            ss << counts["C"];
-        counts.erase("C");
-    }
-
-    if (counts.count("H")) {
-        ss << "H";
-        if (counts["H"] > 1)
-            ss << counts["H"];
-        counts.erase("H");
-    }
-
-    for (const auto& pair : counts)
+    if (checkHydrocarbon())
     {
-        ss << pair.first;
-        if (pair.second > 1)
-            ss << pair.second;
+        if (counts.count("C")) {
+            ss << "C";
+            if (counts["C"] > 1)
+                ss << counts["C"];
+            counts.erase("C");
+        }
+
+        if (counts.count("H")) {
+            ss << "H";
+            if (counts["H"] > 1)
+                ss << counts["H"];
+            counts.erase("H");
+        }
+
+        for (const auto& pair : counts)
+        {
+            ss << pair.first;
+            if (pair.second > 1)
+                ss << pair.second;
+        }
+    }
+    else
+    {
+        bool containsMetal = checkMetal();
+
+        auto cmp = [&](const std::string& a, const std::string& b)
+        {
+            if (a == "N" && b == "H") return true;
+            if (a == "H" && b == "N") return false;
+
+            int priorityA, priorityB;
+            if (a == "H") {
+                if (containsMetal)
+                    priorityA = 10;
+                else
+                    priorityA = 1;
+            }
+            else
+                priorityA = getAtomsPriority(a);
+
+            if (b == "H") {
+                if (containsMetal)
+                    priorityB = 10;
+                else
+                    priorityB = 1;
+            }
+            else
+                priorityB = getAtomsPriority(b);
+
+            return priorityA < priorityB;
+        };
+
+        std::vector<std::string> atomsSymbols;
+        for (const auto& pair : counts)
+            atomsSymbols.push_back(pair.first);
+
+        std::sort(atomsSymbols.begin(), atomsSymbols.end(), cmp);              //Sortam atomii din molecula pe baza prioritatii
+        for (const auto& symbols : atomsSymbols) {
+            ss << symbols;
+            if (counts[symbols] > 1) ss << counts[symbols];
+        }
+
     }
 
     return ss.str();
+}
+
+int molecule::getAtomsPriority(const std::string& atomSymbol)
+{
+    std::vector<std::string> metals = {"Na", "K"};           // Pot fi adaugate mai multe metale pe parcurs ce aplicatia este extinsa
+    for (const auto& m : metals)
+        if (atomSymbol == m)
+            return 2;
+
+    if (atomSymbol == "C")
+        return 3;
+    if (atomSymbol == "N")
+        return 4;
+    if (atomSymbol == "P")
+        return 6;
+    if (atomSymbol == "S")
+        return 7;
+    if (atomSymbol == "O")
+        return 8;
+    if (atomSymbol == "Cl")
+        return 9;
+
+    return 100;                                                     // Un numar mare pentru un alt atom care nu este mentionat
 }
 
 int molecule::checkValenceLaws(const int atomIndex) const
@@ -239,6 +307,20 @@ bool molecule::checkHydrocarbon() const
     }
     if (containsC == true and containsH == true)
         return true;
+
+    return false;
+}
+
+bool molecule::checkMetal() const
+{
+    std::vector<std::string> metals = {"Na", "K"};
+
+    for (const auto& entityPtr : atomsList) {
+        auto thisAtom = static_pointer_cast<atom>(entityPtr);
+        for (const auto & metal : metals)
+            if (metal == thisAtom->getSymbol())
+                return true;
+    }
 
     return false;
 }

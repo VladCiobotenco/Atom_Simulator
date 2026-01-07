@@ -31,5 +31,13 @@
     "atomicMass": 16,
     "name": "Oxigen",
     "symbol": "O"
+  },
+  {
+    "period": 3,
+    "group": 4,
+    "atomicNumber": 16,
+    "atomicMass": 32,
+    "name": "Sulf",
+    "symbol": "S"
   }
 ]

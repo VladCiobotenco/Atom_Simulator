@@ -41,6 +41,8 @@ atom::atom(std::string  n, const int p, const int g, const int Z, const int m, s
             break;
         case 11: atomShape.setFillColor(sf::Color(253,169,255));
             break;
+        case 16: atomShape.setFillColor(sf::Color::Yellow);
+            break;
         default: atomShape.setFillColor(sf::Color(255,255,204));
     }
 
@@ -113,6 +115,8 @@ int atom::atomValence() const
 {
     if (group==1 || group==2 || group==3)
         return group;
+    if (symbol=="S")
+        return 6;
     return 8-group;
 }
 
