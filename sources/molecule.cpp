@@ -4,6 +4,7 @@
 #include <queue>
 #include <set>
 #include <utility>
+#include <algorithm>
 
 #include "../include/double_bond.hpp"
 #include "../include/exceptions.hpp"
