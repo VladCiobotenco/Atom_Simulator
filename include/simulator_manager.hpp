@@ -23,8 +23,6 @@ class simulator_manager
     static void handleRightClick(sf::Vector2f mousePos, molecule& thisMolecule, int& selectedAtomIndex, audio_manager& audio);
     static void drawPalette(sf::RenderWindow& window, const std::vector<std::shared_ptr<atom>>& atomPalette, const sf::RectangleShape& menuBg, const sf::RectangleShape& selectionBox);
     static void scoreSaveMode(sf::RenderWindow&, int, sf::Font, const molecule&, leaderboard&);
-    static void createButton(sf::Text&, sf::RectangleShape&, int, const sf::Vector2f&);
-    static void drawDynamicArrow(sf::RenderWindow& window, sf::Vector2f startPos, sf::Vector2f endPos, sf::Color color);
 
 
 public:

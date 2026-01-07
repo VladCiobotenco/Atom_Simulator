@@ -1046,40 +1046,6 @@ void simulator_manager::scoreSaveMode(sf::RenderWindow& window, int score, sf::F
     }
 }
 
-void simulator_manager::drawDynamicArrow(sf::RenderWindow& window, sf::Vector2f startPos, sf::Vector2f endPos, sf::Color color)
-{
-    sf::Vector2f direction = endPos - startPos;
-    float length = std::sqrt(direction.x*direction.x + direction.y*direction.y);
-    if (length < 1.f) return;
-
-    sf::Vector2f unitDir = direction / length;
-    sf::Vector2f perpDir(-unitDir.y, unitDir.x);
-
-    float shaftThickness = 5.0f;
-    sf::RectangleShape shaft({length - 15.0f, shaftThickness});
-    shaft.setOrigin({0.f, shaftThickness / 2.f});
-    shaft.setPosition(startPos);
-    float angle = std::atan2(direction.y, direction.x) * 180.f / 3.14159265f;
-    shaft.setRotation(sf::radians(angle));
-    shaft.setFillColor(color);
-    window.draw(shaft);
-
-    const float headLength = 20.0f;
-    const float headWidth = 15.0f;
-    sf::ConvexShape head(3);
-    head.setPoint(0, endPos);
-    head.setPoint(1, endPos - unitDir * headLength + perpDir * (headWidth / 2.f));
-    head.setPoint(2, endPos - unitDir * headLength - perpDir * (headWidth / 2.f));
-    head.setFillColor(color);
-
-    window.draw(head);
-}
-
-void simulator_manager::createButton(sf::Text &, sf::RectangleShape &, int, const sf::Vector2f &)
-{
-
-}
-
 simulator_manager &simulator_manager::getInstance()
 {
     return instance;
