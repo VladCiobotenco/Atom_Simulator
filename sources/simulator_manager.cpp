@@ -687,7 +687,6 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
     float bgY = 0;
 
     struct TutorialStep {
-        std::string symbol;
         std::string infoText;
         sf::FloatRect highlightRect;
     };
@@ -702,13 +701,13 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
     };
 
     std::vector<TutorialStep> steps = {
-        { "H", "Hidrogen\n...", makeRect(72.f, 250.f) },
-        { "C", "Carbon\n...", makeRect(1706.f, 392.f) },
-        { "N", "Azot\n...", makeRect(1831.f, 392.f) },
-        { "O", "Oxigen\n...", makeRect(1956.f, 392.f) },
-        { "Na", "Sodiu\n...", makeRect(72.f, 535.f) },
-        { "S", "Sulf\n...", makeRect(1956.f, 535.f) },
-        { "Cl", "Clor\n...", makeRect(2083.f, 535.f) }
+        {"Hidrogen\n...", makeRect(72.f, 250.f) },
+        {"Carbon\n...", makeRect(1706.f, 392.f) },
+        {"Azot\n...", makeRect(1831.f, 392.f) },
+        {"Oxigen\n...", makeRect(1956.f, 392.f) },
+        {"Sodiu\n...", makeRect(72.f, 535.f) },
+        {"Sulf\n...", makeRect(1956.f, 535.f) },
+        {"Clor\n...", makeRect(2083.f, 535.f) }
     };
 
     int currentStepIndex = 0;
