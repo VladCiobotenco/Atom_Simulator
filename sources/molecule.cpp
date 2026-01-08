@@ -416,7 +416,14 @@ void molecule::draw(sf::RenderWindow& window) const
             else
                 db->setVisibility(false);
         }
-                entityPtr->draw(window);
+        else if (const auto& sb = std::dynamic_pointer_cast<single_bond>(entityPtr))
+            if (atomsList.size() == 2 && bondsList.size() == 1)
+            {
+                auto atom1 = static_pointer_cast<atom>(atomsList[sb->getAtomIndex1()]);
+                auto atom2 = static_pointer_cast<atom>(atomsList[sb->getAtomIndex2()]);
+                sb->spin(atom1, atom2);
+            }
+        entityPtr->draw(window);
     }
 
     for (const auto& entityPtr : atomsList)

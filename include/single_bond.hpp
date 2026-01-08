@@ -1,6 +1,7 @@
 #ifndef OOP_SINGLE_BOND_H
 #define OOP_SINGLE_BOND_H
 
+#include "atom.hpp"
 #include "bond.hpp"
 
 
@@ -17,6 +18,7 @@ public:
     ~single_bond() override;
     std::shared_ptr<entity> clone() const override;
 
+    void spin(const std::shared_ptr<atom>&, const std::shared_ptr<atom> &);
     sf::FloatRect getBounds() const override;
     void updatePosition(const sf::Vector2f& pos1, const sf::Vector2f& pos2) override;
     int getOrder() const override;
