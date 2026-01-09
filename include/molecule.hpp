@@ -28,6 +28,8 @@ public:
     [[nodiscard]] int getMoleculeMass() const;
     [[nodiscard]] std::string getMolecularFormula() const;
     static int getAtomsPriority(const std::string&);
+    [[nodiscard]] size_t getNumberOfAtoms() const;
+    [[nodiscard]] size_t getNumberOfBonds() const;
 
     [[nodiscard]] int checkValenceLaws(int) const;
     [[nodiscard]] bool checkAtomsConnections() const;

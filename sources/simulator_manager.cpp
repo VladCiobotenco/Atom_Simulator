@@ -16,6 +16,7 @@
 #include "../include/double_bond.hpp"
 #include "../include/exceptions.hpp"
 #include "../include/leaderboard.hpp"
+#include "../include/single_bond.hpp"
 
 void simulator_manager::simulation() {
     sf::Font font;
@@ -185,6 +186,7 @@ void simulator_manager::simulation() {
             updateHover(triviaButton);
             updateHover(leaderboardButton);
             updateHover(exitButton);
+            updateHover(tutorialButton);
 
             window.clear(sf::Color(30, 30, 30));
 
@@ -958,6 +960,12 @@ void simulator_manager::handleRightClick(sf::Vector2f mousePos, molecule& thisMo
                 db->toggleConfiguration();
                 audio.playSound("selectie");
             }
+        }
+
+        if (const auto sb = std::dynamic_pointer_cast<single_bond>(bondPtr))
+        {
+            if (thisMolecule.getNumberOfAtoms() == 2 && thisMolecule.getNumberOfBonds() == 1)
+                sb->toggleSpin();
         }
     }
 }

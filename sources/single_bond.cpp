@@ -5,13 +5,13 @@
 #include "../include/atom.hpp"
 
 single_bond::single_bond(const int atomIndex1, const int atomIndex2)
-    : bond("SingleBond", atomIndex1 , atomIndex2)
+    : bond("SingleBond", atomIndex1 , atomIndex2), spinning(false)
 {
     bondLine.setFillColor(sf::Color(80, 80, 80));
     bondLine.setOrigin({0.f, 2.f});
 }
 
-single_bond::single_bond(const single_bond& other): bond(other.getName(), other.atomIndex1, other.atomIndex2), bondLine(other.bondLine){}
+single_bond::single_bond(const single_bond& other): bond(other.getName(), other.atomIndex1, other.atomIndex2), bondLine(other.bondLine), spinning(other.spinning){}
 
 single_bond & single_bond::operator=(const single_bond& other)
 {
@@ -19,6 +19,7 @@ single_bond & single_bond::operator=(const single_bond& other)
     {
         bond::operator=(other);
         bondLine=other.bondLine;
+        spinning=other.spinning;
     }
     return *this;
 }
@@ -28,6 +29,16 @@ single_bond::~single_bond(){}
 std::shared_ptr<entity> single_bond::clone() const
 {
     return std::make_shared<single_bond>(*this);
+}
+
+void single_bond::toggleSpin()
+{
+    spinning = !spinning;
+}
+
+bool single_bond::isSpinning() const
+{
+    return spinning;
 }
 
 void single_bond::spin(const std::shared_ptr<atom>& atom1, const std::shared_ptr<atom> &atom2)

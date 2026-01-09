@@ -239,6 +239,16 @@ int molecule::getAtomsPriority(const std::string& atomSymbol)
     return 100;                                                     // Un numar mare pentru un alt atom care nu este mentionat
 }
 
+size_t molecule::getNumberOfAtoms() const
+{
+    return atomsList.size();
+}
+
+size_t molecule::getNumberOfBonds() const
+{
+    return bondsList.size();
+}
+
 int molecule::checkValenceLaws(const int atomIndex) const
 {
     const auto thisAtom = std::static_pointer_cast<atom>(atomsList[atomIndex]);
@@ -417,7 +427,7 @@ void molecule::draw(sf::RenderWindow& window) const
                 db->setVisibility(false);
         }
         else if (const auto& sb = std::dynamic_pointer_cast<single_bond>(entityPtr))
-            if (atomsList.size() == 2 && bondsList.size() == 1)
+            if (sb->isSpinning())
             {
                 auto atom1 = static_pointer_cast<atom>(atomsList[sb->getAtomIndex1()]);
                 auto atom2 = static_pointer_cast<atom>(atomsList[sb->getAtomIndex2()]);
