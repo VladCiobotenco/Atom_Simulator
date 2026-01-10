@@ -239,15 +239,6 @@ int molecule::getAtomsPriority(const std::string& atomSymbol)
     return 100;                                                     // Un numar mare pentru un alt atom care nu este mentionat
 }
 
-size_t molecule::getNumberOfAtoms() const
-{
-    return atomsList.size();
-}
-
-size_t molecule::getNumberOfBonds() const
-{
-    return bondsList.size();
-}
 
 int molecule::checkValenceLaws(const int atomIndex) const
 {

@@ -16,7 +16,6 @@ struct resolution {
 class simulator_manager
 {
     static simulator_manager instance;
-    resolution simulatorResolution;
 
     simulator_manager() = default;
     simulator_manager(const simulator_manager&) = delete;
