@@ -19,7 +19,7 @@ public:
     ~single_bond() override;
     std::shared_ptr<entity> clone() const override;
 
-    void toggleSpin();
+    void setSpinning(bool);
     bool isSpinning() const;
     void spin(const std::shared_ptr<atom>&, const std::shared_ptr<atom> &);
     sf::FloatRect getBounds() const override;

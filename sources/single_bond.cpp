@@ -31,9 +31,9 @@ std::shared_ptr<entity> single_bond::clone() const
     return std::make_shared<single_bond>(*this);
 }
 
-void single_bond::toggleSpin()
+void single_bond::setSpinning(const bool newSpinning)
 {
-    spinning = !spinning;
+    spinning = newSpinning;
 }
 
 bool single_bond::isSpinning() const
@@ -47,7 +47,7 @@ void single_bond::spin(const std::shared_ptr<atom>& atom1, const std::shared_ptr
     const sf::Vector2f p1 = atom1->getAtomPosition();
     const sf::Vector2f p2 = atom2->getAtomPosition();
 
-    sf::Vector2f center = (p1 + p2) / 2.f;
+    const sf::Vector2f center = (p1 + p2) / 2.f;
     const float theta = 0.0005f;
 
     auto rotatePoint = [&](sf::Vector2f p)

@@ -42,6 +42,7 @@ public:
 
     void updateBondsPositions() const;
     void updateBondsIndices(int) const;
+    void updateSpin(bool) const;
     void draw(sf::RenderWindow&) const;
 
 

@@ -188,7 +188,7 @@ void simulator_manager::simulation() {
             updateHover(exitButton);
             updateHover(tutorialButton);
 
-            window.clear(sf::Color(30, 30, 30));
+            window.clear(sf::Color(100, 100, 100));
 
             window.draw(background);
 
@@ -260,12 +260,35 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
     selectionBox.setOutlineColor(sf::Color::Yellow);
     selectionBox.setOutlineThickness(3.f);
 
+    sf::CircleShape playButtonCircle(30.f);
+    playButtonCircle.setPosition({920.f, 520.f});
+    playButtonCircle.setFillColor(sf::Color(50, 50, 50));
+    playButtonCircle.setOutlineThickness(2.f);
+    playButtonCircle.setOutlineColor(sf::Color::Black);
+
+    sf::ConvexShape playIcon;
+    playIcon.setPointCount(3);
+    playIcon.setPoint(0, {0.f, 0.f});
+    playIcon.setPoint(1, {0.f, 20.f});
+    playIcon.setPoint(2, {18.f, 10.f});
+    playIcon.setFillColor(sf::Color::Green);
+    playIcon.setPosition({942.f, 540.f});
+
+    sf::RectangleShape pauseBar1({6.f, 20.f});
+    pauseBar1.setFillColor(sf::Color::Red);
+    pauseBar1.setPosition({938.f, 540.f});
+
+    sf::RectangleShape pauseBar2({6.f, 20.f});
+    pauseBar2.setFillColor(sf::Color::Red);
+    pauseBar2.setPosition({956.f, 540.f});
+
     sf::FloatRect workArea({200, 0}, {800, 600});
 
     int selectedTemplateIndex = 0;
     int draggedAtomIndex = -1; //folosit pentru dragging
     int selectedAtomIndex = -1; //folosit pentru bonding
     bool isDragging = false;
+    bool isSpinning = false;
     sf::Vector2f dragOffset;
 
     while (window.isOpen())
@@ -304,7 +327,16 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
                 sf::Vector2f mousePos = window.mapPixelToCoords(mouseButtonPressed->position);
 
                 if (mouseButtonPressed->button == sf::Mouse::Button::Left)
-                    handleLeftClick(mousePos,thisMolecule,atomPalette, selectedTemplateIndex, draggedAtomIndex, isDragging, dragOffset, audio);
+                {
+                    if (playButtonCircle.getGlobalBounds().contains(mousePos)) {
+                        isSpinning = !isSpinning;
+                        audio.playSound("selectie");
+                        thisMolecule.updateSpin(isSpinning);
+                    }
+                    else
+                        handleLeftClick(mousePos,thisMolecule,atomPalette, selectedTemplateIndex, draggedAtomIndex, isDragging, dragOffset, audio);
+                }
+
 
                 if (mouseButtonPressed->button == sf::Mouse::Button::Right)
                     handleRightClick(mousePos, thisMolecule, selectedAtomIndex, audio);
@@ -405,6 +437,14 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
         }
         window.draw(formulaBox);
         window.draw(formulaText);
+        window.draw(playButtonCircle);
+        if (!isSpinning)
+            window.draw(playIcon);
+        else
+        {
+            window.draw(pauseBar1);
+            window.draw(pauseBar2);
+        }
 
         window.display();
     }
@@ -960,12 +1000,6 @@ void simulator_manager::handleRightClick(sf::Vector2f mousePos, molecule& thisMo
                 db->toggleConfiguration();
                 audio.playSound("selectie");
             }
-        }
-
-        if (const auto sb = std::dynamic_pointer_cast<single_bond>(bondPtr))
-        {
-            if (thisMolecule.getNumberOfAtoms() == 2 && thisMolecule.getNumberOfBonds() == 1)
-                sb->toggleSpin();
         }
     }
 }

@@ -409,6 +409,13 @@ void molecule::updateBondsIndices(int removedIndex) const
         }
 }
 
+void molecule::updateSpin(const bool newSpinning) const
+{
+    for (auto& entityPtr: bondsList)
+        if (const auto sb = std::dynamic_pointer_cast<single_bond>(entityPtr))
+            sb->setSpinning(newSpinning);
+}
+
 void molecule::draw(sf::RenderWindow& window) const
 {
     for (const auto& entityPtr : bondsList)
