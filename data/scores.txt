@@ -1,3 +1,4 @@
+6 marica
 3 vladboss
 3 Player
 2 Vlad2
@@ -6,5 +7,4 @@
 1 sefu
 1 noname2
 1 noname
-1 camy
-1 Vlad5
+1 nah

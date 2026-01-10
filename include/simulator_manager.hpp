@@ -9,9 +9,14 @@
 #include "ion.hpp"
 #include "leaderboard.hpp"
 
+struct resolution {
+    unsigned int width, height;
+};
+
 class simulator_manager
 {
     static simulator_manager instance;
+    resolution simulatorResolution;
 
     simulator_manager() = default;
     simulator_manager(const simulator_manager&) = delete;
@@ -26,7 +31,9 @@ class simulator_manager
 
 
 public:
-    static void simulation();
+    resolution newResolution();
+
+    void simulation(const resolution&);
     static void sandboxMode(sf::RenderWindow&, molecule&, const sf::Font&, const std::vector<atom>&, const std::vector<ion>&, chemical_database&, audio_manager&);
     static void triviaMode(sf::RenderWindow&, molecule&, const sf::Font&, const std::vector<atom>&, const std::vector<ion>&, const chemical_database&, audio_manager&);
     static void leaderboardMode(sf::RenderWindow&, const sf::Font&, audio_manager&);

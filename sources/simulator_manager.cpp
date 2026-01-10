@@ -18,7 +18,7 @@
 #include "../include/leaderboard.hpp"
 #include "../include/single_bond.hpp"
 
-void simulator_manager::simulation() {
+void simulator_manager::simulation(const resolution& rez) {
     sf::Font font;
     if (!font.openFromFile("../assets/Roboto-VariableFont_wdth,wght.ttf"))
         throw resourceMissingException("../assets/Roboto-VariableFont_wdth,wght.ttf");
@@ -28,8 +28,8 @@ void simulator_manager::simulation() {
         throw resourceMissingException("../assets/menu-background.png");
 
     sf::Sprite background(texture);
-    float scaleX = 1000.f/740.f;
-    float scaleY = 600.f/495.f;
+    float scaleX = rez.width/740.f;
+    float scaleY = rez.height/495.f;
     background.setScale({scaleX, scaleY});
     background.setPosition({0, 0});
 
@@ -46,7 +46,12 @@ void simulator_manager::simulation() {
     audio.loadSound("corect","../assets/trivia-corect.wav");
     audio.loadSound("gresit","../assets/trivia-gresit.wav");
 
-    sf::RenderWindow window(sf::VideoMode({1000, 600}), "Atom Simulator");
+    sf::RenderWindow window(sf::VideoMode({rez.width, rez.height}), "Atom Simulator");
+
+    float centerX = rez.width / 2.f;
+    float topMargin = rez.height * 0.08f;
+    float buttonStartY = rez.height * 0.35f;
+    float buttonGap = rez.height * 0.15f;
 
     sf::Text titleText(font);
     titleText.setCharacterSize(50);
@@ -55,70 +60,43 @@ void simulator_manager::simulation() {
     titleText.setStyle(sf::Text::Bold);
     sf::FloatRect titleBounds = titleText.getLocalBounds();
     titleText.setOrigin({titleBounds.position.x + titleBounds.size.x / 2, titleBounds.position.y + titleBounds.size.y / 2});
-    titleText.setPosition({500.f, 50.f});
+    titleText.setPosition({centerX, topMargin});
 
     sf::Vector2f buttonSize(300.f, 60.f);
-    float buttonX = 500.f;
-    float startY = 250.f;
-    float gapY = 100.f;
 
-    sf::RectangleShape sandboxButton(buttonSize);
-    sandboxButton.setOrigin({buttonSize.x / 2, buttonSize.y / 2});
-    sandboxButton.setPosition({buttonX, startY});
-    sandboxButton.setFillColor(sf::Color(192, 192, 192));
-    sandboxButton.setOutlineThickness(2.f);
-    sandboxButton.setOutlineColor(sf::Color(100, 100, 100));
-    sf::Text sandboxText(font);
-    sandboxText.setCharacterSize(24);
-    sandboxText.setString("Sandbox mode");
-    sf::FloatRect sandboxBounds = sandboxText.getLocalBounds();
-    sandboxText.setOrigin({sandboxBounds.position.x + sandboxBounds.size.x/ 2, sandboxBounds.position.y + sandboxBounds.size.y/ 2});
-    sandboxText.setPosition({buttonX, startY});
+    auto setupButton = [&](sf::RectangleShape& btn, sf::Text& txt, std::string label, float yPos) {
+        btn.setSize(buttonSize);
+        btn.setOrigin({buttonSize.x / 2, buttonSize.y / 2});
+        btn.setPosition({centerX, yPos});
+        btn.setFillColor(sf::Color(70, 70, 70));
+        btn.setOutlineThickness(2.f);
+        btn.setOutlineColor(sf::Color(100, 100, 100));
 
-    sf::RectangleShape triviaButton(buttonSize);
-    triviaButton.setOrigin({buttonSize.x / 2, buttonSize.y / 2});
-    triviaButton.setPosition({buttonX, startY + gapY});
-    triviaButton.setFillColor(sf::Color(192, 192, 192));
-    triviaButton.setOutlineThickness(2.f);
-    triviaButton.setOutlineColor(sf::Color(100, 100, 100));
-    sf::Text triviaText(font);
-    triviaText.setCharacterSize(24);
-    triviaText.setString("Trivia mode");
-    sf::FloatRect triviaBounds = triviaText.getLocalBounds();
-    triviaText.setOrigin({triviaBounds.position.x + triviaBounds.size.x/ 2, triviaBounds.position.y + triviaBounds.size.y / 2});
-    triviaText.setPosition({buttonX, startY + gapY});
+        txt.setFont(font);
+        txt.setCharacterSize(24);
+        txt.setString(label);
+        sf::FloatRect bounds = txt.getLocalBounds();
+        txt.setOrigin({bounds.position.x + bounds.size.x/ 2, bounds.position.y + bounds.size.y/ 2});
+        txt.setPosition({centerX, yPos});
+    };
 
-    sf::RectangleShape leaderboardButton(buttonSize);
-    leaderboardButton.setOrigin({buttonSize.x / 2, buttonSize.y / 2});
-    leaderboardButton.setPosition({buttonX, startY + gapY*2});
-    leaderboardButton.setFillColor(sf::Color(70, 70, 70));
-    leaderboardButton.setOutlineThickness(2.f);
-    leaderboardButton.setOutlineColor(sf::Color(100, 100, 100));
-    sf::Text leaderboardText(font);
-    leaderboardText.setCharacterSize(24);
-    leaderboardText.setString("Leaderboard");
-    sf::FloatRect leaderboardBounds = leaderboardText.getLocalBounds();
-    leaderboardText.setOrigin({leaderboardBounds.position.x + leaderboardBounds.size.x/2, leaderboardBounds.position.y + leaderboardBounds.size.y/2});
-    leaderboardText.setPosition({buttonX, startY + gapY*2});
+    sf::RectangleShape sandboxButton; sf::Text sandboxText(font);
+    setupButton(sandboxButton, sandboxText, "Sandbox mode", buttonStartY);
 
-    sf::RectangleShape exitButton(buttonSize);
-    exitButton.setOrigin({buttonSize.x / 2, buttonSize.y / 2});
-    exitButton.setPosition({buttonX, startY + gapY * 3});
-    exitButton.setFillColor(sf::Color(192, 192, 192));
-    exitButton.setOutlineThickness(2.f);
-    exitButton.setOutlineColor(sf::Color(100, 100, 100));
-    sf::Text exitText(font);
-    exitText.setCharacterSize(24);
-    exitText.setString("Exit");
-    sf::FloatRect exitBounds = exitText.getLocalBounds();
-    exitText.setOrigin({exitBounds.position.x + exitBounds.size.x / 2, exitBounds.position.y + exitBounds.size.y / 2});
-    exitText.setPosition({buttonX, startY + gapY * 3});
+    sf::RectangleShape triviaButton; sf::Text triviaText(font);
+    setupButton(triviaButton, triviaText, "Trivia mode", buttonStartY + buttonGap);
+
+    sf::RectangleShape leaderboardButton; sf::Text leaderboardText(font);
+    setupButton(leaderboardButton, leaderboardText, "Leaderboard", buttonStartY + buttonGap * 2);
+
+    sf::RectangleShape exitButton; sf::Text exitText(font);
+    setupButton(exitButton, exitText, "Exit", buttonStartY + buttonGap * 3);
 
     sf::Vector2f tutorialButtonSize(100.f, 40.f);
 
     sf::RectangleShape tutorialButton(tutorialButtonSize);
     tutorialButton.setOrigin({tutorialButtonSize.x / 2.f, tutorialButtonSize.y / 2.f});
-    tutorialButton.setPosition({920.f, 50.f});
+    tutorialButton.setPosition({rez.width - 80.f, 50.f});
     tutorialButton.setFillColor(sf::Color(70, 70, 70));
     tutorialButton.setOutlineThickness(2.f);
     tutorialButton.setOutlineColor(sf::Color(100, 100, 100));
@@ -161,7 +139,6 @@ void simulator_manager::simulation() {
                     }
                     else if (tutorialButton.getGlobalBounds().contains(mousePos)) {
                         audio.playSound("selectie");
-                        // No molecule needed for tutorial mode
                         tutorialMode(window, font, audio);
                     }
                     else if (exitButton.getGlobalBounds().contains(mousePos))
@@ -216,6 +193,9 @@ void simulator_manager::simulation() {
 
 void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons, chemical_database& database, audio_manager& audio)
 {
+
+    float winW = static_cast<float>(window.getSize().x);
+    float winH = static_cast<float>(window.getSize().y);
     /// Crearea unei palete de atomi in zona de menu
     std::vector<std::shared_ptr<atom>>  atomPalette = setupPalette(templateAtoms, templateIons);
 
@@ -230,19 +210,19 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
     infoBox.setSize({150.f, 25.f});
     bool infoBoxVisibility = false;
 
-    sf::RectangleShape atomMenuBackground({200,600});
+    sf::RectangleShape atomMenuBackground({200.f,winH});
     atomMenuBackground.setFillColor(sf::Color(50, 50, 50));
 
     sf::Text dashboardText(font);
     dashboardText.setCharacterSize(14);
     dashboardText.setFillColor(sf::Color::White);
-    dashboardText.setPosition({10.f, 560.f});
+    dashboardText.setPosition({10.f, winH - 40.f});
     sf::RectangleShape dashboardBox;
     dashboardBox.setFillColor(sf::Color(70, 70, 70));
     dashboardBox.setOutlineColor(sf::Color::Black);
     dashboardBox.setOutlineThickness(1.f);
     dashboardBox.setSize({200.f, 100.f});
-    dashboardBox.setPosition({0.f,550.f});
+    dashboardBox.setPosition({0.f, winH - 50.f});
 
     sf::Text formulaText(font);
     formulaText.setCharacterSize(24);
@@ -260,8 +240,11 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
     selectionBox.setOutlineColor(sf::Color::Yellow);
     selectionBox.setOutlineThickness(3.f);
 
+    float btnX = winW - 80.f;
+    float btnY = winH - 80.f;
+
     sf::CircleShape playButtonCircle(30.f);
-    playButtonCircle.setPosition({920.f, 520.f});
+    playButtonCircle.setPosition({btnX, btnY});
     playButtonCircle.setFillColor(sf::Color(50, 50, 50));
     playButtonCircle.setOutlineThickness(2.f);
     playButtonCircle.setOutlineColor(sf::Color::Black);
@@ -272,17 +255,17 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
     playIcon.setPoint(1, {0.f, 20.f});
     playIcon.setPoint(2, {18.f, 10.f});
     playIcon.setFillColor(sf::Color::Green);
-    playIcon.setPosition({942.f, 540.f});
+    playIcon.setPosition({btnX + 22.f, btnY + 20.f});
 
     sf::RectangleShape pauseBar1({6.f, 20.f});
     pauseBar1.setFillColor(sf::Color::Red);
-    pauseBar1.setPosition({938.f, 540.f});
+    pauseBar1.setPosition({btnX + 18.f, btnY + 20.f});
 
     sf::RectangleShape pauseBar2({6.f, 20.f});
     pauseBar2.setFillColor(sf::Color::Red);
-    pauseBar2.setPosition({956.f, 540.f});
+    pauseBar2.setPosition({btnX + 36.f, btnY + 20.f});
 
-    sf::FloatRect workArea({200, 0}, {800, 600});
+    sf::FloatRect workArea({200.f, 0.f}, {winW - 200.f, winH});
 
     int selectedTemplateIndex = 0;
     int draggedAtomIndex = -1; //folosit pentru dragging
@@ -454,6 +437,9 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
 {
     window.setTitle("Atom Simulator - Trivia Mode");
 
+    float winW = static_cast<float>(window.getSize().x);
+    float winH = static_cast<float>(window.getSize().y);
+
     thisMolecule.removeEntities();
     int score = 0;
 
@@ -469,24 +455,24 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
 
     sf::Text scoreText(font, "Scor: 0", 30);
     scoreText.setFillColor(sf::Color::Yellow);
-    scoreText.setPosition({800.f, 20.f});
+    scoreText.setPosition({winW - 150.f, 20.f});
 
     sf::Text feedbackText(font, "", 24);
     feedbackText.setFillColor(sf::Color::Red);
-    feedbackText.setPosition({400.f, 550.f});
+    feedbackText.setPosition({200.f + (winW - 200.f)/2.f - 50.f, winH - 120.f});
 
     sf::RectangleShape submitButton({150.f, 50.f});
     submitButton.setFillColor(sf::Color(0, 150, 0));
-    submitButton.setPosition({800.f, 530.f});
+    submitButton.setPosition({winW - 180.f, winH - 80.f});
     sf::Text submitLabel(font, "SUBMIT", 20);
     sf::FloatRect submitBounds = submitLabel.getLocalBounds();
     submitLabel.setOrigin({submitBounds.size.x/2.f, submitBounds.size.y/2.f});
-    submitLabel.setPosition({800.f + 75.f, 530.f + 25.f});
+    submitLabel.setPosition({submitButton.getPosition().x + 75.f, submitButton.getPosition().y + 25.f});
 
-    sf::RectangleShape atomMenuBackground({200.f, 600.f});
+    sf::RectangleShape atomMenuBackground({200.f, winH});
     atomMenuBackground.setFillColor(sf::Color(50, 50, 50));
 
-    sf::FloatRect workArea({200.f, 0.f}, {800.f, 600.f});
+    sf::FloatRect workArea({200.f, 0.f}, {winW - 200.f, winH});
     sf::RectangleShape selectionBox;
     selectionBox.setFillColor(sf::Color::Transparent);
     selectionBox.setOutlineColor(sf::Color::Yellow);
@@ -625,22 +611,24 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
 
 void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font& font, audio_manager& audio)
 {
-    leaderboard board("../data/scores.txt");
+    float winW = static_cast<float>(window.getSize().x);
+    float winH = static_cast<float>(window.getSize().y);
 
+    leaderboard board("../data/scores.txt");
     audio.playMusic("../assets/Leaderboard.ogg");
 
     sf::Text leaderboardTitle(font, "High Scores", 40);
     leaderboardTitle.setFillColor(sf::Color::Yellow);
     sf::FloatRect leaderboardTitleBounds = leaderboardTitle.getLocalBounds();
     leaderboardTitle.setOrigin({leaderboardTitleBounds.size.x/2.f, leaderboardTitleBounds.size.y/2.f});
-    leaderboardTitle.setPosition({500.f, 50.f});
+    leaderboardTitle.setPosition({winW / 2.f, 50.f});
 
     sf::RectangleShape leaderboardPanel({600.f, 420.f});
     leaderboardPanel.setFillColor(sf::Color(0, 0, 0, 160));
     leaderboardPanel.setOutlineThickness(2.f);
     leaderboardPanel.setOutlineColor(sf::Color(255, 215, 0));
     leaderboardPanel.setOrigin({300.f, 0.f});
-    leaderboardPanel.setPosition({500.f, 110.f});
+    leaderboardPanel.setPosition({winW / 2.f, 110.f});
 
     std::vector<sf::Text> scoreLines;
     const auto& topScores = board.getScores();
@@ -659,7 +647,7 @@ void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font
 
         sf::FloatRect bounds = text.getLocalBounds();
         text.setOrigin({bounds.size.x / 2.f, 0.f});
-        text.setPosition({500.f, startY});
+        text.setPosition({winW / 2.f, startY});
 
         scoreLines.push_back(text);
         startY += 35.f;
@@ -670,13 +658,13 @@ void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font
         sf::Text emptyText(font, "No scores yet!", 30);
         sf::FloatRect eb = emptyText.getLocalBounds();
         emptyText.setOrigin({eb.size.x/2.f, eb.size.y/2.f});
-        emptyText.setPosition({500.f, 300.f});
+        emptyText.setPosition({winW / 2.f, 300.f});
         scoreLines.push_back(emptyText);
     }
 
     sf::Text backText(font, "Press ESC to return", 20);
     backText.setFillColor(sf::Color(150, 150, 150));
-    backText.setPosition({20.f, 560.f});
+    backText.setPosition({20.f, winH - 40.f});
 
     while (window.isOpen())
     {
@@ -709,7 +697,10 @@ void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font
     }
 }
 
-void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& font, audio_manager& audio) {
+void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& font, audio_manager& audio)
+{
+    float winW = static_cast<float>(window.getSize().x);
+    float winH = static_cast<float>(window.getSize().y);
 
     audio.playMusic("../assets/TutorialMusic.ogg");
 
@@ -720,8 +711,8 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
 
     sf::Sprite backgroundSprite(periodicTableTexture);
 
-    float scaleX = window.getSize().x / static_cast<float>(periodicTableTexture.getSize().x);
-    float scaleY = window.getSize().y / static_cast<float>(periodicTableTexture.getSize().y);
+    float scaleX = winW / static_cast<float>(periodicTableTexture.getSize().x);
+    float scaleY = winH / static_cast<float>(periodicTableTexture.getSize().y);
     backgroundSprite.setScale({scaleX, scaleY});
     backgroundSprite.setPosition({0, 0});
 
@@ -754,29 +745,38 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
 
     int currentStepIndex = 0;
 
+    sf::Vector2f boxSize(600.f, 120.f);
+    float boxX = (winW - boxSize.x) / 2.f;
+    float boxY = winH - boxSize.y - 60.f;
+    float btnY = boxY + 35.f;
+
     sf::RectangleShape infoBoxRect({600.f, 120.f});
     infoBoxRect.setFillColor(sf::Color(0, 0, 0, 220));
     infoBoxRect.setOutlineColor(sf::Color::White);
     infoBoxRect.setOutlineThickness(2.f);
-    infoBoxRect.setPosition({200.f, 430.f});
+    infoBoxRect.setPosition({boxX, boxY});
 
     sf::Text infoText(font, "", 20);
     infoText.setFillColor(sf::Color::White);
-    infoText.setPosition({220.f, 440.f});
+    infoText.setPosition({boxX + 20.f, boxY + 10.f});
 
     sf::RectangleShape nextButton({120.f, 50.f});
-    nextButton.setPosition({820.f, 465.f});
+    nextButton.setPosition({winW - 150.f, btnY});
     sf::Text nextTxt(font, "Next >", 24);
-    nextTxt.setPosition({845.f, 475.f});
+    sf::FloatRect nextB = nextTxt.getLocalBounds();
+    nextTxt.setOrigin({nextB.position.x + nextB.size.x / 2.f, nextB.position.y + nextB.size.y / 2.f});
+    nextTxt.setPosition({nextButton.getPosition().x + nextButton.getSize().x / 2.f, nextButton.getPosition().y + nextButton.getSize().y / 2.f});
 
     sf::RectangleShape previousButton({120.f, 50.f});
-    previousButton.setPosition({60.f, 465.f});
+    previousButton.setPosition({30.f, btnY});
     sf::Text prevTxt(font, "< Prev", 24);
-    prevTxt.setPosition({85.f, 475.f});
+    sf::FloatRect prevB = prevTxt.getLocalBounds();
+    prevTxt.setOrigin({prevB.position.x + prevB.size.x / 2.f, prevB.position.y + prevB.size.y / 2.f});
+    prevTxt.setPosition({previousButton.getPosition().x + previousButton.getSize().x / 2.f, previousButton.getPosition().y + previousButton.getSize().y / 2.f});
 
     sf::Text exitText(font, "Press ESC to return to Menu", 18);
     exitText.setFillColor(sf::Color::Black);
-    exitText.setPosition({20.f, 570.f});
+    exitText.setPosition({20.f, winH - 30.f});
 
     while (window.isOpen())
     {
@@ -1017,10 +1017,13 @@ void simulator_manager::scoreSaveMode(sf::RenderWindow& window, int score, sf::F
 {
     if (score > 0)
     {
-        const float centerX = 500.f;
-        const float centerY = 300.f;
+        float winW = static_cast<float>(window.getSize().x);
+        float winH = static_cast<float>(window.getSize().y);
 
-        sf::RectangleShape overlay({800.f, 600.f});
+        const float centerX = winW / 2.f;
+        const float centerY = winH / 2.f;
+
+        sf::RectangleShape overlay({winW, winH});
         overlay.setFillColor(sf::Color(0, 0, 0, 150));
 
         sf::RectangleShape inputBox({300.f, 50.f});
@@ -1086,6 +1089,78 @@ void simulator_manager::scoreSaveMode(sf::RenderWindow& window, int score, sf::F
         board.addScore(playerName, score);
     }
 }
+
+resolution simulator_manager::newResolution()
+{
+    sf::RenderWindow launcher(sf::VideoMode({400, 300}), "Select Resolution", sf::Style::Titlebar | sf::Style::Close);
+    sf::Font font;
+    if (!font.openFromFile("../assets/Roboto-VariableFont_wdth,wght.ttf"))
+        throw resourceMissingException("../assets/Roboto-VariableFont_wdth,wght.ttf");
+
+    struct ResOption { unsigned int w, h; std::string label; };
+    std::vector<ResOption> options = {
+        {800, 600,  "800 x 600"},
+        {1000, 600, "1000 x 600 (Default)"},
+        {1280, 720, "1280 x 720 (HD)"},
+        {1366, 768, "1366 x 768 (Laptop)"}
+    };
+
+    std::vector<sf::Text> buttons;
+    float startY = 60.f;
+
+    sf::Text title(font, "Choose Resolution:", 20);
+    title.setPosition({20.f, 20.f});
+
+    for (const auto& opt : options) {
+        sf::Text t(font, opt.label, 20);
+        t.setPosition({50.f, startY});
+        buttons.push_back(t);
+        startY += 50.f;
+    }
+
+    while (launcher.isOpen())
+    {
+        while (const std::optional event = launcher.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>()) {
+                launcher.close();
+                return {1000, 600};
+            }
+
+            if (const auto* mousePress = event->getIf<sf::Event::MouseButtonPressed>())
+            {
+                if (mousePress->button == sf::Mouse::Button::Left)
+                {
+                    sf::Vector2f mousePos = launcher.mapPixelToCoords(sf::Mouse::getPosition(launcher));
+
+                    for (size_t i = 0; i < buttons.size(); ++i) {
+                        if (buttons[i].getGlobalBounds().contains(mousePos)) {
+                            launcher.close();
+                            return {options[i].w, options[i].h};
+                        }
+                    }
+                }
+            }
+        }
+
+        // Hover Effect
+        sf::Vector2f mousePos = launcher.mapPixelToCoords(sf::Mouse::getPosition(launcher));
+        for (auto& btn : buttons) {
+            if (btn.getGlobalBounds().contains(mousePos))
+                btn.setFillColor(sf::Color::Yellow);
+            else
+                btn.setFillColor(sf::Color::White);
+        }
+
+        launcher.clear(sf::Color(60, 60, 60));
+        launcher.draw(title);
+        for (const auto& btn : buttons) launcher.draw(btn);
+        launcher.display();
+    }
+
+    return {1000, 600};
+}
+
 
 simulator_manager &simulator_manager::getInstance()
 {

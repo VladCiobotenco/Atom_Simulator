@@ -11,7 +11,8 @@ int main()
     {
         simulator_manager& simulator=simulator_manager::getInstance();
 
-        simulator.simulation();
+        resolution thisResolution = simulator.newResolution();
+        simulator.simulation(thisResolution);
     }
 
     catch (const fileLoadingException& e)
