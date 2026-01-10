@@ -13,6 +13,26 @@ struct resolution {
     unsigned int width, height;
 };
 
+struct UIMenu {
+    sf::Text titleText;
+
+    sf::RectangleShape sandboxButton, triviaButton, leaderboardButton, exitButton, tutorialButton;
+    sf::Text sandboxText, triviaText, leaderboardText, exitText, tutorialText;
+
+    sf::CircleShape helpButton;
+    sf::Text helpButtonText;
+
+    sf::RectangleShape overlayBg;
+    sf::RectangleShape rulesPanel, purposePanel;
+    sf::Text rulesTitle, rulesBody;
+    sf::Text purposeTitle, purposeBody;
+    sf::Text closeInfo;
+
+    explicit UIMenu(const sf::Font& font) : titleText(font), sandboxText(font), triviaText(font), leaderboardText(font), exitText(font), tutorialText(font), helpButtonText(font), rulesTitle(font), rulesBody(font), purposeTitle(font),
+                                            purposeBody(font), closeInfo(font){}
+};
+
+
 class simulator_manager
 {
     static simulator_manager instance;
@@ -21,6 +41,9 @@ class simulator_manager
     simulator_manager(const simulator_manager&) = delete;
     simulator_manager& operator=(const simulator_manager&) = delete;
     ~simulator_manager() = default;
+
+    static void UIMenuSetup(const resolution&, const sf::Font&, UIMenu&);
+    static void UIMenuDraw(sf::RenderWindow&, UIMenu&, sf::Sprite&, bool);
 
     static std::vector<std::shared_ptr<atom>> setupPalette(const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons);
     static void handleLeftClick(sf::Vector2f mousePos, molecule& thisMolecule, const std::vector<std::shared_ptr<atom>>& atomPalette, int& selectedTemplateIndex, int& draggedAtomIndex, bool& isDragging, sf::Vector2f& dragOffset, audio_manager& audio);

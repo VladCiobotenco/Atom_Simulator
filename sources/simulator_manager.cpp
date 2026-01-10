@@ -48,62 +48,10 @@ void simulator_manager::simulation(const resolution& rez) {
 
     sf::RenderWindow window(sf::VideoMode({rez.width, rez.height}), "Atom Simulator");
 
-    float centerX = rez.width / 2.f;
-    float topMargin = rez.height * 0.08f;
-    float buttonStartY = rez.height * 0.35f;
-    float buttonGap = rez.height * 0.15f;
+    UIMenu UI(font);
+    UIMenuSetup(rez, font, UI);
 
-    sf::Text titleText(font);
-    titleText.setCharacterSize(50);
-    titleText.setString("Atom Simulator");
-    titleText.setFillColor(sf::Color::Black);
-    titleText.setStyle(sf::Text::Bold);
-    sf::FloatRect titleBounds = titleText.getLocalBounds();
-    titleText.setOrigin({titleBounds.position.x + titleBounds.size.x / 2, titleBounds.position.y + titleBounds.size.y / 2});
-    titleText.setPosition({centerX, topMargin});
-
-    sf::Vector2f buttonSize(300.f, 60.f);
-
-    auto setupButton = [&](sf::RectangleShape& btn, sf::Text& txt, std::string label, float yPos) {
-        btn.setSize(buttonSize);
-        btn.setOrigin({buttonSize.x / 2, buttonSize.y / 2});
-        btn.setPosition({centerX, yPos});
-        btn.setFillColor(sf::Color(70, 70, 70));
-        btn.setOutlineThickness(2.f);
-        btn.setOutlineColor(sf::Color(100, 100, 100));
-
-        txt.setFont(font);
-        txt.setCharacterSize(24);
-        txt.setString(label);
-        sf::FloatRect bounds = txt.getLocalBounds();
-        txt.setOrigin({bounds.position.x + bounds.size.x/ 2, bounds.position.y + bounds.size.y/ 2});
-        txt.setPosition({centerX, yPos});
-    };
-
-    sf::RectangleShape sandboxButton; sf::Text sandboxText(font);
-    setupButton(sandboxButton, sandboxText, "Sandbox mode", buttonStartY);
-
-    sf::RectangleShape triviaButton; sf::Text triviaText(font);
-    setupButton(triviaButton, triviaText, "Trivia mode", buttonStartY + buttonGap);
-
-    sf::RectangleShape leaderboardButton; sf::Text leaderboardText(font);
-    setupButton(leaderboardButton, leaderboardText, "Leaderboard", buttonStartY + buttonGap * 2);
-
-    sf::RectangleShape exitButton; sf::Text exitText(font);
-    setupButton(exitButton, exitText, "Exit", buttonStartY + buttonGap * 3);
-
-    sf::Vector2f tutorialButtonSize(100.f, 40.f);
-
-    sf::RectangleShape tutorialButton(tutorialButtonSize);
-    tutorialButton.setOrigin({tutorialButtonSize.x / 2.f, tutorialButtonSize.y / 2.f});
-    tutorialButton.setPosition({rez.width - 80.f, 50.f});
-    tutorialButton.setFillColor(sf::Color(70, 70, 70));
-    tutorialButton.setOutlineThickness(2.f);
-    tutorialButton.setOutlineColor(sf::Color(100, 100, 100));
-    sf::Text tutorialText(font, "Tutorial", 20);
-    sf::FloatRect tutBounds = tutorialText.getLocalBounds();
-    tutorialText.setOrigin({tutBounds.position.x + tutBounds.size.x/2.f, tutBounds.position.y + tutBounds.size.y/2.f});
-    tutorialText.setPosition(tutorialButton.getPosition());
+    bool showHelp = false;
 
     while (window.isOpen())
     {
@@ -118,76 +66,59 @@ void simulator_manager::simulation(const resolution& rez) {
             {
                 if (mousePress->button == sf::Mouse::Button::Left)
                 {
-                    sf::Vector2f mousePos = window.mapPixelToCoords(mousePress->position);
-                    if (sandboxButton.getGlobalBounds().contains(mousePos))
+                    if (showHelp)
+                        showHelp = false;
+                    else
                     {
-                        audio.playSound("selectie");
-                        molecule testMolecule("sandboxMolecule");
-                        sandboxMode(window, testMolecule, font, inputAtoms, inputIons, database, audio);
-                        testMolecule.removeEntities();
-                    }
-                    else if (triviaButton.getGlobalBounds().contains(mousePos))
-                    {
-                        audio.playSound("selectie");
-                        molecule testMolecule("triviaMolecule");
-                        triviaMode(window, testMolecule, font, inputAtoms, inputIons, database, audio);
-                        testMolecule.removeEntities();
-                    }
-                    else if (leaderboardButton.getGlobalBounds().contains(mousePos)) {
-                        audio.playSound("selectie");
-                        leaderboardMode(window,font,audio);
-                    }
-                    else if (tutorialButton.getGlobalBounds().contains(mousePos)) {
-                        audio.playSound("selectie");
-                        tutorialMode(window, font, audio);
-                    }
-                    else if (exitButton.getGlobalBounds().contains(mousePos))
-                    {
-                        window.close();
-                        return;
+                        sf::Vector2f mousePos = window.mapPixelToCoords(mousePress->position);
+                        if (UI.sandboxButton.getGlobalBounds().contains(mousePos))
+                        {
+                            audio.playSound("selectie");
+                            molecule testMolecule("sandboxMolecule");
+                            sandboxMode(window, testMolecule, font, inputAtoms, inputIons, database, audio);
+                            testMolecule.removeEntities();
+                        }
+                        else if (UI.triviaButton.getGlobalBounds().contains(mousePos))
+                        {
+                            audio.playSound("selectie");
+                            molecule testMolecule("triviaMolecule");
+                            triviaMode(window, testMolecule, font, inputAtoms, inputIons, database, audio);
+                            testMolecule.removeEntities();
+                        }
+                        else if (UI.leaderboardButton.getGlobalBounds().contains(mousePos)) {
+                            audio.playSound("selectie");
+                            leaderboardMode(window,font,audio);
+                        }
+                        else if (UI.tutorialButton.getGlobalBounds().contains(mousePos)) {
+                            audio.playSound("selectie");
+                            tutorialMode(window, font, audio);
+                        }
+                        else if (UI.helpButton.getGlobalBounds().contains(mousePos))
+                        {
+                            showHelp = true;
+                            audio.playSound("selectie");
+                        }
+                        else if (UI.exitButton.getGlobalBounds().contains(mousePos))
+                        {
+                            window.close();
+                            return;
+                        }
                     }
                 }
             }
+            if (const auto* keyPress = event->getIf<sf::Event::KeyPressed>())
+            {
+                if (keyPress->code == sf::Keyboard::Key::Escape && showHelp)
+                {
+                    showHelp = false;
+                }
+            }
+
             if (!window.isOpen())
                 break;
-
-            sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-            auto updateHover = [&](sf::RectangleShape& button)
-            {
-                if (button.getGlobalBounds().contains(mousePos))
-                    button.setFillColor(sf::Color(100, 100, 100));
-                else
-                    button.setFillColor(sf::Color(70, 70, 70));
-            };
-            updateHover(sandboxButton);
-            updateHover(triviaButton);
-            updateHover(leaderboardButton);
-            updateHover(exitButton);
-            updateHover(tutorialButton);
-
-            window.clear(sf::Color(100, 100, 100));
-
-            window.draw(background);
-
-            window.draw(titleText);
-
-            window.draw(sandboxButton);
-            window.draw(sandboxText);
-
-            window.draw(triviaButton);
-            window.draw(triviaText);
-
-            window.draw(leaderboardButton);
-            window.draw(leaderboardText);
-
-            window.draw(exitButton);
-            window.draw(exitText);
-
-            window.draw(tutorialButton);
-            window.draw(tutorialText);
-
-            window.display();
         }
+
+        UIMenuDraw(window,UI,background,showHelp);
     }
 }
 
@@ -865,6 +796,237 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
     }
 }
 
+void simulator_manager::UIMenuSetup(const resolution& rez, const sf::Font& font, UIMenu& ui)
+{
+    float centerX = rez.width / 2.f;
+    float centerY = rez.height / 2.f;
+    float topMargin = rez.height * 0.08f;
+    float buttonStartY = rez.height * 0.35f;
+    float buttonGap = rez.height * 0.15f;
+
+    // ui.background.setTexture(bgTexture);
+    // float scaleX = static_cast<float>(rez.width) / static_cast<float>(bgTexture.getSize().x);
+    // float scaleY = static_cast<float>(rez.height) / static_cast<float>(bgTexture.getSize().y);
+    // ui.background.setScale({scaleX, scaleY});
+    // ui.background.setPosition({0, 0});
+
+    ui.titleText.setFont(font);
+    ui.titleText.setCharacterSize(50);
+    ui.titleText.setString("Atom Simulator");
+    ui.titleText.setFillColor(sf::Color::Black);
+    ui.titleText.setStyle(sf::Text::Bold);
+    sf::FloatRect tb = ui.titleText.getLocalBounds();
+    ui.titleText.setOrigin({tb.position.x + tb.size.x / 2.f, tb.position.y + tb.size.y / 2.f});
+    ui.titleText.setPosition({centerX, topMargin});
+
+    auto configBtn = [&](sf::RectangleShape& btn, sf::Text& txt, std::string label, float yPos)
+    {
+        sf::Vector2f btnSize(300.f, 60.f);
+        btn.setSize(btnSize);
+        btn.setOrigin({btnSize.x / 2.f, btnSize.y / 2.f});
+        btn.setPosition({centerX, yPos});
+        btn.setFillColor(sf::Color(70, 70, 70));
+        btn.setOutlineThickness(2.f);
+        btn.setOutlineColor(sf::Color(100, 100, 100));
+
+        txt.setFont(font);
+        txt.setCharacterSize(24);
+        txt.setString(label);
+        sf::FloatRect b = txt.getLocalBounds();
+        txt.setOrigin({b.position.x + b.size.x/ 2.f, b.position.y + b.size.y/ 2.f});
+        txt.setPosition({centerX, yPos});
+    };
+
+    configBtn(ui.sandboxButton, ui.sandboxText, "Sandbox mode", buttonStartY);
+    configBtn(ui.triviaButton, ui.triviaText, "Trivia mode", buttonStartY + buttonGap);
+    configBtn(ui.leaderboardButton, ui.leaderboardText, "Leaderboard", buttonStartY + buttonGap * 2);
+    configBtn(ui.exitButton, ui.exitText, "Exit", buttonStartY + buttonGap * 3);
+
+    sf::Vector2f tutSize(100.f, 40.f);
+    ui.tutorialButton.setSize(tutSize);
+    ui.tutorialButton.setOrigin({tutSize.x / 2.f, tutSize.y / 2.f});
+    ui.tutorialButton.setPosition({rez.width - 80.f, 50.f});
+    ui.tutorialButton.setFillColor(sf::Color(70, 70, 70));
+    ui.tutorialButton.setOutlineThickness(2.f);
+    ui.tutorialButton.setOutlineColor(sf::Color(100, 100, 100));
+
+    ui.tutorialText.setFont(font);
+    ui.tutorialText.setCharacterSize(20);
+    ui.tutorialText.setString("Tutorial");
+    sf::FloatRect tutB = ui.tutorialText.getLocalBounds();
+    ui.tutorialText.setOrigin({tutB.position.x + tutB.size.x/2.f, tutB.position.y + tutB.size.y/2.f});
+    ui.tutorialText.setPosition(ui.tutorialButton.getPosition());
+
+    ui.helpButton.setRadius(25.f);
+    ui.helpButton.setOrigin({25.f, 25.f});
+    ui.helpButton.setPosition({50.f, 50.f});
+    ui.helpButton.setFillColor(sf::Color(0, 120, 200));
+    ui.helpButton.setOutlineThickness(2.f);
+    ui.helpButton.setOutlineColor(sf::Color::White);
+
+    ui.helpButtonText.setFont(font);
+    ui.helpButtonText.setCharacterSize(35);
+    ui.helpButtonText.setString("?");
+    ui.helpButtonText.setStyle(sf::Text::Bold);
+    sf::FloatRect hb = ui.helpButtonText.getLocalBounds();
+    ui.helpButtonText.setOrigin({hb.size.x/2.f, hb.size.y/2.f + 8.f});
+    ui.helpButtonText.setPosition(ui.helpButton.getPosition());
+
+    ui.overlayBg.setSize({(float)rez.width, (float)rez.height});
+    ui.overlayBg.setFillColor(sf::Color(0, 0, 0, 220));
+
+    float leftPanelX = centerX - 220.f;
+    float rightPanelX = centerX + 220.f;
+
+    ui.rulesPanel.setSize({400.f, 500.f});
+    ui.rulesPanel.setOrigin({200.f, 250.f});
+    ui.rulesPanel.setPosition({leftPanelX, centerY});
+    ui.rulesPanel.setFillColor(sf::Color(40, 44, 52));
+    ui.rulesPanel.setOutlineThickness(3.f);
+    ui.rulesPanel.setOutlineColor(sf::Color(0, 180, 230));
+
+    ui.rulesTitle.setFont(font);
+    ui.rulesTitle.setCharacterSize(28);
+    ui.rulesTitle.setString("CONTROLS");
+    ui.rulesTitle.setStyle(sf::Text::Bold);
+    ui.rulesTitle.setFillColor(sf::Color(0, 180, 230));
+    sf::FloatRect rtb = ui.rulesTitle.getLocalBounds();
+    ui.rulesTitle.setOrigin({rtb.position.x + rtb.size.x/2.f, rtb.position.y + rtb.size.y/2.f});
+    ui.rulesTitle.setPosition({leftPanelX, centerY - 210.f});
+
+    std::string rulesString =
+        " Controale uzuale: \n"
+        " MOUSE\n"
+        "   L-Click + Drag : Mutare atomi\n"
+        "   L-Click (in paleta): Selectare tip de atom\n"
+        "   L-Click : Creare atom\n"
+        "   R-Click : Selectare atom/creare de legatura\n\n"
+        " TASTATURA\n"
+        "   DELETE : Stergere atom selectat\n"
+        "   R : Resetat spatiul de lucru\n"
+        "   ESC : Revenire la meniu"
+        " INTERFATA\n"
+        "   BUTON PLAY : Toggle mod fizic\n"
+        "   R-CLICK(legatura dubla intre atomi de carbon):\n"
+        "   Toggle configuratie izormer geometric(cis/trans)";
+
+    ui.rulesBody.setFont(font);
+    ui.rulesBody.setCharacterSize(18);
+    ui.rulesBody.setString(rulesString);
+    ui.rulesBody.setLineSpacing(1.5f);
+    ui.rulesBody.setFillColor(sf::Color::White);
+    sf::FloatRect rbb = ui.rulesBody.getLocalBounds();
+    ui.rulesBody.setOrigin({rbb.position.x + rbb.size.x/2.f, rbb.position.y + rbb.size.y/2.f});
+    ui.rulesBody.setPosition({leftPanelX, centerY + 20.f});
+
+    ui.purposePanel.setSize({400.f, 500.f});
+    ui.purposePanel.setOrigin({200.f, 250.f});
+    ui.purposePanel.setPosition({rightPanelX, centerY});
+    ui.purposePanel.setFillColor(sf::Color(40, 44, 52));
+    ui.purposePanel.setOutlineThickness(3.f);
+    ui.purposePanel.setOutlineColor(sf::Color(255, 215, 0));
+
+    ui.purposeTitle.setFont(font);
+    ui.purposeTitle.setCharacterSize(28);
+    ui.purposeTitle.setString("PURPOSE");
+    ui.purposeTitle.setStyle(sf::Text::Bold);
+    ui.purposeTitle.setFillColor(sf::Color(255, 215, 0));
+    sf::FloatRect ptb = ui.purposeTitle.getLocalBounds();
+    ui.purposeTitle.setOrigin({ptb.position.x + ptb.size.x/2.f, ptb.position.y + ptb.size.y/2.f});
+    ui.purposeTitle.setPosition({rightPanelX, centerY - 210.f});
+
+    std::string purposeString =
+        "Acest simulator este o aplicatie educationala\n"
+        "conceputa pentru a ajuta elevii sa inteleaga\n"
+        "mai bine chimia\n\n"
+        "Scop:\n"
+        "- Legarea atomilor pe baza electronilor disponibili\n"
+        "- Vizualizarea de legaturi simple, duble si triple\n"
+        "- Descoperirea de formule noi.\n\n"
+        "Exploreaza modul 'Sandbox pentru a invata codurile'\n"
+        "de culoare ale atomilor si cum se leaga atomii\n"
+        "Cand esti pregatiti, acceseaza modul 'Trivia pentru'\n"
+        "a-ti testa cunostintele\n\n";
+
+    ui.purposeBody.setFont(font);
+    ui.purposeBody.setCharacterSize(18);
+    ui.purposeBody.setString(purposeString);
+    ui.purposeBody.setLineSpacing(1.5f);
+    ui.purposeBody.setFillColor(sf::Color::White);
+    sf::FloatRect pbb = ui.purposeBody.getLocalBounds();
+    ui.purposeBody.setOrigin({pbb.position.x + pbb.size.x/2.f, pbb.position.y + pbb.size.y/2.f});
+    ui.purposeBody.setPosition({rightPanelX, centerY + 20.f});
+
+    ui.closeInfo.setFont(font);
+    ui.closeInfo.setCharacterSize(18);
+    ui.closeInfo.setString("[ Click anywhere to close ]");
+    ui.closeInfo.setFillColor(sf::Color(150, 150, 150));
+    sf::FloatRect cb = ui.closeInfo.getLocalBounds();
+    ui.closeInfo.setOrigin({cb.position.x + cb.size.x/2.f, cb.position.y + cb.size.y/2.f});
+    ui.closeInfo.setPosition({centerX, centerY + 280.f});
+}
+
+void simulator_manager::UIMenuDraw(sf::RenderWindow& window, UIMenu& UI, sf::Sprite& background, bool showHelp)
+{
+    sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+            if (!showHelp)
+            {
+                auto updateHover = [&](sf::RectangleShape& button)
+                {
+                    if (button.getGlobalBounds().contains(mousePos))
+                        button.setFillColor(sf::Color(100, 100, 100));
+                    else
+                        button.setFillColor(sf::Color(70, 70, 70));
+                };
+                updateHover(UI.sandboxButton);
+                updateHover(UI.triviaButton);
+                updateHover(UI.leaderboardButton);
+                updateHover(UI.exitButton);
+                updateHover(UI.tutorialButton);
+
+                if (UI.helpButton.getGlobalBounds().contains(mousePos))
+                    UI.helpButton.setFillColor(sf::Color(0, 180, 230));
+                else
+                    UI.helpButton.setFillColor(sf::Color(0, 150, 200));
+            }
+
+            window.clear(sf::Color(100, 100, 100));
+
+            window.draw(background);
+            window.draw(UI.titleText);
+
+            window.draw(UI.sandboxButton);
+            window.draw(UI.sandboxText);
+
+            window.draw(UI.triviaButton);
+            window.draw(UI.triviaText);
+
+            window.draw(UI.leaderboardButton);
+            window.draw(UI.leaderboardText);
+
+            window.draw(UI.exitButton);
+            window.draw(UI.exitText);
+
+            window.draw(UI.tutorialButton);
+            window.draw(UI.tutorialText);
+
+            window.draw(UI.helpButton);
+            window.draw(UI.helpButtonText);
+            if (showHelp)
+            {
+                window.draw(UI.overlayBg);
+                window.draw(UI.rulesPanel);
+                window.draw(UI.rulesTitle);
+                window.draw(UI.rulesBody);
+                window.draw(UI.purposePanel);
+                window.draw(UI.purposeTitle);
+                window.draw(UI.purposeBody);
+                window.draw(UI.closeInfo);
+            }
+
+            window.display();
+}
+
 std::vector<std::shared_ptr<atom>> simulator_manager::setupPalette(const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons)
 {
     std::vector<std::shared_ptr<atom>> palette;
@@ -1099,7 +1261,6 @@ resolution simulator_manager::newResolution()
 
     struct ResOption { unsigned int w, h; std::string label; };
     std::vector<ResOption> options = {
-        {800, 600,  "800 x 600"},
         {1000, 600, "1000 x 600 (Default)"},
         {1280, 720, "1280 x 720 (HD)"},
         {1366, 768, "1366 x 768 (Laptop)"}
