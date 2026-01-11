@@ -223,6 +223,20 @@ Comanda este aceeași ca la pasul 1 sau 2. Nu merge combinat cu Valgrind.
 ```
 
 ## Resurse
-<!-- renovate: datasource=github-tags depName=SFML/SFML versioning=loose -->
+Resursele mentionate mai sus nu imi apartin. Acestea au fost utilizate pentru a crea o aplicatie atractiva din punct de vedere vizual si auditiv. O parte din aceste resurse au fost convertite din formatul original din motive de compatibilitate. Autorii acestor resurse detin dreptul de autor.
+
 - [SFML](https://github.com/SFML/SFML/tree/3.0.2) (Zlib)
-- adăugați trimiteri **detaliate** către resursele externe care v-au ajutat sau pe care le-ați folosit
+- Directorul __assets__ (IMAGES)
+  - __periodic-table.jpg__: [sursa](https://npr.brightspotcdn.com/legacy/sites/wuwm/files/201912/AdobeStock_238869971.jpg)
+  - __menu-background.jpg__: [sursa](https://img.freepik.com/free-vector/science-logo-banner-with-lab-tools-equipment_1308-157213.jpg?semt=ais_hybrid&w=740&q=80)
+- Directorul __assets__ (SOUNDS)
+  - __trivia-corect.wav__: [sursa](https://www.myinstants.com/media/sounds/kids-saying-yay-sound-effect_3.mp3)
+  - __trivia-gresit.wav__: [sursa](https://www.myinstants.com/media/sounds/wrong-answer_L4HjrqG.mp3)
+  - __click-selectare.wav__:
+  - __click-stergere.wav__:
+  - __TutorialMusic.ogg__: [sursa](https://www.youtube.com/watch?v=jj0ChLVTpaA)
+  - __Leaderboard.ogg__: [sursa](https://www.myinstants.com/media/sounds/fnaf-1-music-box.mp3)
+  - __MainMusic.ogg__: 
+- Directorul __assets__ (FONT)
+  - __Roboto-VariableFont_wdth,wght.ttf__: [sursa](https://fonts.google.com/specimen/Roboto)
+

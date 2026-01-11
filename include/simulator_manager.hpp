@@ -9,11 +9,13 @@
 #include "ion.hpp"
 #include "leaderboard.hpp"
 
-struct resolution {
+struct resolution
+{
     unsigned int width, height;
 };
 
-struct UIMenu {
+struct UIMenu
+{
     sf::Text titleText;
 
     sf::RectangleShape sandboxButton, triviaButton, leaderboardButton, exitButton, tutorialButton;

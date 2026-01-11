@@ -124,6 +124,7 @@ void simulator_manager::simulation(const resolution& rez) {
 
 void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons, chemical_database& database, audio_manager& audio)
 {
+    window.setTitle("Atom Simulator - Sandbox Mode");
 
     float winW = static_cast<float>(window.getSize().x);
     float winH = static_cast<float>(window.getSize().y);
@@ -664,24 +665,74 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
         );
     };
 
-    std::vector<TutorialStep> steps = {
-        {"Hidrogen\n...", makeRect(72.f, 250.f) },
-        {"Carbon\n...", makeRect(1706.f, 392.f) },
-        {"Azot\n...", makeRect(1831.f, 392.f) },
-        {"Oxigen\n...", makeRect(1956.f, 392.f) },
-        {"Sodiu\n...", makeRect(72.f, 535.f) },
-        {"Sulf\n...", makeRect(1956.f, 535.f) },
-        {"Clor\n...", makeRect(2083.f, 535.f) }
+    std::vector<TutorialStep> steps =
+    {
+        {
+            "Hidrogen (H)\n"
+            "Cel mai simplu si abundent element din univers.\n"
+            "Culoare: ALB\n"
+            "Electroni de valenta: 1\n"
+            "Poate forma o singura legatura.",
+            makeRect(72.f, 250.f)
+        },
+        {
+            "Carbon (C)\n"
+            "Elementul fundamental al vietii si chimiei organice.\n"
+            "Culoare: NEGRU/GRI\n"
+            "Electroni de valenta: 4\n"
+            "Poate forma legaturi simple, duble sau triple.",
+            makeRect(1706.f, 392.f)
+        },
+        {
+        "Azot (N)\n"
+            "Componenta principala a atmosferei (78%).\n"
+            "Culoare: ALBASTRU\n"
+            "Electroni de valenta: 5\n"
+            "Formeaza de obicei 3 legaturi covalente.",
+            makeRect(1831.f, 392.f)
+        },
+        {
+        "Oxigen (O)\n"
+            "Vital pentru respiratie si procesele de ardere.\n"
+            "Culoare: ROSU\n"
+            "Electroni de valenta: 6\n"
+            "Formeaza de obicei 2 legaturi.",
+            makeRect(1956.f, 392.f)
+        },
+        {
+            "Sodiu (Na)\n"
+            "Metal alcalin moale si foarte reactiv.\n"
+            "Culoare: VIOLET\n"
+            "Electroni de valenta: 1\n"
+            "Doneaza usor un electron pentru a forma ioni pozitivi.",
+            makeRect(72.f, 535.f)
+        },
+        {
+            "Sulf (S)\n"
+            "Essential pentru viata, gasit adesea langa vulcani.\n"
+            "Culoare: GALBEN\n"
+            "Electroni de valenta: 6\n"
+            "Are proprietati chimice similare cu Oxigenul.",
+            makeRect(1956.f, 535.f)
+        },
+        {
+            "Clor (Cl)\n"
+            "Halogen toxic, folosit adesea la dezinfectare.\n"
+            "Culoare: VERDE\n"
+            "Electroni de valenta: 7\n"
+            "Accepta un electron pentru a completa stratul.",
+            makeRect(2083.f, 535.f)
+        }
     };
 
     int currentStepIndex = 0;
 
-    sf::Vector2f boxSize(600.f, 120.f);
+    sf::Vector2f boxSize(600.f, 160.f);
     float boxX = (winW - boxSize.x) / 2.f;
     float boxY = winH - boxSize.y - 60.f;
     float btnY = boxY + 35.f;
 
-    sf::RectangleShape infoBoxRect({600.f, 120.f});
+    sf::RectangleShape infoBoxRect(boxSize);
     infoBoxRect.setFillColor(sf::Color(0, 0, 0, 220));
     infoBoxRect.setOutlineColor(sf::Color::White);
     infoBoxRect.setOutlineThickness(2.f);
@@ -804,12 +855,6 @@ void simulator_manager::UIMenuSetup(const resolution& rez, const sf::Font& font,
     float buttonStartY = rez.height * 0.35f;
     float buttonGap = rez.height * 0.15f;
 
-    // ui.background.setTexture(bgTexture);
-    // float scaleX = static_cast<float>(rez.width) / static_cast<float>(bgTexture.getSize().x);
-    // float scaleY = static_cast<float>(rez.height) / static_cast<float>(bgTexture.getSize().y);
-    // ui.background.setScale({scaleX, scaleY});
-    // ui.background.setPosition({0, 0});
-
     ui.titleText.setFont(font);
     ui.titleText.setCharacterSize(50);
     ui.titleText.setString("Atom Simulator");
@@ -819,28 +864,28 @@ void simulator_manager::UIMenuSetup(const resolution& rez, const sf::Font& font,
     ui.titleText.setOrigin({tb.position.x + tb.size.x / 2.f, tb.position.y + tb.size.y / 2.f});
     ui.titleText.setPosition({centerX, topMargin});
 
-    auto configBtn = [&](sf::RectangleShape& btn, sf::Text& txt, std::string label, float yPos)
+    auto setupButton = [&](sf::RectangleShape& button, sf::Text& text, const std::string& label, float yPos)
     {
         sf::Vector2f btnSize(300.f, 60.f);
-        btn.setSize(btnSize);
-        btn.setOrigin({btnSize.x / 2.f, btnSize.y / 2.f});
-        btn.setPosition({centerX, yPos});
-        btn.setFillColor(sf::Color(70, 70, 70));
-        btn.setOutlineThickness(2.f);
-        btn.setOutlineColor(sf::Color(100, 100, 100));
+        button.setSize(btnSize);
+        button.setOrigin({btnSize.x / 2.f, btnSize.y / 2.f});
+        button.setPosition({centerX, yPos});
+        button.setFillColor(sf::Color(70, 70, 70));
+        button.setOutlineThickness(2.f);
+        button.setOutlineColor(sf::Color(100, 100, 100));
 
-        txt.setFont(font);
-        txt.setCharacterSize(24);
-        txt.setString(label);
-        sf::FloatRect b = txt.getLocalBounds();
-        txt.setOrigin({b.position.x + b.size.x/ 2.f, b.position.y + b.size.y/ 2.f});
-        txt.setPosition({centerX, yPos});
+        text.setFont(font);
+        text.setCharacterSize(24);
+        text.setString(label);
+        sf::FloatRect bounds = text.getLocalBounds();
+        text.setOrigin({bounds.position.x + bounds.size.x/ 2.f, bounds.position.y + bounds.size.y/ 2.f});
+        text.setPosition({centerX, yPos});
     };
 
-    configBtn(ui.sandboxButton, ui.sandboxText, "Sandbox mode", buttonStartY);
-    configBtn(ui.triviaButton, ui.triviaText, "Trivia mode", buttonStartY + buttonGap);
-    configBtn(ui.leaderboardButton, ui.leaderboardText, "Leaderboard", buttonStartY + buttonGap * 2);
-    configBtn(ui.exitButton, ui.exitText, "Exit", buttonStartY + buttonGap * 3);
+    setupButton(ui.sandboxButton, ui.sandboxText, "Sandbox mode", buttonStartY);
+    setupButton(ui.triviaButton, ui.triviaText, "Trivia mode", buttonStartY + buttonGap);
+    setupButton(ui.leaderboardButton, ui.leaderboardText, "Leaderboard", buttonStartY + buttonGap * 2);
+    setupButton(ui.exitButton, ui.exitText, "Exit", buttonStartY + buttonGap * 3);
 
     sf::Vector2f tutSize(100.f, 40.f);
     ui.tutorialButton.setSize(tutSize);
@@ -875,95 +920,99 @@ void simulator_manager::UIMenuSetup(const resolution& rez, const sf::Font& font,
     ui.overlayBg.setSize({(float)rez.width, (float)rez.height});
     ui.overlayBg.setFillColor(sf::Color(0, 0, 0, 220));
 
-    float leftPanelX = centerX - 220.f;
-    float rightPanelX = centerX + 220.f;
+    float panelWidth = (rez.width - 80.f) / 2.f;
+    float panelHeight = rez.height - 100.f;
+    float leftPanelX = rez.width * 0.25f;
+    float rightPanelX = rez.width * 0.75f;
+    int headerSize = (rez.height < 700) ? 24 : 28;
+    int bodySize = (rez.height < 700) ? 14 : 18;
 
-    ui.rulesPanel.setSize({400.f, 500.f});
-    ui.rulesPanel.setOrigin({200.f, 250.f});
+    ui.rulesPanel.setSize({panelWidth, panelHeight});
+    ui.rulesPanel.setOrigin({panelWidth / 2.f, panelHeight / 2.f});
     ui.rulesPanel.setPosition({leftPanelX, centerY});
     ui.rulesPanel.setFillColor(sf::Color(40, 44, 52));
     ui.rulesPanel.setOutlineThickness(3.f);
     ui.rulesPanel.setOutlineColor(sf::Color(0, 180, 230));
 
     ui.rulesTitle.setFont(font);
-    ui.rulesTitle.setCharacterSize(28);
+    ui.rulesTitle.setCharacterSize(headerSize);
     ui.rulesTitle.setString("CONTROLS");
     ui.rulesTitle.setStyle(sf::Text::Bold);
     ui.rulesTitle.setFillColor(sf::Color(0, 180, 230));
     sf::FloatRect rtb = ui.rulesTitle.getLocalBounds();
     ui.rulesTitle.setOrigin({rtb.position.x + rtb.size.x/2.f, rtb.position.y + rtb.size.y/2.f});
-    ui.rulesTitle.setPosition({leftPanelX, centerY - 210.f});
+    ui.rulesTitle.setPosition({leftPanelX, centerY - (panelHeight / 2.f) + 40.f});
 
     std::string rulesString =
         " Controale uzuale: \n"
         " MOUSE\n"
         "   L-Click + Drag : Mutare atomi\n"
-        "   L-Click (in paleta): Selectare tip de atom\n"
+        "   L-Click (in paleta): Selectare tip\n"
         "   L-Click : Creare atom\n"
-        "   R-Click : Selectare atom/creare de legatura\n\n"
+        "   R-Click : Selectare / Legatura\n\n"
         " TASTATURA\n"
         "   DELETE : Stergere atom selectat\n"
         "   R : Resetat spatiul de lucru\n"
-        "   ESC : Revenire la meniu"
+        "   ESC : Revenire la meniu\n"
         " INTERFATA\n"
         "   BUTON PLAY : Toggle mod fizic\n"
-        "   R-CLICK(legatura dubla intre atomi de carbon):\n"
-        "   Toggle configuratie izormer geometric(cis/trans)";
+        "   R-CLICK (legatura C=C):\n"
+        "   Toggle cis/trans";
 
     ui.rulesBody.setFont(font);
-    ui.rulesBody.setCharacterSize(18);
+    ui.rulesBody.setCharacterSize(bodySize);
     ui.rulesBody.setString(rulesString);
-    ui.rulesBody.setLineSpacing(1.5f);
+    ui.rulesBody.setLineSpacing(1.4f);
     ui.rulesBody.setFillColor(sf::Color::White);
     sf::FloatRect rbb = ui.rulesBody.getLocalBounds();
     ui.rulesBody.setOrigin({rbb.position.x + rbb.size.x/2.f, rbb.position.y + rbb.size.y/2.f});
     ui.rulesBody.setPosition({leftPanelX, centerY + 20.f});
 
-    ui.purposePanel.setSize({400.f, 500.f});
-    ui.purposePanel.setOrigin({200.f, 250.f});
+    ui.purposePanel.setSize({panelWidth, panelHeight});
+    ui.purposePanel.setOrigin({panelWidth / 2.f, panelHeight / 2.f});
     ui.purposePanel.setPosition({rightPanelX, centerY});
     ui.purposePanel.setFillColor(sf::Color(40, 44, 52));
     ui.purposePanel.setOutlineThickness(3.f);
     ui.purposePanel.setOutlineColor(sf::Color(255, 215, 0));
 
     ui.purposeTitle.setFont(font);
-    ui.purposeTitle.setCharacterSize(28);
+    ui.purposeTitle.setCharacterSize(headerSize);
     ui.purposeTitle.setString("PURPOSE");
     ui.purposeTitle.setStyle(sf::Text::Bold);
     ui.purposeTitle.setFillColor(sf::Color(255, 215, 0));
     sf::FloatRect ptb = ui.purposeTitle.getLocalBounds();
     ui.purposeTitle.setOrigin({ptb.position.x + ptb.size.x/2.f, ptb.position.y + ptb.size.y/2.f});
-    ui.purposeTitle.setPosition({rightPanelX, centerY - 210.f});
+    ui.purposeTitle.setPosition({rightPanelX, centerY - (panelHeight / 2.f) + 40.f});
 
     std::string purposeString =
         "Acest simulator este o aplicatie educationala\n"
         "conceputa pentru a ajuta elevii sa inteleaga\n"
         "mai bine chimia\n\n"
         "Scop:\n"
-        "- Legarea atomilor pe baza electronilor disponibili\n"
-        "- Vizualizarea de legaturi simple, duble si triple\n"
+        "- Legarea atomilor (electroni)\n"
+        "- Vizualizare legaturi simple/duble/triple\n"
         "- Descoperirea de formule noi.\n\n"
-        "Exploreaza modul 'Sandbox pentru a invata codurile'\n"
-        "de culoare ale atomilor si cum se leaga atomii\n"
-        "Cand esti pregatiti, acceseaza modul 'Trivia pentru'\n"
-        "a-ti testa cunostintele\n\n";
+        "Exploreaza modul 'Sandbox' pentru a invata\n"
+        "codurile de culoare si cum se leaga atomii.\n"
+        "Cand esti pregatit, acceseaza 'Trivia'\n"
+        "pentru a-ti testa cunostintele.\n\n";
 
     ui.purposeBody.setFont(font);
-    ui.purposeBody.setCharacterSize(18);
+    ui.purposeBody.setCharacterSize(bodySize);
     ui.purposeBody.setString(purposeString);
-    ui.purposeBody.setLineSpacing(1.5f);
+    ui.purposeBody.setLineSpacing(1.4f);
     ui.purposeBody.setFillColor(sf::Color::White);
     sf::FloatRect pbb = ui.purposeBody.getLocalBounds();
     ui.purposeBody.setOrigin({pbb.position.x + pbb.size.x/2.f, pbb.position.y + pbb.size.y/2.f});
     ui.purposeBody.setPosition({rightPanelX, centerY + 20.f});
 
     ui.closeInfo.setFont(font);
-    ui.closeInfo.setCharacterSize(18);
-    ui.closeInfo.setString("[ Click anywhere to close ]");
+    ui.closeInfo.setCharacterSize(bodySize);
+    ui.closeInfo.setString("[ Apasa oriunde pentru a inchide ]");
     ui.closeInfo.setFillColor(sf::Color(150, 150, 150));
     sf::FloatRect cb = ui.closeInfo.getLocalBounds();
     ui.closeInfo.setOrigin({cb.position.x + cb.size.x/2.f, cb.position.y + cb.size.y/2.f});
-    ui.closeInfo.setPosition({centerX, centerY + 280.f});
+    ui.closeInfo.setPosition({centerX, rez.height - 30.f});
 }
 
 void simulator_manager::UIMenuDraw(sf::RenderWindow& window, UIMenu& UI, sf::Sprite& background, bool showHelp)
@@ -1263,7 +1312,8 @@ resolution simulator_manager::newResolution()
     std::vector<ResOption> options = {
         {1000, 600, "1000 x 600 (Default)"},
         {1280, 720, "1280 x 720 (HD)"},
-        {1366, 768, "1366 x 768 (Laptop)"}
+        //{1920, 1080, "1920 x 1080 (UHD)"},
+        //{2048, 1080, "2048 x 1080 (2K)"}
     };
 
     std::vector<sf::Text> buttons;
