@@ -37,7 +37,7 @@ struct resolution
 
 class simulator_manager
 {
-    std::vector<event_observer*> observers;                                 //implementat observer pattern
+    std::vector<std::shared_ptr<event_observer>> observers;                                 //implementat observer pattern
     void notifySelectedItem() const;
 
     static simulator_manager instance;
@@ -68,25 +68,25 @@ class simulator_manager
     };
 
     static void UIMenuSetup(const resolution&, const sf::Font&, UIMenu&);
-    static void UIMenuDraw(sf::RenderWindow&, UIMenu&, sf::Sprite&, bool);
+    static void UIMenuDraw(sf::RenderWindow&, UIMenu&, const sf::Sprite&, bool);
 
     static std::vector<std::shared_ptr<atom>> setupPalette(const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons);
      void handleLeftClick(sf::Vector2f mousePos, molecule& thisMolecule, const std::vector<std::shared_ptr<atom>>& atomPalette, int& selectedTemplateIndex, int& draggedAtomIndex, bool& isDragging, sf::Vector2f& dragOffset) const;
-     void handleRightClick(sf::Vector2f mousePos, molecule& thisMolecule, int& selectedAtomIndex, audio_manager& audio) const;
+     void handleRightClick(sf::Vector2f mousePos, molecule& thisMolecule, int& selectedAtomIndex, const std::shared_ptr<audio_manager>& audio) const;
     static void drawPalette(sf::RenderWindow& window, const std::vector<std::shared_ptr<atom>>& atomPalette, const sf::RectangleShape& menuBg, const sf::RectangleShape& selectionBox);
     static void scoreSaveMode(sf::RenderWindow&, int, const sf::Font&, const molecule&, leaderboard&);
 
 
 public:
-    void addObserver(event_observer* obs);
+    void addObserver(const std::shared_ptr<event_observer>&);
 
     static resolution newResolution();
 
     void simulation(const resolution&);
-    void sandboxMode(sf::RenderWindow&, molecule&, const sf::Font&, const std::vector<atom>&, const std::vector<ion>&, chemical_database&, audio_manager&);
-    void triviaMode(sf::RenderWindow&, molecule&, const sf::Font&, const std::vector<atom>&, const std::vector<ion>&, const chemical_database&, audio_manager&);
-    void leaderboardMode(sf::RenderWindow&, const sf::Font&, audio_manager&);
-    void tutorialMode(sf::RenderWindow& window, const sf::Font& font, audio_manager& audio) const;
+    void sandboxMode(sf::RenderWindow&, molecule&, const sf::Font&, const std::vector<atom>&, const std::vector<ion>&, chemical_database&, const std::shared_ptr<audio_manager>&) const;
+    void triviaMode(sf::RenderWindow&, molecule&, const sf::Font&, const std::vector<atom>&, const std::vector<ion>&, const chemical_database&, const std::shared_ptr<audio_manager>&) const;
+    void leaderboardMode(sf::RenderWindow&, const sf::Font&, const std::shared_ptr<audio_manager>&) const;
+    void tutorialMode(sf::RenderWindow& window, const sf::Font& font, const std::shared_ptr<audio_manager>& audio) const;
     static simulator_manager& getInstance();
 };
 

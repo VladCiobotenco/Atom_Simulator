@@ -39,14 +39,14 @@ void simulator_manager::simulation(const resolution& rez) {
     chemical_database database;
     database.loadIntoDatabase("../data/elements.json");
 
-    audio_manager audio;
-    audio.playMusic("../assets/MainMusic.ogg");
-    audio.loadSound("selectie","../assets/click-selectare.wav");
-    audio.loadSound("stergere","../assets/click-stergere.wav");
-    audio.loadSound("corect","../assets/trivia-corect.wav");
-    audio.loadSound("gresit","../assets/trivia-gresit.wav");
+    auto audio = std::make_shared<audio_manager>();
+    audio->playMusic("../assets/MainMusic.ogg");
+    audio->loadSound("selectie","../assets/click-selectare.wav");
+    audio->loadSound("stergere","../assets/click-stergere.wav");
+    audio->loadSound("corect","../assets/trivia-corect.wav");
+    audio->loadSound("gresit","../assets/trivia-gresit.wav");
 
-    addObserver(&audio);
+    addObserver(audio);
 
     sf::RenderWindow window(sf::VideoMode({rez.width, rez.height}), "Atom Simulator");
 
@@ -125,8 +125,7 @@ void simulator_manager::simulation(const resolution& rez) {
     }
 }
 
-void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons, chemical_database& database, audio_manager& audio)
-{
+void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons, chemical_database& database, const std::shared_ptr<audio_manager>& audio) const {
     window.setTitle("Atom Simulator - Sandbox Mode");
 
     float winW = static_cast<float>(window.getSize().x);
@@ -236,7 +235,7 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
                     {
                         thisMolecule.removeAtom(selectedAtomIndex);
                         selectedAtomIndex = -1;
-                        audio.playSound("stergere");
+                        audio->playSound("stergere");
                     }
 
                 if (keyPressed->code==sf::Keyboard::Key::R)
@@ -372,8 +371,7 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
     }
 }
 
-void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons, const chemical_database& database, audio_manager& audio)
-{
+void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolecule, const sf::Font& font, const std::vector<atom>& templateAtoms, const std::vector<ion>& templateIons, const chemical_database& database, const std::shared_ptr<audio_manager>& audio) const {
     window.setTitle("Atom Simulator - Trivia Mode");
 
     float winW = static_cast<float>(window.getSize().x);
@@ -460,7 +458,7 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
                 {
                     thisMolecule.removeAtom(selectedAtomIndex);
                     selectedAtomIndex = -1;
-                    audio.playSound("stergere");
+                    audio->playSound("stergere");
                 }
                 if (keyEvent->code == sf::Keyboard::Key::R)
                     thisMolecule.removeEntities();
@@ -479,14 +477,14 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
                             score++;
                             scoreText.setString("Scor: " + std::to_string(score));
                             feedbackText.setString("Corect!"); feedbackText.setFillColor(sf::Color::Green);
-                            audio.playSound("corect");
+                            audio->playSound("corect");
                             clock.restart();
                             waitNewMolecule = true;
                         }
                         else
                         {
                             feedbackText.setString("Gresit!"); feedbackText.setFillColor(sf::Color::Red);
-                            audio.playSound("gresit");
+                            audio->playSound("gresit");
                         }
                     }
                     else
@@ -549,13 +547,12 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
     }
 }
 
-void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font& font, audio_manager& audio)
-{
+void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font& font, const std::shared_ptr<audio_manager>& audio) const {
     float winW = static_cast<float>(window.getSize().x);
     float winH = static_cast<float>(window.getSize().y);
 
     leaderboard board("../data/scores.txt");
-    audio.playMusic("../assets/Leaderboard.ogg");
+    audio->playMusic("../assets/Leaderboard.ogg");
 
     sf::Text leaderboardTitle(font, "High Scores", 40);
     leaderboardTitle.setFillColor(sf::Color::Yellow);
@@ -620,7 +617,7 @@ void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font
                 if (key->code == sf::Keyboard::Key::Escape)
                 {
                     notifySelectedItem();
-                    audio.playMusic("../assets/MainMusic.ogg");
+                    audio->playMusic("../assets/MainMusic.ogg");
                     return;
                 }
             }
@@ -638,11 +635,11 @@ void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font
     }
 }
 
-void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& font, audio_manager& audio) const {
+void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& font, const std::shared_ptr<audio_manager>& audio) const {
     float winW = static_cast<float>(window.getSize().x);
     float winH = static_cast<float>(window.getSize().y);
 
-    audio.playMusic("../assets/TutorialMusic.ogg");
+    audio->playMusic("../assets/TutorialMusic.ogg");
 
     sf::Texture periodicTableTexture;
     if (!periodicTableTexture.loadFromFile("../assets/periodic-table.jpg")) {
@@ -667,7 +664,7 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
     float rawTileW = 120.f;
     float rawTileH = 140.f;
 
-    auto makeRect = [&](float rawX, float rawY) {
+    auto makeRect = [&](const float rawX, const float rawY) {
         return sf::FloatRect(
             {bgX + (rawX * scaleX), bgY + (rawY * scaleY)},{rawTileW * scaleX, rawTileH * scaleY}
         );
@@ -783,7 +780,7 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
                 if (key->code == sf::Keyboard::Key::Escape)
                 {
                     notifySelectedItem();
-                    audio.playMusic("../assets/MainMusic.ogg");
+                    audio->playMusic("../assets/MainMusic.ogg");
                     return;
                 }
 
@@ -1028,9 +1025,9 @@ void simulator_manager::UIMenuSetup(const resolution& rez, const sf::Font& font,
     ui.closeInfo.setPosition({centerX, rez.height - 30.f});
 }
 
-void simulator_manager::UIMenuDraw(sf::RenderWindow& window, UIMenu& UI, sf::Sprite& background, bool showHelp)
+void simulator_manager::UIMenuDraw(sf::RenderWindow& window, UIMenu& UI, const sf::Sprite& background, const bool showHelp)
 {
-    sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+    const sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
             if (!showHelp)
             {
                 auto updateHover = [&](sf::RectangleShape& button)
@@ -1159,7 +1156,7 @@ void simulator_manager::handleLeftClick(const sf::Vector2f mousePos, molecule& t
     }
 }
 
-void simulator_manager::handleRightClick(const sf::Vector2f mousePos, molecule& thisMolecule,int& selectedAtomIndex, audio_manager& audio) const {
+void simulator_manager::handleRightClick(const sf::Vector2f mousePos, molecule& thisMolecule,int& selectedAtomIndex, const std::shared_ptr<audio_manager>& audio) const {
     const int clickAtomIndex = thisMolecule.findAtomAtPosition(mousePos);
 
     if (clickAtomIndex != -1)
@@ -1201,7 +1198,7 @@ void simulator_manager::handleRightClick(const sf::Vector2f mousePos, molecule& 
             if (bondIndex != -1)
             {
                 thisMolecule.removeBond(bondIndex);
-                audio.playSound("stergere");
+                audio->playSound("stergere");
             }
 
             if (const auto atom = thisMolecule.getAtom(selectedAtomIndex))
@@ -1312,7 +1309,7 @@ void simulator_manager::scoreSaveMode(sf::RenderWindow& window, const int score,
     }
 }
 
-void simulator_manager::addObserver(event_observer *obs)
+void simulator_manager::addObserver(const std::shared_ptr<event_observer>& obs)
 {
     observers.push_back(obs);
 }
