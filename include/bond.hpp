@@ -20,8 +20,8 @@ public:
     ~bond() override;
     [[nodiscard]] std::shared_ptr<entity> clone() const override = 0;
 
-    int getAtomIndex1()const;
-    int getAtomIndex2()const;
+    [[nodiscard]] int getAtomIndex1()const;
+    [[nodiscard]] int getAtomIndex2()const;
     void setIndices(int, int);
 
     static std::pair<float, float> calculateGeometry(const sf::Vector2f&, const sf::Vector2f&);

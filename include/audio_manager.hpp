@@ -5,7 +5,9 @@
 #include <map>
 #include <string>
 
-class audio_manager
+#include "event_observer.h"
+
+class audio_manager: public event_observer
 {
     sf::Music mainMusic;
     std::map<std::string, sf::SoundBuffer> rawSounds;
@@ -15,6 +17,8 @@ public:
     void playMusic(const std::string&);
     void loadSound(const std::string&, const std::string&);
     void playSound(const std::string&);
+
+    void onItemSelected() override;
 };
 
 

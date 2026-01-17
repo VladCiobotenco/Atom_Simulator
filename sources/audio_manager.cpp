@@ -31,4 +31,8 @@ void audio_manager::playSound(const std::string& name)
     sounds[name]->play();
 }
 
+void audio_manager::onItemSelected()
+{
+    playSound("selectie");
 
+}

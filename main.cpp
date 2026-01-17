@@ -11,7 +11,7 @@ int main()
     {
         simulator_manager& simulator=simulator_manager::getInstance();
 
-        resolution thisResolution = simulator.newResolution();
+        const resolution thisResolution = simulator_manager::newResolution();
         simulator.simulation(thisResolution);
     }
 

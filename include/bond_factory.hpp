@@ -12,7 +12,7 @@
 class bond_factory
 {
 public:
-    static std::shared_ptr<bond> createBond(const std::string&, int, int);
+    static std::shared_ptr<bond> createBond(const std::string&, int, int);      //as fi putut crea functie de factory pentru fiecare bond dar e acelasi lucru
 };
 
 #endif

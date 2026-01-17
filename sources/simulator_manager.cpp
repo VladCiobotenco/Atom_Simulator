@@ -46,6 +46,8 @@ void simulator_manager::simulation(const resolution& rez) {
     audio.loadSound("corect","../assets/trivia-corect.wav");
     audio.loadSound("gresit","../assets/trivia-gresit.wav");
 
+    addObserver(&audio);
+
     sf::RenderWindow window(sf::VideoMode({rez.width, rez.height}), "Atom Simulator");
 
     UIMenu UI(font);
@@ -73,30 +75,30 @@ void simulator_manager::simulation(const resolution& rez) {
                         sf::Vector2f mousePos = window.mapPixelToCoords(mousePress->position);
                         if (UI.sandboxButton.getGlobalBounds().contains(mousePos))
                         {
-                            audio.playSound("selectie");
+                            notifySelectedItem();
                             molecule testMolecule("sandboxMolecule");
                             sandboxMode(window, testMolecule, font, inputAtoms, inputIons, database, audio);
                             testMolecule.removeEntities();
                         }
                         else if (UI.triviaButton.getGlobalBounds().contains(mousePos))
                         {
-                            audio.playSound("selectie");
+                            notifySelectedItem();
                             molecule testMolecule("triviaMolecule");
                             triviaMode(window, testMolecule, font, inputAtoms, inputIons, database, audio);
                             testMolecule.removeEntities();
                         }
                         else if (UI.leaderboardButton.getGlobalBounds().contains(mousePos)) {
-                            audio.playSound("selectie");
+                            notifySelectedItem();
                             leaderboardMode(window,font,audio);
                         }
                         else if (UI.tutorialButton.getGlobalBounds().contains(mousePos)) {
-                            audio.playSound("selectie");
+                            notifySelectedItem();
                             tutorialMode(window, font, audio);
                         }
                         else if (UI.helpButton.getGlobalBounds().contains(mousePos))
                         {
                             showHelp = true;
-                            audio.playSound("selectie");
+                            notifySelectedItem();
                         }
                         else if (UI.exitButton.getGlobalBounds().contains(mousePos))
                         {
@@ -111,6 +113,7 @@ void simulator_manager::simulation(const resolution& rez) {
                 if (keyPress->code == sf::Keyboard::Key::Escape && showHelp)
                 {
                     showHelp = false;
+                    notifySelectedItem();
                 }
             }
 
@@ -222,7 +225,11 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
             {
                 const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
                 if (keyPressed->code==sf::Keyboard::Key::Escape)
+                {
+                    notifySelectedItem();
                     return;
+                }
+
 
                 if (keyPressed->code==sf::Keyboard::Key::Delete)
                     if (selectedAtomIndex !=-1 )
@@ -245,11 +252,11 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
                 {
                     if (playButtonCircle.getGlobalBounds().contains(mousePos)) {
                         isSpinning = !isSpinning;
-                        audio.playSound("selectie");
+                        notifySelectedItem();
                         thisMolecule.updateSpin(isSpinning);
                     }
                     else
-                        handleLeftClick(mousePos,thisMolecule,atomPalette, selectedTemplateIndex, draggedAtomIndex, isDragging, dragOffset, audio);
+                        handleLeftClick(mousePos,thisMolecule,atomPalette, selectedTemplateIndex, draggedAtomIndex, isDragging, dragOffset);
                 }
 
 
@@ -312,7 +319,7 @@ void simulator_manager::sandboxMode(sf::RenderWindow& window, molecule& thisMole
         if (selectedTemplateIndex>=0)
         {
             const auto& selectedMenuAtom=atomPalette[selectedTemplateIndex];
-            std::string info = "Selected atom: " + selectedMenuAtom->getName() + " (" + selectedMenuAtom->getSymbol() + ")";
+            std::string info = "Atom selectat: " + selectedMenuAtom->getName() + " (" + selectedMenuAtom->getSymbol() + ")";
             dashboardText.setString(info);
         }
 
@@ -445,6 +452,7 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
             {
                 if (keyEvent->code == sf::Keyboard::Key::Escape)
                 {
+                    notifySelectedItem();
                     scoreSaveMode(window, score, font, thisMolecule, board);
                     return;
                 }
@@ -482,7 +490,7 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
                         }
                     }
                     else
-                        handleLeftClick(mousePos, thisMolecule, atomPalette, selectedTemplateIndex, draggedAtomIndex, isDragging, dragOffset, audio);
+                        handleLeftClick(mousePos, thisMolecule, atomPalette, selectedTemplateIndex, draggedAtomIndex, isDragging, dragOffset);
                 }
 
                 else if(mousePress->button == sf::Mouse::Button::Right)
@@ -587,14 +595,14 @@ void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font
     }
 
     if (scoreLines.empty()) {
-        sf::Text emptyText(font, "No scores yet!", 30);
+        sf::Text emptyText(font, "Niciun scor inregistrat!", 30);
         sf::FloatRect eb = emptyText.getLocalBounds();
         emptyText.setOrigin({eb.size.x/2.f, eb.size.y/2.f});
         emptyText.setPosition({winW / 2.f, 300.f});
         scoreLines.push_back(emptyText);
     }
 
-    sf::Text backText(font, "Press ESC to return", 20);
+    sf::Text backText(font, "Apasa ESC pentru a te intoarce", 20);
     backText.setFillColor(sf::Color(150, 150, 150));
     backText.setPosition({20.f, winH - 40.f});
 
@@ -611,6 +619,7 @@ void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font
             {
                 if (key->code == sf::Keyboard::Key::Escape)
                 {
+                    notifySelectedItem();
                     audio.playMusic("../assets/MainMusic.ogg");
                     return;
                 }
@@ -629,8 +638,7 @@ void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font
     }
 }
 
-void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& font, audio_manager& audio)
-{
+void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& font, audio_manager& audio) const {
     float winW = static_cast<float>(window.getSize().x);
     float winH = static_cast<float>(window.getSize().y);
 
@@ -756,7 +764,7 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
     prevTxt.setOrigin({prevB.position.x + prevB.size.x / 2.f, prevB.position.y + prevB.size.y / 2.f});
     prevTxt.setPosition({previousButton.getPosition().x + previousButton.getSize().x / 2.f, previousButton.getPosition().y + previousButton.getSize().y / 2.f});
 
-    sf::Text exitText(font, "Press ESC to return to Menu", 18);
+    sf::Text exitText(font, "Apasa ESC pentru a te intoarce", 18);
     exitText.setFillColor(sf::Color::Black);
     exitText.setPosition({20.f, winH - 30.f});
 
@@ -774,6 +782,7 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
             {
                 if (key->code == sf::Keyboard::Key::Escape)
                 {
+                    notifySelectedItem();
                     audio.playMusic("../assets/MainMusic.ogg");
                     return;
                 }
@@ -782,12 +791,12 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
                 if (key->code == sf::Keyboard::Key::Right && static_cast<size_t>(currentStepIndex) < steps.size() - 1)
                 {
                     currentStepIndex++;
-                    audio.playSound("selectie");
+                    notifySelectedItem();
                 }
                 if (key->code == sf::Keyboard::Key::Left && currentStepIndex > 0)
                 {
                     currentStepIndex--;
-                    audio.playSound("selectie");
+                    notifySelectedItem();
                 }
             }
 
@@ -799,12 +808,12 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
                      if(static_cast<size_t>(currentStepIndex) < steps.size() - 1 && nextButton.getGlobalBounds().contains(mousePos))
                      {
                          currentStepIndex++;
-                         audio.playSound("selectie");
+                         notifySelectedItem();
                      }
                      if (currentStepIndex > 0 && previousButton.getGlobalBounds().contains(mousePos))
                      {
                          currentStepIndex--;
-                         audio.playSound("selectie");
+                         notifySelectedItem();
                      }
                  }
             }
@@ -845,6 +854,10 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
 
         window.display();
     }
+}
+
+void simulator_manager::notifySelectedItem() const {
+    for (const auto& obs : observers) obs->onItemSelected();
 }
 
 void simulator_manager::UIMenuSetup(const resolution& rez, const sf::Font& font, UIMenu& ui)
@@ -936,7 +949,7 @@ void simulator_manager::UIMenuSetup(const resolution& rez, const sf::Font& font,
 
     ui.rulesTitle.setFont(font);
     ui.rulesTitle.setCharacterSize(headerSize);
-    ui.rulesTitle.setString("CONTROLS");
+    ui.rulesTitle.setString("Comenzile simulatorului");
     ui.rulesTitle.setStyle(sf::Text::Bold);
     ui.rulesTitle.setFillColor(sf::Color(0, 180, 230));
     sf::FloatRect rtb = ui.rulesTitle.getLocalBounds();
@@ -953,7 +966,7 @@ void simulator_manager::UIMenuSetup(const resolution& rez, const sf::Font& font,
         " TASTATURA\n"
         "   DELETE : Stergere atom selectat\n"
         "   R : Resetat spatiul de lucru\n"
-        "   ESC : Revenire la meniu\n"
+        "   ESC : Revenire la meniu\n\n"
         " INTERFATA\n"
         "   BUTON PLAY : Toggle mod fizic\n"
         "   R-CLICK (legatura C=C):\n"
@@ -977,7 +990,7 @@ void simulator_manager::UIMenuSetup(const resolution& rez, const sf::Font& font,
 
     ui.purposeTitle.setFont(font);
     ui.purposeTitle.setCharacterSize(headerSize);
-    ui.purposeTitle.setString("PURPOSE");
+    ui.purposeTitle.setString("Scopul simulatorului");
     ui.purposeTitle.setStyle(sf::Text::Bold);
     ui.purposeTitle.setFillColor(sf::Color(255, 215, 0));
     sf::FloatRect ptb = ui.purposeTitle.getLocalBounds();
@@ -1101,9 +1114,8 @@ std::vector<std::shared_ptr<atom>> simulator_manager::setupPalette(const std::ve
     return palette;
 }
 
-void simulator_manager::handleLeftClick(sf::Vector2f mousePos, molecule& thisMolecule, const std::vector<std::shared_ptr<atom>>& atomPalette,
-                                        int& selectedTemplateIndex, int& draggedAtomIndex, bool& isDragging, sf::Vector2f& dragOffset, audio_manager& audio)
-{
+void simulator_manager::handleLeftClick(const sf::Vector2f mousePos, molecule& thisMolecule, const std::vector<std::shared_ptr<atom>>& atomPalette,
+                                        int& selectedTemplateIndex, int& draggedAtomIndex, bool& isDragging, sf::Vector2f& dragOffset) const {
     if (mousePos.x < 200)
     {
         for (size_t i = 0; i < atomPalette.size(); ++i)
@@ -1111,7 +1123,7 @@ void simulator_manager::handleLeftClick(sf::Vector2f mousePos, molecule& thisMol
             if (atomPalette[i]->getBounds().contains(mousePos))
             {
                 selectedTemplateIndex = (int)i;
-                audio.playSound("selectie");
+                notifySelectedItem();
             }
         }
     }
@@ -1121,10 +1133,10 @@ void simulator_manager::handleLeftClick(sf::Vector2f mousePos, molecule& thisMol
 
         if (clickIndex != -1)
         {
-            audio.playSound("selectie");
+            notifySelectedItem();
             isDragging = true;
             draggedAtomIndex = clickIndex;
-            auto atomPtr = thisMolecule.getAtom(draggedAtomIndex);
+            const auto atomPtr = thisMolecule.getAtom(draggedAtomIndex);
             if (atomPtr)
             {
                 atomPtr->setAtomThickness(5.f);
@@ -1133,13 +1145,13 @@ void simulator_manager::handleLeftClick(sf::Vector2f mousePos, molecule& thisMol
         }
         else
         {
-            audio.playSound("selectie");
-            auto newEntity = atomPalette[selectedTemplateIndex]->clone();
+            notifySelectedItem();
+            const auto newEntity = atomPalette[selectedTemplateIndex]->clone();
 
-            if (auto atomPtr = std::dynamic_pointer_cast<atom>(newEntity))
+            if (const auto atomPtr = std::dynamic_pointer_cast<atom>(newEntity))
                 atomPtr->setShowElectrons(true);
 
-            if (auto ionPtr = std::dynamic_pointer_cast<ion>(newEntity))
+            if (const auto ionPtr = std::dynamic_pointer_cast<ion>(newEntity))
                 thisMolecule.addAtom(ionPtr, mousePos);
             else if (auto atomPtr = std::dynamic_pointer_cast<atom>(newEntity))
                 thisMolecule.addAtom(atomPtr, mousePos);
@@ -1147,30 +1159,29 @@ void simulator_manager::handleLeftClick(sf::Vector2f mousePos, molecule& thisMol
     }
 }
 
-void simulator_manager::handleRightClick(sf::Vector2f mousePos, molecule& thisMolecule,int& selectedAtomIndex, audio_manager& audio)
-{
-    int clickAtomIndex = thisMolecule.findAtomAtPosition(mousePos);
+void simulator_manager::handleRightClick(const sf::Vector2f mousePos, molecule& thisMolecule,int& selectedAtomIndex, audio_manager& audio) const {
+    const int clickAtomIndex = thisMolecule.findAtomAtPosition(mousePos);
 
     if (clickAtomIndex != -1)
     {
         if (selectedAtomIndex == -1)
         {
-            audio.playSound("selectie");
+            notifySelectedItem();
             selectedAtomIndex = clickAtomIndex;
-            if (auto atom = thisMolecule.getAtom(selectedAtomIndex))
+            if (const auto atom = thisMolecule.getAtom(selectedAtomIndex))
                 atom->setAtomThickness(5.f);
         }
         else
         {
-            int bondIndex = thisMolecule.findBondPosition(selectedAtomIndex, clickAtomIndex);
-            int v1 = thisMolecule.checkValenceLaws(clickAtomIndex);
-            int v2 = thisMolecule.checkValenceLaws(selectedAtomIndex);
+            const int bondIndex = thisMolecule.findBondPosition(selectedAtomIndex, clickAtomIndex);
+            const int v1 = thisMolecule.checkValenceLaws(clickAtomIndex);
+            const int v2 = thisMolecule.checkValenceLaws(selectedAtomIndex);
 
             try
             {
                 if (v1 && v2 && bondIndex == -1)
                 {
-                    audio.playSound("selectie");
+                    notifySelectedItem();
                     std::string type = "single_bond";
                     if (v1 >= 4 && v2 >= 4)
                         type = "quad_bond";
@@ -1193,23 +1204,23 @@ void simulator_manager::handleRightClick(sf::Vector2f mousePos, molecule& thisMo
                 audio.playSound("stergere");
             }
 
-            if (auto atom = thisMolecule.getAtom(selectedAtomIndex))
+            if (const auto atom = thisMolecule.getAtom(selectedAtomIndex))
                 atom->setAtomThickness(2.f);
 
             selectedAtomIndex = -1;
         }
         return;
     }
-    int clickBondIndex = thisMolecule.findBondAtPosition(mousePos);
+    const int clickBondIndex = thisMolecule.findBondAtPosition(mousePos);
     if (clickBondIndex != -1)
     {
-        auto bondPtr = thisMolecule.getBond(clickBondIndex);
-        if (auto db = std::dynamic_pointer_cast<double_bond>(bondPtr))
+        const auto bondPtr = thisMolecule.getBond(clickBondIndex);
+        if (const auto db = std::dynamic_pointer_cast<double_bond>(bondPtr))
         {
             if (thisMolecule.checkHydrocarbon())
             {
                 db->toggleConfiguration();
-                audio.playSound("selectie");
+                notifySelectedItem();
             }
         }
     }
@@ -1224,12 +1235,12 @@ void simulator_manager::drawPalette(sf::RenderWindow& window, const std::vector<
     window.draw(selectionBox);
 }
 
-void simulator_manager::scoreSaveMode(sf::RenderWindow& window, int score, sf::Font font,const molecule& thisMolecule, leaderboard& board)
+void simulator_manager::scoreSaveMode(sf::RenderWindow& window, const int score, const sf::Font& font,const molecule& thisMolecule, leaderboard& board)
 {
     if (score > 0)
     {
-        float winW = static_cast<float>(window.getSize().x);
-        float winH = static_cast<float>(window.getSize().y);
+        const float winW = static_cast<float>(window.getSize().x);
+        const float winH = static_cast<float>(window.getSize().y);
 
         const float centerX = winW / 2.f;
         const float centerY = winH / 2.f;
@@ -1282,7 +1293,7 @@ void simulator_manager::scoreSaveMode(sf::RenderWindow& window, int score, sf::F
 
                     nameText.setString(playerName);
 
-                    sf::FloatRect nb = nameText.getLocalBounds();
+                    const sf::FloatRect nb = nameText.getLocalBounds();
                     nameText.setOrigin({nb.position.x + nb.size.x / 2.f, nb.position.y + nb.size.y / 2.f});
                     nameText.setPosition({centerX, centerY});
                 }
@@ -1299,6 +1310,11 @@ void simulator_manager::scoreSaveMode(sf::RenderWindow& window, int score, sf::F
 
         board.addScore(playerName, score);
     }
+}
+
+void simulator_manager::addObserver(event_observer *obs)
+{
+    observers.push_back(obs);
 }
 
 resolution simulator_manager::newResolution()
@@ -1319,7 +1335,7 @@ resolution simulator_manager::newResolution()
     std::vector<sf::Text> buttons;
     float startY = 60.f;
 
-    sf::Text title(font, "Choose Resolution:", 20);
+    sf::Text title(font, "Alege rezolutia:", 20);
     title.setPosition({20.f, 20.f});
 
     for (const auto& opt : options) {

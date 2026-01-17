@@ -15,23 +15,23 @@ public:
     }
 };
 
-class fileLoadingException: public atomSimulatorExceptions
+class fileLoadingException final : public atomSimulatorExceptions
 {
 public:
     explicit fileLoadingException(const std::string& fileName): atomSimulatorExceptions("Nu a fost gasit fisierul: " + fileName){}
 };
 
-class fileFormatException: public atomSimulatorExceptions {
+class fileFormatException final : public atomSimulatorExceptions {
 public:
     explicit fileFormatException(const std::string& fileName, const std::string& details): atomSimulatorExceptions("Eroare formatare in fisierul [" + fileName + "]: " + details){}
 };
 
-class resourceMissingException: public atomSimulatorExceptions {
+class resourceMissingException final : public atomSimulatorExceptions {
 public:
     explicit resourceMissingException(const std::string& resourceName): atomSimulatorExceptions("Nu s-a gasit resursa: " + resourceName){}
 };
 
-class chemistryLawsException: public atomSimulatorExceptions {
+class chemistryLawsException final : public atomSimulatorExceptions {
 public:
     explicit chemistryLawsException(const std::string& details): atomSimulatorExceptions("Regula din chimie ignorata: " + details) {}
 };
