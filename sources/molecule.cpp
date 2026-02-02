@@ -328,9 +328,10 @@ bool molecule::checkMetal() const
 }
 
 bool molecule::checkSimpleMolecule() const {
-    for (const auto& bondPtr: bondsList)
-        if (typeid(*bondPtr) != typeid(single_bond))
+    for (const auto& bondPtr: bondsList) {
+        if (dynamic_pointer_cast<single_bond>(bondPtr)==nullptr)
             return false;
+    }
     return true;
 }
 
