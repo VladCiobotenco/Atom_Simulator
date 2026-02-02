@@ -11,6 +11,7 @@ Versiunea actuala a aplicatiei permite utilizatorului sa vizualizeze o molecule 
 - Oxigen - rosu
 - Hidrogen - alb
 - Azot - albastru
+- Sulf - galben
 - Sodiu (in forma de ion) - roz
 - Clor (in forma de ion) - verde
 
@@ -19,6 +20,7 @@ Pentru utilizarea simulatorului utilizatorul trebuie sa cunoasca cateva reguli i
 - atomul de oxigen accepta maxim 2 legaturi
 - atomul de azot accepta maxim 3 legaturi
 - atomul de carbon accepta maxim 4 legaturi 
+- atomul de sulf accepta maxim 6 legaturi (functionalitatea atomului de sulf a fost redusa in contextul acestei aplicatii)
 - atomul de sodiu accepta maxim o legatura
 - atomul de clor accepta maxim o legatura
 
@@ -35,192 +37,20 @@ Aplicatia dezvoltata este foarte intuitiva. Scopul utilizatorului este de a crea
 
 Odata ce toti atomii din spatiul de lucru sunt __conectati__, programul va afisa numele moleculei formate si masa moleculara. Daca molecula creata este __recunoscuta__ de aplicatie, va afisa si denumirea ei. 
 
+## Alte functionalitati
+Pe langa modelarea diverselor molecule, simulatorul permite 2 functionalitati subtile.
+- pentru catenele de carbon cu legatura dubla => se poate seta tipul configuratiei geometrice (pentru schimbarea configuratiei se face _click_stanga_ pe legatura dubla)
+- pentru moleculele formate numai din legaturi simple => se poate apasa butonul _play_ pentru setarea modului fizic (legaturile simple se rotesc)
 
-### Folosiți template-ul corespunzător grupei voastre!
-
-| Laborant  | Link template                                |
-|-----------|----------------------------------------------|
-| Dragoș B  | https://github.com/Ionnier/oop-template      |
-| Tiberiu M | https://github.com/MaximTiberiu/oop-template |
-| Marius MC | https://github.com/mcmarius/oop-template     |
-
-### Important!
-
-Aveți voie cu cod generat de modele de limbaj la care nu ați contribuit semnificativ doar dacă documentați riguros acest proces.
-Codul generat pus "ca să fie"/pe care nu îl înțelegeți se punctează doar pentru puncte bonus, doar în contextul
-în care oferă funcționalități ajutătoare și doar dacă are sens.
-
-Codul din proiect trebuie să poată fi ușor de înțeles și de modificat de către altcineva. Pentru detalii, veniți la ore.
-
-O cerință nu se consideră îndeplinită dacă este realizată doar prin cod generat.
-
-- **Fără cod de umplutură/fără sens!**
-- **Fără copy-paste!**
-- **Fără variabile globale!**
-- **Fără atribute publice!**
-- **Pentru T2 și T3, fără date în cod!** Datele vor fi citite din fișier, aveți exemple destule.
-- **Obligatoriu** fișiere cu date mai multe din care să citiți, obligatoriu cu biblioteci externe: fișiere (local sau server) sau baze de date
-- obligatoriu (TBD) să integrați cel puțin două biblioteci externe pe lângă cele pentru stocare
-
-### Tema 0
-
-- [x] Nume proiect (poate fi schimbat ulterior)
-- [x] Scurtă descriere a temei alese, ce v-ați propus să implementați
-
-## Tema 1
-
-#### Cerințe
-- [x] definirea a minim **3-4 clase** folosind compunere cu clasele definite de voi; moștenirile nu se iau în considerare aici
-- [x] constructori de inițializare cu parametri pentru fiecare clasă
-- [x] pentru o aceeași (singură) clasă: constructor de copiere, `operator=` de copiere, destructor
-<!-- - [ ] pentru o altă clasă: constructor de mutare, `operator=` de mutare, destructor -->
-<!-- - [ ] pentru o altă clasă: toate cele 5 funcții membru speciale -->
-- [x] `operator<<` pentru **toate** clasele pentru afișare (`std::ostream`) folosind compunere de apeluri cu `operator<<`
-- [x] cât mai multe `const` (unde este cazul) și funcții `private`
-- [x] implementarea a minim 3 funcții membru publice pentru funcționalități netriviale specifice temei alese, dintre care cel puțin 1-2 funcții mai complexe
-  - nu doar citiri/afișări sau adăugat/șters elemente într-un/dintr-un vector
-- [x] scenariu de utilizare **cu sens** a claselor definite:
-  - crearea de obiecte și apelarea tuturor funcțiilor membru publice în main
-  - vor fi adăugate în fișierul `tastatura.txt` DOAR exemple de date de intrare de la tastatură (dacă există); dacă aveți nevoie de date din fișiere, creați alte fișiere separat
-- [x] minim 50-55% din codul propriu să fie C++, `.gitattributes` configurat corect
-- [x] tag de `git`: de exemplu `v0.1`
-- [x] serviciu de integrare continuă (CI) cu **toate bifele**; exemplu: GitHub Actions
-- [x] code review #1 2 proiecte
-
-## Tema 2
-
-#### Cerințe
-- [x] separarea codului din clase în `.h` (sau `.hpp`) și `.cpp`
-- [x] moșteniri:
-  - minim o clasă de bază și **3 clase derivate** din aceeași ierarhie
-  - ierarhia trebuie să fie cu bază proprie, nu derivată dintr-o clasă predefinită
-  - [x] funcții virtuale (pure) apelate prin pointeri de bază din clasa care conține atributul de tip pointer de bază
-    - minim o funcție virtuală va fi **specifică temei** (i.e. nu simple citiri/afișări sau preluate din biblioteci i.e. draw/update/render)
-    - constructori virtuali (clone): sunt necesari, dar nu se consideră funcții specifice temei
-    - afișare virtuală, interfață non-virtuală
-  - [x] apelarea constructorului din clasa de bază din constructori din derivate
-  - [x] clasă cu atribut de tip pointer la o clasă de bază cu derivate; aici apelați funcțiile virtuale prin pointer de bază, eventual prin interfața non-virtuală din bază
-    - [x] suprascris cc/op= pentru copieri/atribuiri corecte, copy and swap
-    - [x] `dynamic_cast`/`std::dynamic_pointer_cast` pentru downcast cu sens
-    - [x] smart pointers (recomandat, opțional)
-- [x] excepții
-  - [x] ierarhie proprie cu baza `std::exception` sau derivată din `std::exception`; minim **3** clase pentru erori specifice distincte
-    - clasele de excepții trebuie să trateze categorii de erori distincte (exemplu de erori echivalente: citire fișiere cu diverse extensii)
-  - [x] utilizare cu sens: de exemplu, `throw` în constructor (sau funcție care întoarce un obiect), `try`/`catch` în `main`
-  - această ierarhie va fi complet independentă de ierarhia cu funcții virtuale
-- [x] funcții și atribute `static`
-- [x] STL
-- [x] cât mai multe `const`
-- [x] funcții *de nivel înalt*, de eliminat cât mai mulți getters/setters/funcții low-level
-- [x] minim 75-80% din codul propriu să fie C++
-- [x] la sfârșit: commit separat cu adăugarea unei noi clase derivate fără a modifica restul codului, **pe lângă cele 3 derivate deja adăugate** din aceeași ierarhie
-  - noua derivată nu poate fi una existentă care a fost ștearsă și adăugată din nou
-  - noua derivată va fi integrată în codul existent (adică va fi folosită, nu adăugată doar ca să fie)
-- [x] tag de `git` pe commit cu **toate bifele**: de exemplu `v0.2`
-- [ ] code review #2 2 proiecte
-
-## Tema 3
-
-#### Cerințe
-- [ ] 2 șabloane de proiectare (design patterns)
-- [ ] o clasă șablon cu sens; minim **2 instanțieri**
-  - [ ] preferabil și o funcție șablon (template) cu sens; minim 2 instanțieri
-- [ ] minim 85% din codul propriu să fie C++
-<!-- - [ ] o specializare pe funcție/clasă șablon -->
-- [ ] tag de `git` pe commit cu **toate bifele**: de exemplu `v0.3` sau `v1.0`
-- [ ] code review #3 2 proiecte
-
-## Instrucțiuni de compilare
-
-Proiectul este configurat cu CMake.
-
-Instrucțiuni pentru terminal:
-
-0. Biblioteci necesare pe Linux (presupunem sistem de operare bazat pe Debian, necesită `sudo`)
-```sh
-bash ./scripts/install-sfml-deps.sh
-```
-
-Dacă lipsesc și alte biblioteci, ștergeți folder-ul de build de la pasul 1 și reconfigurați proiectul după ce ați instalat ce lipsea.
-
-1. Pasul de configurare
-```sh
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-# sau ./scripts/cmake.sh configure
-```
-
-Sau pe Windows cu GCC folosind Git Bash:
-```sh
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -G Ninja
-# sau ./scripts/cmake.sh configure -g Ninja
-```
-
-Pentru a configura cu ASan, avem opțiunea `-DUSE_ASAN=ON` (nu merge pe Windows cu GCC):
-```sh
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DUSE_ASAN=ON
-# sau ./scripts/cmake.sh configure -e "-DUSE_ASAN=ON"
-```
-
-
-La acest pas putem cere să generăm fișiere de proiect pentru diverse medii de lucru.
-
-
-2. Pasul de compilare
-```sh
-cmake --build build --config Debug --parallel 6
-# sau ./scripts/cmake.sh build
-```
-
-Cu opțiunea `parallel` specificăm numărul de fișiere compilate în paralel.
-
-
-3. Pasul de instalare (opțional)
-```sh
-cmake --install build --config Debug --prefix install_dir
-# sau ./scripts/cmake.sh install
-```
-
-Vezi și [`scripts/cmake.sh`](scripts/cmake.sh).
-
-Observație: folderele `build/` și `install_dir/` sunt adăugate în fișierul `.gitignore` deoarece
-conțin fișiere generate și nu ne ajută să le versionăm.
-
-
-## Instrucțiuni pentru a rula executabilul
-
-Există mai multe variante:
-
-1. Din directorul de build (implicit `build`). Executabilul se află la locația `./build/oop` după ce a fost rulat pasul de compilare al proiectului (`./scripts/cmake.sh build` - pasul 2 de mai sus).
-
-```sh
-./build/oop
-```
-
-2. Din directorul `install_dir`. Executabilul se află la locația `./install_dir/bin/oop` după ce a fost rulat pasul de instalare (`./scripts/cmake.sh install` - pasul 3 de mai sus).
-
-```sh
-./install_dir/bin/oop
-```
-
-3. Rularea programului folosind Valgrind se poate face executând script-ul `./scripts/run_valgrind.sh` din rădăcina proiectului. Pe Windows acest script se poate rula folosind WSL (Windows Subsystem for Linux). Valgrind se poate rula în modul interactiv folosind: `RUN_INTERACTIVE=true ./scripts/run_valgrind.sh`
-
-Implicit, nu se rulează interactiv, iar datele pentru `std::cin` sunt preluate din fișierul `tastatura.txt`.
-
-```sh
-RUN_INTERACTIVE=true ./scripts/run_valgrind.sh
-# sau
-./scripts/run_valgrind.sh
-```
-
-4. Pentru a rula executabilul folosind ASan, este nevoie ca la pasul de configurare (vezi mai sus) să fie activat acest sanitizer. Ar trebui să meargă pe macOS și Linux. Pentru Windows, ar merge doar cu MSVC (nerecomandat).
-
-Comanda este aceeași ca la pasul 1 sau 2. Nu merge combinat cu Valgrind.
-
-```sh
-./build/oop
-# sau
-./install_dir/bin/oop
-```
+## GUI
+Simulatorul are un GUI minimalist ce permite oricarui utilizator sa inteleaga cum functioneaza aplicatia. Pasi de urmat (pentru cei lipsiti de arta deducerii):
+1) se alege rezolutia dorita (momentan sunt doar 2 rezolutii disponibile, mai mult in viitor)
+2) utilizatorul poate alege sa faca orice doreste din meniul simulatorului (indicat ar fi sa apese pe butonul _?_)
+3) se activeaza modul __Help Overlay__ pentru explicarea functionalitatilor; se poate apasa pe orice tasta pentru a iesi
+4) se activeaza modul __Tutorial__ pentru un scurt tutorial ce include atomii care sunt inclusi in simulator
+5) se activeaza modul __Sandbox__ pentru intelegerea functionalitatilor; aici utilizatorul poate interactiona cu atomii; daca o molecula creata corespunde cu o molecula din realitate, simulatorul va preciza acest lucru
+6) se activeaza modul __Trivia__ pentru testarea cunostintelor acumulate; aici utilizatorul este trecut prin mai multe molecule cu scopul de a le reproduce dupa nume; fiecare intrebare aduca un punct utilizatorului; la iesire va aparea un input box pentru numele care va apare in leaderboard
+7) se activeaza modul __Leaderboard__ pentru vizualizarea Top-10 celor mai bune rezultate inregistrate local
 
 ## Resurse
 Resursele mentionate mai sus nu imi apartin. Acestea au fost utilizate pentru a crea o aplicatie atractiva din punct de vedere vizual si auditiv. O parte din aceste resurse au fost convertite din formatul original din motive de compatibilitate. Autorii acestor resurse detin dreptul de autor.
