@@ -9,7 +9,6 @@
 class molecule
 {
     std::string name;
-    //std::vector<std::shared_ptr<entity>> entitiesList;
     std::vector<std::shared_ptr<entity>> atomsList;
     std::vector<std::shared_ptr<entity>> bondsList;
 
@@ -33,6 +32,7 @@ public:
     [[nodiscard]] bool checkAtomsConnections() const;
     [[nodiscard]] bool checkHydrocarbon() const;
     [[nodiscard]] bool checkMetal() const;
+    [[nodiscard]] bool checkSimpleMolecule()const;
 
     [[nodiscard]] int findAtomAtPosition(const sf::Vector2f&) const;
     [[nodiscard]] int findBondAtPosition(const sf::Vector2f&) const;

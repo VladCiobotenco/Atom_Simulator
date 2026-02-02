@@ -327,6 +327,13 @@ bool molecule::checkMetal() const
     return false;
 }
 
+bool molecule::checkSimpleMolecule() const {
+    for (const auto& bondPtr: bondsList)
+        if (typeid(*bondPtr) != typeid(single_bond))
+            return false;
+    return true;
+}
+
 int molecule::findAtomAtPosition(const sf::Vector2f& worldPos) const
 {
     int entityIndex=0;
