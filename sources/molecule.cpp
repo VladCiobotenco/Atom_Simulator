@@ -141,8 +141,8 @@ std::string molecule::getMolecularFormula() const
 
     for (const auto& entity : atomsList)
     {
-        if (auto atomPtr = std::dynamic_pointer_cast<atom>(entity))
-            counts[atomPtr->getSymbol()]++;
+        auto atomPtr = std::static_pointer_cast<atom>(entity);
+        counts[atomPtr->getSymbol()]++;
     }
 
     std::stringstream ss;

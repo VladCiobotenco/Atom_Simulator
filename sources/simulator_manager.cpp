@@ -23,12 +23,12 @@ void simulator_manager::simulation(const resolution& rez) {
     observers.clear();
 
     sf::Font font;
-    if (!font.openFromFile("../assets/Roboto-VariableFont_wdth,wght.ttf"))
-        throw resourceMissingException("../assets/Roboto-VariableFont_wdth,wght.ttf");
+    if (!font.openFromFile("./assets/Roboto-VariableFont_wdth,wght.ttf"))
+        throw resourceMissingException("./assets/Roboto-VariableFont_wdth,wght.ttf");
 
     sf::Texture texture;
-    if (!texture.loadFromFile("../assets/menu-background.png"))
-        throw resourceMissingException("../assets/menu-background.png");
+    if (!texture.loadFromFile("./assets/menu-background.png"))
+        throw resourceMissingException("./assets/menu-background.png");
 
     sf::Sprite background(texture);
     float scaleX = rez.width/740.f;
@@ -43,11 +43,11 @@ void simulator_manager::simulation(const resolution& rez) {
     database.loadIntoDatabase("../data/elements.json");
 
     auto audio = std::make_shared<audio_manager>();
-    audio->playMusic("../assets/MainMusic.ogg");
-    audio->loadSound("selectie","../assets/click-selectare.wav");
-    audio->loadSound("stergere","../assets/click-stergere.wav");
-    audio->loadSound("corect","../assets/trivia-corect.wav");
-    audio->loadSound("gresit","../assets/trivia-gresit.wav");
+    audio->playMusic("./assets/MainMusic.ogg");
+    audio->loadSound("selectie","./assets/click-selectare.wav");
+    audio->loadSound("stergere","./assets/click-stergere.wav");
+    audio->loadSound("corect","./assets/trivia-corect.wav");
+    audio->loadSound("gresit","./assets/trivia-gresit.wav");
 
     addObserver(audio);
 
@@ -1173,13 +1173,15 @@ void simulator_manager::handleLeftClick(const sf::Vector2f mousePos, molecule& t
             notifyEvent("selectie");
             const auto newEntity = atomPalette[selectedTemplateIndex]->clone();
 
-            if (const auto atomPtr = std::dynamic_pointer_cast<atom>(newEntity))
-                atomPtr->setShowElectrons(true);
+            const auto atomPtr = std::static_pointer_cast<atom>(newEntity);
+            atomPtr->setShowElectrons(true);
 
-            if (const auto ionPtr = std::dynamic_pointer_cast<ion>(newEntity))
-                thisMolecule.addAtom(ionPtr, mousePos);
-            else if (auto atomPtr = std::dynamic_pointer_cast<atom>(newEntity))
-                thisMolecule.addAtom(atomPtr, mousePos);
+            if (const auto newIon = std::dynamic_pointer_cast<ion>(newEntity))
+                thisMolecule.addAtom(newIon, mousePos);
+            else {
+                const auto newAtom = std::static_pointer_cast<atom>(newEntity);
+                thisMolecule.addAtom(newAtom, mousePos);
+            }
         }
     }
 }
@@ -1346,8 +1348,8 @@ resolution simulator_manager::newResolution()
 {
     sf::RenderWindow launcher(sf::VideoMode({400, 300}), "Select Resolution", sf::Style::Titlebar | sf::Style::Close);
     sf::Font font;
-    if (!font.openFromFile("../assets/Roboto-VariableFont_wdth,wght.ttf"))
-        throw resourceMissingException("../assets/Roboto-VariableFont_wdth,wght.ttf");
+    if (!font.openFromFile("./assets/Roboto-VariableFont_wdth,wght.ttf"))
+        throw resourceMissingException("./assets/Roboto-VariableFont_wdth,wght.ttf");
 
     struct ResOption { unsigned int w, h; std::string label; };
     std::vector<ResOption> options = {
