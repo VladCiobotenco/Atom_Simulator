@@ -52,6 +52,7 @@ void simulator_manager::simulation(const resolution& rez) {
     addObserver(audio);
 
     sf::RenderWindow window(sf::VideoMode({rez.width, rez.height}), "Atom Simulator");
+    window.setFramerateLimit(60);
 
     UIMenu UI(font);
     UIMenuSetup(rez, font, UI);
@@ -1347,6 +1348,7 @@ void simulator_manager::addObserver(const std::shared_ptr<event_observer>& obs)
 resolution simulator_manager::newResolution()
 {
     sf::RenderWindow launcher(sf::VideoMode({400, 300}), "Select Resolution", sf::Style::Titlebar | sf::Style::Close);
+    launcher.setFramerateLimit(60);
     sf::Font font;
     if (!font.openFromFile("assets/Roboto-VariableFont_wdth,wght.ttf"))
         throw resourceMissingException("assets/Roboto-VariableFont_wdth,wght.ttf");
