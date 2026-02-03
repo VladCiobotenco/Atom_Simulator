@@ -23,12 +23,12 @@ void simulator_manager::simulation(const resolution& rez) {
     observers.clear();
 
     sf::Font font;
-    if (!font.openFromFile("Roboto-VariableFont_wdth,wght.ttf"))
-        throw resourceMissingException("Roboto-VariableFont_wdth,wght.ttf");
+    if (!font.openFromFile("assets/Roboto-VariableFont_wdth,wght.ttf"))
+        throw resourceMissingException("assets/Roboto-VariableFont_wdth,wght.ttf");
 
     sf::Texture texture;
-    if (!texture.loadFromFile("menu-background.png"))
-        throw resourceMissingException("menu-background.png");
+    if (!texture.loadFromFile("assets/menu-background.png"))
+        throw resourceMissingException("assets/menu-background.png");
 
     sf::Sprite background(texture);
     float scaleX = rez.width/740.f;
@@ -36,18 +36,18 @@ void simulator_manager::simulation(const resolution& rez) {
     background.setScale({scaleX, scaleY});
     background.setPosition({0, 0});
 
-    std::vector<atom> inputAtoms = input<atom>::read("../data/atoms.json");
-    std::vector<ion> inputIons = input<ion>::read("../data/ions.json", font);
+    std::vector<atom> inputAtoms = input<atom>::read("data/atoms.json");
+    std::vector<ion> inputIons = input<ion>::read("data/ions.json", font);
 
     chemical_database database;
-    database.loadIntoDatabase("../data/elements.json");
+    database.loadIntoDatabase("data/elements.json");
 
     auto audio = std::make_shared<audio_manager>();
-    audio->playMusic("MainMusic.ogg");
-    audio->loadSound("selectie","click-selectare.wav");
-    audio->loadSound("stergere","click-stergere.wav");
-    audio->loadSound("corect","trivia-corect.wav");
-    audio->loadSound("gresit","trivia-gresit.wav");
+    audio->playMusic("assets/MainMusic.ogg");
+    audio->loadSound("selectie","assets/click-selectare.wav");
+    audio->loadSound("stergere","assets/click-stergere.wav");
+    audio->loadSound("corect","assets/trivia-corect.wav");
+    audio->loadSound("gresit","assets/trivia-gresit.wav");
 
     addObserver(audio);
 
@@ -1348,8 +1348,8 @@ resolution simulator_manager::newResolution()
 {
     sf::RenderWindow launcher(sf::VideoMode({400, 300}), "Select Resolution", sf::Style::Titlebar | sf::Style::Close);
     sf::Font font;
-    if (!font.openFromFile("Roboto-VariableFont_wdth,wght.ttf"))
-        throw resourceMissingException("Roboto-VariableFont_wdth,wght.ttf");
+    if (!font.openFromFile("assets/Roboto-VariableFont_wdth,wght.ttf"))
+        throw resourceMissingException("assets/Roboto-VariableFont_wdth,wght.ttf");
 
     struct ResOption { unsigned int w, h; std::string label; };
     std::vector<ResOption> options = {
