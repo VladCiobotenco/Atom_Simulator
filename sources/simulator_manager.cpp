@@ -453,7 +453,7 @@ void simulator_manager::triviaMode(sf::RenderWindow& window, molecule& thisMolec
     bool waitNewMolecule = false;
 
     // Variabila de leaderboard
-    leaderboard board("../data/scores.txt");
+    leaderboard board("data/scores.txt");
 
     while (window.isOpen())
     {
@@ -578,8 +578,8 @@ void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font
     float winW = static_cast<float>(window.getSize().x);
     float winH = static_cast<float>(window.getSize().y);
 
-    leaderboard board("../data/scores.txt");
-    audio->playMusic("../assets/Leaderboard.ogg");
+    leaderboard board("data/scores.txt");
+    audio->playMusic("assets/Leaderboard.ogg");
 
     sf::Text leaderboardTitle(font, "High Scores", 40);
     leaderboardTitle.setFillColor(sf::Color::Yellow);
@@ -644,7 +644,7 @@ void simulator_manager::leaderboardMode(sf::RenderWindow& window, const sf::Font
                 if (key->code == sf::Keyboard::Key::Escape)
                 {
                     notifyEvent("selectie");
-                    audio->playMusic("../assets/MainMusic.ogg");
+                    audio->playMusic("assets/MainMusic.ogg");
                     return;
                 }
             }
@@ -666,11 +666,11 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
     float winW = static_cast<float>(window.getSize().x);
     float winH = static_cast<float>(window.getSize().y);
 
-    audio->playMusic("../assets/TutorialMusic.ogg");
+    audio->playMusic("assets/TutorialMusic.ogg");
 
     sf::Texture periodicTableTexture;
-    if (!periodicTableTexture.loadFromFile("../assets/periodic-table.jpg")) {
-        throw resourceMissingException("../assets/periodic-table.jpg");
+    if (!periodicTableTexture.loadFromFile("assets/periodic-table.jpg")) {
+        throw resourceMissingException("assets/periodic-table.jpg");
     }
 
     sf::Sprite backgroundSprite(periodicTableTexture);
@@ -807,7 +807,7 @@ void simulator_manager::tutorialMode(sf::RenderWindow& window, const sf::Font& f
                 if (key->code == sf::Keyboard::Key::Escape)
                 {
                     notifyEvent("selectie");
-                    audio->playMusic("../assets/MainMusic.ogg");
+                    audio->playMusic("assets/MainMusic.ogg");
                     return;
                 }
 
