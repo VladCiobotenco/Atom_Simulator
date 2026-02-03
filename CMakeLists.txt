@@ -123,6 +123,6 @@ if(APPLE)
 endif()
 
 
-copy_files(DIRECTORY sources/assets data COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
+copy_files(FILES sources/TutorialMusic.ogg sources/trivia-gresit.wav sources/trivia-corect.wav sources/Roboto-VariableFont_wdth,wght.ttf sources/periodic-table.jpg sources/menu-background.png sources/MainMusic.ogg sources/Leaderboard.ogg sources/click-stergere.wav sources/click-selectare.wav DIRECTORY data COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(FILES tastatura.txt config.json DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
