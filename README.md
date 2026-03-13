@@ -1,72 +1,71 @@
-# Atom simulator
+# Atom Simulator
 
-## O scurta descriere
+## A Brief Description
 
-__Atom simulator__ este o aplicatie educationala destinat elevilor ce doresc sa inteleaga principiile fundamentale ale chimiei. Programul permite utilizatorului sa simuleze molecule, sa vizualizeze legaturile chimice care se stabilesc intre atomi pe baza valentelor acestora si sa descopere informatii despre elemente precum _oxigenul_, _hidrogenul_, _carbonul_ si altele.
+**Atom Simulator** is an educational application designed for students who want to understand the fundamental principles of chemistry. The program allows users to simulate molecules, visualize the chemical bonds formed between atoms based on their valencies, and discover information about elements such as *oxygen*, *hydrogen*, *carbon*, and others.
 
-## Notiuni de chimie
+## Chemistry Concepts
 
-Versiunea actuala a aplicatiei permite utilizatorului sa vizualizeze o molecule ce contine 6 atomi (reprezentati prin cercuri de culori si dimensiuni diferite):
-- Carbon - negru
-- Oxigen - rosu
-- Hidrogen - alb
-- Azot - albastru
-- Sulf - galben
-- Sodiu (in forma de ion) - roz
-- Clor (in forma de ion) - verde
+The current version of the application allows the user to visualize molecules containing 7 types of atoms (represented by circles of different colors and sizes):
+- Carbon - Black
+- Oxygen - Red
+- Hydrogen - White
+- Nitrogen - Blue
+- Sulfur - Yellow
+- Sodium (as an ion) - Pink
+- Chlorine (as an ion) - Green
 
-Pentru utilizarea simulatorului utilizatorul trebuie sa cunoasca cateva reguli importante din chimie:
-- atomul de hidrogen accepta maxim o legatura
-- atomul de oxigen accepta maxim 2 legaturi
-- atomul de azot accepta maxim 3 legaturi
-- atomul de carbon accepta maxim 4 legaturi 
-- atomul de sulf accepta maxim 6 legaturi (functionalitatea atomului de sulf a fost redusa in contextul acestei aplicatii)
-- atomul de sodiu accepta maxim o legatura
-- atomul de clor accepta maxim o legatura
+To use the simulator, the user must know a few important chemistry rules:
+- A hydrogen atom accepts a maximum of 1 bond.
+- An oxygen atom accepts a maximum of 2 bonds.
+- A nitrogen atom accepts a maximum of 3 bonds.
+- A carbon atom accepts a maximum of 4 bonds.
+- A sulfur atom accepts a maximum of 6 bonds (sulfur functionality has been reduced in the context of this application).
+- A sodium atom accepts a maximum of 1 bond.
+- A chlorine atom accepts a maximum of 1 bond.
 
-## Mecanica simulatorului
-Aplicatia dezvoltata este foarte intuitiva. Scopul utilizatorului este de a crea molecule cu ajutorul unor atomi prestabiliti si a legaturilor ce se formeaza intre atomi. Modul de functionare al simulatorului este exemplificat mai jos:
-1) se selecteaza un tip de atom din meniul de atomi
-2) se efectueaza _click_stanga_ in spatiu de lucru pentru a adauga atomi
-3) se efectueaza _click_dreapta_ pe atomi pentru a-i selecta
-   - pentru a crea o legatura -> _click_dreapta pe alt atom care are electroni disponibili_
-   - pentru a sterge o legatura -> _click_dreapta_ pe atomul cu care imparte legatura pe care vrem sa o stergem
-   - pentru a sterge atomul selectat -> tasta _delete_
-4) pentru a reseta spatiul de lucru -> tasta _R_
-5) pentru inchiderea simulatorului -> tasta _ESC_
+## Simulator Mechanics
+The developed application is very intuitive. The user's goal is to create molecules using pre-set atoms and the bonds formed between them. The simulator's operation is exemplified below:
+1) Select an atom type from the atom menu.
+2) *Left-click* in the workspace to add atoms.
+3) *Right-click* on atoms to select them.
+   - To create a bond -> *Right-click* on another atom that has available electrons.
+   - To delete a bond -> *Right-click* on the atom with which it shares the bond you want to delete.
+   - To delete the selected atom -> Press the *Delete* key.
+4) To reset the workspace -> Press the *R* key.
+5) To close the simulator -> Press the *ESC* key.
 
-Odata ce toti atomii din spatiul de lucru sunt __conectati__, programul va afisa numele moleculei formate si masa moleculara. Daca molecula creata este __recunoscuta__ de aplicatie, va afisa si denumirea ei. 
+Once all atoms in the workspace are **connected**, the program will display the name of the formed molecule and its molecular mass. If the created molecule is **recognized** by the application, it will also display its specific name.
 
-## Alte functionalitati
-Pe langa modelarea diverselor molecule, simulatorul permite 2 functionalitati subtile.
-- pentru catenele de carbon cu legatura dubla => se poate seta tipul configuratiei geometrice (pentru schimbarea configuratiei se face _click_stanga_ pe legatura dubla)
-- pentru moleculele formate numai din legaturi simple => se poate apasa butonul _play_ pentru setarea modului fizic (legaturile simple se rotesc)
+## Other Functionalities
+In addition to modeling various molecules, the simulator allows for two subtle functionalities:
+- For carbon chains with double bonds => The geometric configuration type can be set (to change the configuration, *left-click* on the double bond).
+- For molecules consisting only of single bonds => The *Play* button can be pressed to set the physics mode (single bonds rotate).
 
 ## GUI
-Simulatorul are un GUI minimalist ce permite oricarui utilizator sa inteleaga cum functioneaza aplicatia. Pasi de urmat (pentru cei lipsiti de arta deducerii):
-1) se alege rezolutia dorita (momentan sunt doar 2 rezolutii disponibile, mai mult in viitor)
-2) utilizatorul poate alege sa faca orice doreste din meniul simulatorului (indicat ar fi sa apese pe butonul _?_)
-3) se activeaza modul __Help Overlay__ pentru explicarea functionalitatilor; se poate apasa pe orice tasta pentru a iesi
-4) se activeaza modul __Tutorial__ pentru un scurt tutorial ce include atomii care sunt inclusi in simulator
-5) se activeaza modul __Sandbox__ pentru intelegerea functionalitatilor; aici utilizatorul poate interactiona cu atomii; daca o molecula creata corespunde cu o molecula din realitate, simulatorul va preciza acest lucru
-6) se activeaza modul __Trivia__ pentru testarea cunostintelor acumulate; aici utilizatorul este trecut prin mai multe molecule cu scopul de a le reproduce dupa nume; fiecare intrebare aduca un punct utilizatorului; la iesire va aparea un input box pentru numele care va apare in leaderboard
-7) se activeaza modul __Leaderboard__ pentru vizualizarea Top-10 celor mai bune rezultate inregistrate local
+The simulator has a minimalist GUI that allows any user to understand how the application works. Steps to follow (for those lacking the art of deduction):
+1) Choose the desired resolution (currently only 2 resolutions are available, more in the future).
+2) The user can choose to do whatever they wish from the simulator menu (it is recommended to press the *?* button).
+3) Activate **Help Overlay** mode for an explanation of functionalities; press any key to exit.
+4) Activate **Tutorial** mode for a short tutorial including the atoms featured in the simulator.
+5) Activate **Sandbox** mode to understand functionalities; here the user can interact with atoms; if a created molecule corresponds to a real-world molecule, the simulator will specify this.
+6) Activate **Trivia** mode to test accumulated knowledge; here the user is presented with several molecules to reproduce by name; each correct answer earns the user a point; upon exiting, an input box will appear for the name to be displayed on the leaderboard.
+7) Activate **Leaderboard** mode to view the Top-10 best results recorded locally.
 
-## Resurse
-Resursele mentionate mai sus nu imi apartin. Acestea au fost utilizate pentru a crea o aplicatie atractiva din punct de vedere vizual si auditiv. O parte din aceste resurse au fost convertite din formatul original din motive de compatibilitate. Autorii acestor resurse detin dreptul de autor.
+## Resources
+The resources mentioned above do not belong to me. They were used to create a visually and audibly attractive application. Some of these resources were converted from their original format for compatibility reasons. The authors of these resources hold the copyright.
 
 - [SFML](https://github.com/SFML/SFML/tree/3.0.2) (Zlib)
-- Directorul __assets__ (IMAGES)
-  - __periodic-table.jpg__: [sursa](https://npr.brightspotcdn.com/legacy/sites/wuwm/files/201912/AdobeStock_238869971.jpg)
-  - __menu-background.jpg__: [sursa](https://img.freepik.com/free-vector/science-logo-banner-with-lab-tools-equipment_1308-157213.jpg?semt=ais_hybrid&w=740&q=80)
-- Directorul __assets__ (SOUNDS)
-  - __trivia-corect.wav__: [sursa](https://www.myinstants.com/media/sounds/kids-saying-yay-sound-effect_3.mp3)
-  - __trivia-gresit.wav__: [sursa](https://www.myinstants.com/media/sounds/wrong-answer_L4HjrqG.mp3)
-  - __click-selectare.wav__:
-  - __click-stergere.wav__:
-  - __TutorialMusic.ogg__: [sursa](https://www.youtube.com/watch?v=jj0ChLVTpaA)
-  - __Leaderboard.ogg__: [sursa](https://www.myinstants.com/media/sounds/fnaf-1-music-box.mp3)
-  - __MainMusic.ogg__: 
-- Directorul __assets__ (FONT)
-  - __Roboto-VariableFont_wdth,wght.ttf__: [sursa](https://fonts.google.com/specimen/Roboto)
-
+- **assets** directory (IMAGES)
+  - **periodic-table.jpg**: [source](https://npr.brightspotcdn.com/legacy/sites/wuwm/files/201912/AdobeStock_238869971.jpg)
+  - **menu-background.jpg**: [source](https://img.freepik.com/free-vector/science-logo-banner-with-lab-tools-equipment_1308-157213.jpg?semt=ais_hybrid&w=740&q=80)
+- **assets** directory (SOUNDS)
+  - **trivia-corect.wav**: [source](https://www.myinstants.com/media/sounds/kids-saying-yay-sound-effect_3.mp3)
+  - **trivia-gresit.wav**: [source](https://www.myinstants.com/media/sounds/wrong-answer_L4HjrqG.mp3)
+  - **click-selectare.wav**:
+  - **click-stergere.wav**:
+  - **TutorialMusic.ogg**: [source](https://www.youtube.com/watch?v=jj0ChLVTpaA)
+  - **Leaderboard.ogg**: [source](https://www.myinstants.com/media/sounds/fnaf-1-music-box.mp3)
+  - **MainMusic.ogg**: 
+- **assets** directory (FONT)
+  - **Roboto-VariableFont_wdth,wght.ttf**: [source](https://fonts.google.com/specimen/Roboto)
